@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Rights - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Added PINK glow (rgb for pink-500) */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(236, 72, 153, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-pink-500 to-purple-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Women's Rights</h1>
+            <p class="text-xl mb-6">Protection of Women Acts - 8 Key Laws</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths (Pink Theme) ---
+        const ICONS = {
+            domesticViolence: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V10a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h2z"></path></svg>`,
+            dowry: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 8c-1.11 0-2.08-.402-2.599-1M12 16v1m0-1v-8m0 0c1.657 0 3 .895 3 2s-1.343 2-3 2-3 .895-3 2 1.343 2 3 2m0 0l1.401-1.401M12 16L10.599 14.599m0 0A3.001 3.001 0 0112 12m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3 .895 3 2-1.343 2-3 2m0 0l-1.401 1.401M12 12l1.401-1.401m0 0A3.001 3.001 0 0112 12m0 0c1.657 0 3 .895 3 2s-1.343 2-3 2m0 0v1m0-1v-8m0 8L10.599 14.599M12 16l1.401-1.401"></path></svg>`,
+            harassment: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 11-9 0v3.75M13.5 10.5H21A2.25 2.25 0 0123.25 12.75v7.5A2.25 2.25 0 0121 22.5H3A2.25 2.25 0 01.75 20.25v-7.5A2.25 2.25 0 013 10.5h10.5M13.5 10.5c-1.12 0-2.163.303-3.071.835a.75.75 0 01-1.04-1.04A6.002 6.002 0 0113.5 10.5z"></path></svg>`,
+            acidAttack: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg>`,
+            rape: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.48 0 .947-.04.14-.117M12 21c-.48 0-.947-.04-1.4-.117M12 21c-2.21 0-4-1.79-4-4v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2"></path></svg>`,
+            maternity: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M11.828 15.172a.5.5 0 01.707 0l3.5 3.5a.5.5 0 01-.707.707l-3.5-3.5a.5.5 0 010-.707zM12 3.75a8.25 8.25 0 100 16.5 8.25 8.25 0 000-16.5zM12 15a.75.75 0 000 1.5.75.75 0 000-1.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5A2.25 2.25 0 1012 12a2.25 2.25 0 000-4.5z"></path></svg>`,
+            equalPay: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52c2.621.962 4.5 3.385 4.5 6.21 0 2.825-1.879 5.248-4.5 6.21m0 0c-1.01.143-2.01.317-3 .52m-3-.52c-2.621.962-4.5 3.385-4.5 6.21 0 2.825 1.879 5.248 4.5 6.21m-3-.52c-1.01-.143-2.01-.317-3-.52m0 0c-2.621-.962-4.5-3.385-4.5-6.21 0-2.825 1.879 5.248 4.5-6.21m3 .52c1.01.143 2.01.317 3 .52m0 0c2.621-.962 4.5-3.385 4.5-6.21 0-2.825-1.879 5.248-4.5-6.21m-3 .52c-1.01-.143-2.01-.317-3-.52"></path></svg>`,
+            stalking: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`
+        };
+        
+        const womenLaws = [
+            {
+                name: {en:"Domestic Violence", hi:"घरेलू हिंसा", ml:"ഗാർഹിക പീഡനം", ta:"வீட்டு வன்முறை", kn:"ಮನೆಯ ಹಿಂಸೆ"},
+                icon: ICONS.domesticViolence,
+                source: "DV Act 2005 Sec 3",
+                simplified: {
+                    en: "You are protected from any physical, mental, or financial abuse from your husband or his family. Call 1091 for help.",
+                    hi: "आप अपने पति या उसके परिवार से किसी भी शारीरिक, मानसिक या वित्तीय शोषण से सुरक्षित हैं। मदद के लिए 1091 पर कॉल करें।",
+                    ml: "നിങ്ങളുടെ ഭർത്താവിൽ നിന്നോ കുടുംബത്തിൽ നിന്നോ ഉള്ള ശാരീരികമോ മാനസികമോ സാമ്പത്തികമോ ആയ പീഡനങ്ങളിൽ നിന്ന് നിങ്ങൾ സംരക്ഷിക്കപ്പെട്ടിരിക്കുന്നു. സഹായത്തിനായി 1091-ൽ വിളിക്കുക.",
+                    ta: "உங்கள் கணவர் அல்லது அவரது குடும்பத்தினரிடமிருந்து எந்தவொரு உடல், மன அல்லது நிதி ரீதியான துன்புறுத்தல்களிலிருந்தும் நீங்கள் பாதுகாக்கப்படுகிறீர்கள். உதவிக்கு 1091 ஐ அழைக்கவும்.",
+                    kn: "ನಿಮ್ಮ ಪತಿ ಅಥವಾ ಅವರ ಕುಟುಂಬದಿಂದ ಯಾವುದೇ ದೈಹಿಕ, ಮಾನಸಿಕ ಅಥವಾ ಆರ್ಥಿಕ ದೌರ್ಜನ್ಯದಿಂದ ನೀವು ರಕ್ಷಿಸಲ್ಪಟ್ಟಿದ್ದೀರಿ. ಸಹಾಯಕ್ಕಾಗಿ 1091 ಕ್ಕೆ ಕರೆ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A woman faced constant threats and abuse from her husband. She filed a case under the DV Act. The court immediately issued a protection order, stopping the husband from contacting her, and granted her monetary relief.",
+                    hi: "एक महिला को अपने पति से लगातार धमकियों और दुर्व्यवहार का सामना करना पड़ रहा था। उसने डीवी अधिनियम के तहत मामला दर्ज कराया। अदालत ने तुरंत एक सुरक्षा आदेश जारी किया, पति को उससे संपर्क करने से रोक दिया, और उसे मौद्रिक राहत दी।",
+                    ml: "ഒരു സ്ത്രീക്ക് ഭർത്താവിൽ നിന്ന് നിരന്തരമായ ഭീഷണിയും പീഡനവും നേരിടേണ്ടി വന്നു. അവർ ഡിവി ആക്ട് പ്രകാരം കേസ് ഫയൽ ചെയ്തു. കോടതി ഉടൻ തന്നെ ഒരു സംരക്ഷണ ഉത്തരവ് പുറപ്പെടുവിച്ചു, ഭർത്താവ് അവരുമായി ബന്ധപ്പെടുന്നത് തടയുകയും സാമ്പത്തിക സഹായം അനുവദിക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு பெண் தனது கணவரிடமிருந்து தொடர்ச்சியான அச்சுறுத்தல்களையும் துன்புறுத்தல்களையும் சந்தித்தார். அவர் டி.வி சட்டத்தின் கீழ் வழக்குத் தொடர்ந்தார். நீதிமன்றம் உடனடியாக ஒரு பாதுகாப்பு உத்தரவைப் பிறப்பித்தது, கணவர் அவளைத் தொடர்புகொள்வதைத் தடுத்தது, மேலும் அவருக்கு பண நிவாரணம் வழங்கியது.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆ ತನ್ನ ಪತಿಯಿಂದ ನಿರಂತರ ಬೆದರಿಕೆಗಳು ಮತ್ತು ದೌರ್ಜನ್ಯವನ್ನು ಎದುರಿಸುತ್ತಿದ್ದಳು. ಅವಳು ಡಿವಿ ಕಾಯ್ದೆಯಡಿ ಪ್ರಕರಣ ದಾಖಲಿಸಿದಳು. ನ್ಯಾಯಾಲಯವು ತಕ್ಷಣವೇ ರಕ್ಷಣಾ ಆದೇಶವನ್ನು ಹೊರಡಿಸಿತು, ಪತಿಯು ಅವಳನ್ನು ಸಂಪರ್ಕಿಸುವುದನ್ನು ತಡೆಯಿತು, ಮತ್ತು ಅವಳಿಗೆ ಆರ್ಥಿಕ ಪರಿಹಾರವನ್ನು ನೀಡಿತು."
+                }
+            },
+            {
+                name: {en:"Dowry Prohibition", hi:"दहेज निषेध", ml:"സ്ത്രീധന നിരോധനം", ta:"வரதட்சணை தடை", kn:"ವರದಕ್ಷಿಣೆ ನಿಷೇಧ"},
+                icon: ICONS.dowry,
+                source: "Dowry Act 1961 Sec 3",
+                simplified: {
+                    en: "It is illegal to give or demand dowry before, during, or after marriage. Report any dowry demands to the police immediately.",
+                    hi: "शादी से पहले, दौरान या बाद में दहेज देना या मांगना गैरकानूनी है। दहेज की किसी भी मांग की तुरंत पुलिस को सूचना दें।",
+                    ml: "വിവാഹത്തിന് മുമ്പോ, വിവാഹസമയത്തോ, ശേഷമോ സ്ത്രീധനം നൽകുന്നതോ ആവശ്യപ്പെടുന്നതോ നിയമവിരുദ്ധമാണ്. സ്ത്രീധനം ആവശ്യപ്പെട്ടാൽ ഉടൻ പോലീസിൽ അറിയിക്കുക.",
+                    ta: "திருமணத்திற்கு முன், போது, அல்லது பின் வரதட்சணை கொடுப்பதோ அல்லது கேட்பதோ சட்டவிரோதமானது. வரதட்சணை கோரிக்கைகளை உடனடியாக காவல்துறையிடம் தெரிவிக்கவும்.",
+                    kn: "ಮದುವೆಗೆ ಮೊದಲು, ಮದುವೆಯ ಸಮಯದಲ್ಲಿ, ಅಥವಾ ನಂತರ ವರದಕ್ಷಿಣೆ ನೀಡುವುದು ಅಥವಾ ಬೇಡಿಕೆ ಇಡುವುದು ಕಾನೂನುಬಾಹಿರವಾಗಿದೆ. ಯಾವುದೇ ವರದಕ್ಷಿಣೆ ಬೇಡಿಕೆಗಳನ್ನು ತಕ್ಷಣ ಪೊಲೀಸರಿಗೆ ವರದಿ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A woman's in-laws demanded a car after marriage. She filed an FIR. The police arrested the in-laws under the Dowry Prohibition Act, and they faced 5 years in jail and a heavy fine.",
+                    hi: "एक महिला के ससुराल वालों ने शादी के बाद एक कार की मांग की। उसने प्राथमिकी दर्ज कराई। पुलिस ने ससुराल वालों को दहेज निषेध अधिनियम के तहत गिरफ्तार कर लिया, और उन्हें 5 साल की जेल और भारी जुर्माना भरना पड़ा।",
+                    ml: "വിവാഹശേഷം ഒരു സ്ത്രീയുടെ ഭർതൃവീട്ടുകാർ കാർ ആവശ്യപ്പെട്ടു. അവർ എഫ്‌ഐആർ ഫയൽ ചെയ്തു. പോലീസ് ഭർതൃവീട്ടുകാരെ സ്ത്രീധന നിരോധന നിയമപ്രകാരം അറസ്റ്റ് ചെയ്തു, അവർക്ക് 5 വർഷം തടവും കനത്ത പിഴയും ലഭിച്ചു.",
+                    ta: "திருமணத்திற்குப் பிறகு ஒரு பெண்ணின் புகுந்த வீட்டார் கார் கேட்டனர். அவர் எஃப்.ஐ.ஆர் பதிவு செய்தார். வரதட்சணை தடைச் சட்டத்தின் கீழ் காவல்துறையினர் புகுந்த வீட்டாரைக் கைது செய்தனர், மேலும் அவர்கள் 5 ஆண்டுகள் சிறைத்தண்டனையும் பெரும் அபராதமும் செலுத்த நேரிட்டது.",
+                    kn: "ಮದುವೆಯ ನಂತರ ಮಹಿಳೆಯ ಅತ್ತೆಮನೆಯವರು ಕಾರಿಗೆ ಬೇಡಿಕೆ ಇಟ್ಟರು. ಅವಳು ಎಫ್‌ಐಆರ್ ದಾಖಲಿಸಿದಳು. ಪೊಲೀಸರು ಅತ್ತೆಮನೆಯವರನ್ನು ವರದಕ್ಷಿಣೆ ನಿಷೇಧ ಕಾಯ್ದೆಯಡಿ ಬಂಧಿಸಿದರು, ಮತ್ತು ಅವರು 5 ವರ್ಷಗಳ ಜೈಲು ಶಿಕ್ಷೆ ಮತ್ತು ಭಾರಿ ದಂಡವನ್ನು ಎದುರಿಸಿದರು."
+                }
+            },
+            {
+                name: {en:"Sexual Harassment", hi:"यौन उत्पीड़न", ml:"ലൈംഗിക പീഡനം", ta:"பாலியல் தொல்லை", kn:"ಲೈಂಗಿಕ ಕಿರುಕುಳ"},
+                icon: ICONS.harassment,
+                source: "POSH Act 2013 Sec 9",
+                simplified: {
+                    en: "You have the right to a safe workplace, free from sexual harassment. Every company must have an Internal Complaints Committee (ICC).",
+                    hi: "आपको यौन उत्पीड़न से मुक्त, एक सुरक्षित कार्यस्थल का अधिकार है। हर कंपनी में एक आंतरिक शिकायत समिति (आईसीसी) होनी चाहिए।",
+                    ml: "ലൈംഗിക പീഡനങ്ങളിൽ നിന്ന് മുക്തമായ, സുരക്ഷിതമായ ഒരു ജോലിസ്ഥലത്തിന് നിങ്ങൾക്ക് അവകാശമുണ്ട്. എല്ലാ കമ്പനികൾക്കും ഒരു ആഭ്യന്തര പരാതി പരിഹാര കമ്മിറ്റി (ഐസിസി) ഉണ്ടായിരിക്കണം.",
+                    ta: "பாலியல் தொல்லைகளிலிருந்து விடுபட்ட, பாதுகாப்பான பணியிடத்திற்கு உங்களுக்கு உரிமை உண்டு. ஒவ்வொரு நிறுவனத்திலும் ஒரு உள் புகார் குழு (ஐசிசி) இருக்க வேண்டும்.",
+                    kn: "ಲೈಂಗಿಕ ಕಿರುಕುಳದಿಂದ ಮುಕ್ತವಾದ, ಸುರಕ್ಷಿತವಾದ ಕೆಲಸದ ಸ್ಥಳಕ್ಕೆ ನಿಮಗೆ ಹಕ್ಕಿದೆ. ಪ್ರತಿಯೊಂದು ಕಂಪನಿಯಲ್ಲೂ ಆಂತರಿಕ ದೂರು ಸಮಿತಿ (ಐಸಿಸಿ) ಇರಬೇಕು."
+                },
+                caseStudy: {
+                    en: "An employee was harassed by her manager. She filed a complaint with her company's Internal Complaints Committee (ICC). The ICC investigated, found the manager guilty, and the company terminated his employment.",
+                    hi: "एक कर्मचारी को उसके प्रबंधक द्वारा परेशान किया गया था। उसने अपनी कंपनी की आंतरिक शिकायत समिति (आईसीसी) में शिकायत दर्ज कराई। आईसीसी ने जांच की, प्रबंधक को दोषी पाया, और कंपनी ने उसकी नौकरी समाप्त कर दी।",
+                    ml: "ഒരു ജീവനക്കാരിയെ അവരുടെ മാനേജർ പീഡിപ്പിച്ചു. അവർ കമ്പനിയുടെ ആഭ്യന്തര പരാതി പരിഹാര കമ്മിറ്റിയിൽ (ഐസിസി) പരാതി നൽകി. ഐസിസി അന്വേഷണം നടത്തുകയും മാനേജർ കുറ്റക്കാരനാണെന്ന് കണ്ടെത്തുകയും കമ്പനി അയാളെ പിരിച്ചുവിടുകയും ചെയ്തു.",
+                    ta: "ஒரு ஊழியர் தனது மேலாளரால் துன்புறுத்தப்பட்டார். அவர் தனது நிறுவனத்தின் உள் புகார் குழுவில் (ஐசிசி) புகார் அளித்தார். ஐசிசி விசாரித்தது, மேலாளர் குற்றவாளி என்று கண்டறிந்தது, மற்றும் நிறுவனம் அவரது வேலையை நிறுத்தியது.",
+                    kn: "ಒಬ್ಬ ಉದ್ಯೋಗಿಯನ್ನು ಅವಳ ವ್ಯವಸ್ಥಾಪಕನು ಕಿರುಕುಳ ನೀಡಿದ್ದನು. ಅವಳು ತನ್ನ ಕಂಪನಿಯ ಆಂತರಿಕ ದೂರು ಸಮಿತಿಯಲ್ಲಿ (ಐಸಿಸಿ) ದೂರು ದಾಖಲಿಸಿದಳು. ಐಸಿಸಿ ತನಿಖೆ ನಡೆಸಿತು, ವ್ಯವಸ್ಥಾಪಕನನ್ನು ದೋಷಿ ಎಂದು ಕಂಡುಕೊಂಡಿತು, ಮತ್ತು ಕಂಪನಿಯು ಅವನ ಉದ್ಯೋಗವನ್ನು ಕೊನೆಗೊಳಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Acid Attack", hi:"एसिड अटैक", ml:"ആസിഡ് ആക്രമണം", ta:"அமிலத் தாக்குதல்", kn:"ಆಸಿಡ್ ದಾಳಿ"},
+                icon: ICONS.acidAttack,
+                source: "Sec 326A IPC / BNS",
+                simplified: {
+                    en: "Throwing acid on someone is a heinous crime. Attackers face a minimum of 10 years to life in prison. Call 181 for help.",
+                    hi: "किसी पर एसिड फेंकना एक जघन्य अपराध है। हमलावरों को कम से कम 10 साल से लेकर आजीवन कारावास तक की सजा हो सकती है। मदद के लिए 181 पर कॉल करें।",
+                    ml: "ഒരാളുടെ മേൽ ആസിഡ് എറിയുന്നത് ഹീനമായ കുറ്റകൃത്യമാണ്. ആക്രമികൾക്ക് കുറഞ്ഞത് 10 വർഷം മുതൽ ജീവപര്യന്തം വരെ തടവ് ശിക്ഷ ലഭിക്കും. സഹായത്തിനായി 181-ൽ വിളിക്കുക.",
+                    ta: "ఒకరిపై యాసిడ్ విసరడం ఘోరమైన నేరం. దాడి చేసినవారికి కనీసం 10 ఏళ్ల నుంచి జీవిత ఖైదు వరకు శిక్ష పడుతుంది. సహాయం కోసం 181కి కాల్ చేయండి.",
+                    kn: "ಯಾರೊಬ್ಬರ ಮೇಲೆ ಆಸಿಡ್ ಎಸೆಯುವುದು ಘೋರ ಅಪರಾಧ. ದಾಳಿಕೋರರು ಕನಿಷ್ಠ 10 ವರ್ಷಗಳಿಂದ ಜೀವಾವಧಿ ಶಿಕ್ಷೆಯನ್ನು ಎದುರಿಸುತ್ತಾರೆ. ಸಹಾಯಕ್ಕಾಗಿ 181 ಕ್ಕೆ ಕರೆ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "After an acid attack, the victim's case was fast-tracked. The Supreme Court not only sentenced the attacker to life imprisonment but also ordered the state to pay ₹3 Lakhs in compensation to the victim for medical treatment.",
+                    hi: "एसिड हमले के बाद, पीड़ित के मामले को तेजी से निपटाया गया। सुप्रीम कोर्ट ने न केवल हमलावर को आजीवन कारावास की सजा सुनाई, बल्कि राज्य को पीड़ित को चिकित्सा उपचार के लिए ₹3 लाख का मुआवजा देने का भी आदेश दिया।",
+                    ml: "ആസിഡ് ആക്രമണത്തിന് ശേഷം, ഇരയുടെ കേസ് അതിവേഗം പരിഗണിച്ചു. സുപ്രീം കോടതി ആക്രമിയെ ജീവപര്യന്തം തടവിന് ശിക്ഷിക്കുക മാത്രമല്ല, ഇരയ്ക്ക് ചികിത്സയ്ക്കായി ₹3 ലക്ഷം രൂപ നഷ്ടപരിഹാരം നൽകാൻ സംസ്ഥാനത്തോട് ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஆசிட் தாக்குதலுக்குப் பிறகு, பாதிக்கப்பட்டவரின் வழக்கு விரைவுபடுத்தப்பட்டது. உச்சநீதிமன்றம் தாக்குதல் நடத்தியவருக்கு ஆயுள் தண்டனை விதித்தது மட்டுமல்லாமல், பாதிக்கப்பட்டவருக்கு மருத்துவ சிகிச்சைக்காக ₹3 லட்சம் இழப்பீடு வழங்க மாநிலத்திற்கு உத்தரவிட்டது.",
+                    kn: "ಆಸಿಡ್ ದಾಳಿಯ ನಂತರ, ಸಂತ್ರಸ್ತೆಯ ಪ್ರಕರಣವನ್ನು ಶೀಘ್ರವಾಗಿ ವಿಚಾರಣೆ ನಡೆಸಲಾಯಿತು. ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ದಾಳಿಕೋರನಿಗೆ ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ವಿಧಿಸಿದ್ದು ಮಾತ್ರವಲ್ಲದೆ, ಸಂತ್ರಸ್ತೆಗೆ ವೈದ್ಯಕೀಯ ಚಿಕಿತ್ಸೆಗಾಗಿ ₹3 ಲಕ್ಷ ಪರಿಹಾರ ನೀಡುವಂತೆ ರಾಜ್ಯಕ್ಕೆ ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Rape", hi:"बलात्कार", ml:"ബലാത്സംഗം", ta:"பாலியல் வன்முறை", kn:"ಬಲಾತ್ಕಾರ"},
+                icon: ICONS.rape,
+                source: "Sec 64 BNS 2023",
+                simplified: {
+                    en: "Forcing a woman into any sexual act without her consent is a crime, punishable by life imprisonment or even death. Call 1098 or 100.",
+                    hi: "किसी महिला को उसकी सहमति के बिना किसी भी यौन क्रिया के लिए मजबूर करना एक अपराध है, जो आजीवन कारावास या मौत की सजा से दंडनीय है। 1098 या 100 पर कॉल करें।",
+                    ml: "ഒരു സ്ത്രീയെ അവരുടെ സമ്മതമില്ലാതെ ഏതെങ്കിലും ലൈംഗിക പ്രവർത്തനത്തിന് നിർബന്ധിക്കുന്നത് കുറ്റകരമാണ്, ജീവപര്യന്തം തടവോ വധശിക്ഷയോ ലഭിക്കാവുന്നതാണ്. 1098 അല്ലെങ്കിൽ 100 എന്ന നമ്പറിൽ വിളിക്കുക.",
+                    ta: "ஒரு பெண்ணை அவளது சம்மதம் இல்லாமல் எந்தவொரு பாலியல் செயலிலும் ஈடுபடக் கட்டாயப்படுத்துவது ஒரு குற்றம், இது ஆயுள் தண்டனை அல்லது மரண தண்டனைக்குரியது. 1098 அல்லது 100 ஐ அழைக்கவும்.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆಯನ್ನು ಅವಳ ಒಪ್ಪಿಗೆಯಿಲ್ಲದೆ ಯಾವುದೇ ಲೈಂಗಿಕ ಕ್ರಿಯೆಗೆ ಒತ್ತಾಯಿಸುವುದು ಅಪರಾಧವಾಗಿದೆ, ಇದು ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ಅಥವಾ ಮರಣದಂಡನೆಗೆ ಶಿಕ್ಷಾರ್ಹವಾಗಿದೆ. 1098 ಅಥವಾ 100 ಕ್ಕೆ ಕರೆ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A woman reported a rape case. Based on her testimony and medical evidence, the court found the accused guilty. The accused was sentenced to life imprisonment under the new, stricter laws.",
+                    hi: "एक महिला ने बलात्कार का मामला दर्ज कराया। उसकी गवाही और चिकित्सा सबूतों के आधार पर, अदालत ने आरोपी को दोषी पाया। आरोपी को नए, सख्त कानूनों के तहत आजीवन कारावास की सजा सुनाई गई।",
+                    ml: "ഒരു സ്ത്രീ ബലാത്സംഗ കേസ് റിപ്പോർട്ട് ചെയ്തു. അവരുടെ മൊഴിയുടെയും മെഡിക്കൽ തെളിവുകളുടെയും അടിസ്ഥാനത്തിൽ കോടതി പ്രതി കുറ്റക്കാരനാണെന്ന് കണ്ടെത്തി. പുതിയതും കർശനവുമായ നിയമപ്രകാരം പ്രതിയെ ജീവപര്യന്തം തടവിന് ശിക്ഷിച്ചു.",
+                    ta: "ஒரு பெண் கற்பழிப்பு வழக்குப் பதிவு செய்தார். அவரது சாட்சியம் மற்றும் மருத்துவ ஆதாரங்களின் அடிப்படையில், நீதிமன்றம் குற்றவாளியைக் கண்டறிந்தது. புதிய, கடுமையான சட்டங்களின் கீழ் குற்றவாளிக்கு ஆயுள் தண்டனை விதிக்கப்பட்டது.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆ ಅತ್ಯಾಚಾರ ಪ್ರಕರಣವನ್ನು ವರದಿ ಮಾಡಿದಳು. ಅವಳ ಸಾಕ್ಷ್ಯ ಮತ್ತು ವೈದ್ಯಕೀಯ ಸಾಕ್ಷ್ಯಗಳ ಆಧಾರದ ಮೇಲೆ, ನ್ಯಾಯಾಲಯವು ಆರೋಪಿಯನ್ನು ದೋಷಿ ಎಂದು ತೀರ್ಮಾನಿಸಿತು. ಹೊಸ, ಕಠಿಣ ಕಾನೂನುಗಳ ಅಡಿಯಲ್ಲಿ ಆರೋಪಿಗೆ ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ವಿಧಿಸಲಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Maternity Benefits", hi:"मातृत्व लाभ", ml:"പ്രസവ ആനുകൂല്യങ്ങൾ", ta:"மகப்பேறு நலன்கள்", kn:"ಮಾತೃತ್ವ ಪ್ರಯೋಜನಗಳು"},
+                icon: ICONS.maternity,
+                source: "Maternity Benefit Act 1961",
+                simplified: {
+                    en: "You are entitled to 26 weeks (about 6 months) of fully paid leave from your job for pregnancy and childbirth.",
+                    hi: "आप गर्भावस्था और प्रसव के लिए अपनी नौकरी से 26 सप्ताह (लगभग 6 महीने) के पूर्ण भुगतान वाले अवकाश की हकदार हैं।",
+                    ml: "ഗർഭാവസ്ഥയിലും പ്രസവസമയത്തും നിങ്ങളുടെ ജോലിയിൽ നിന്ന് 26 ആഴ്ച (ഏകദേശം 6 മാസം) പൂർണ്ണ ശമ്പളത്തോടുകൂടിയ അവധിക്ക് നിങ്ങൾക്ക് അർഹതയുണ്ട്.",
+                    ta: "கர்ப்பம் மற்றும் பிரசவத்திற்காக உங்கள் வேலையிலிருந்து 26 வாரங்கள் (சுமார் 6 மாதங்கள்) முழு ஊதியத்துடன் கூடிய விடுப்புக்கு உங்களுக்கு உரிமை உண்டு.",
+                    kn: "ಗರ್ಭಧಾರಣೆ ಮತ್ತು ಹೆರಿಗೆಗಾಗಿ ನಿಮ್ಮ ಉದ್ಯೋಗದಿಂದ 26 ವಾರಗಳ (ಸುಮಾರು 6 ತಿಂಗಳು) ಪೂರ್ಣ ಪಾವತಿಸಿದ ರಜೆಗೆ ನೀವು ಅರ್ಹರಾಗಿದ್ದೀರಿ."
+                },
+                caseStudy: {
+                    en: "A company tried to deny an employee her 26-week paid maternity leave. She filed a complaint. The Labour Court ruled in her favor, and the Supreme Court upheld this, forcing the company to provide the full paid leave.",
+                    hi: "एक कंपनी ने एक कर्मचारी को 26 सप्ताह के सवेतन मातृत्व अवकाश से वंचित करने की कोशिश की। उसने शिकायत दर्ज कराई। लेबर कोर्ट ने उसके पक्ष में फैसला सुनाया, और सुप्रीम कोर्ट ने इसे बरकरार रखा, जिससे कंपनी को पूरा सवेतन अवकाश देने के लिए मजबूर होना पड़ा।",
+                    ml: "ഒരു കമ്പനി തങ്ങളുടെ ജീവനക്കാരിക്ക് 26 ആഴ്ചത്തെ ശമ്പളത്തോടുകൂടിയ പ്രസവാവധി നിഷേധിക്കാൻ ശ്രമിച്ചു. അവർ പരാതി നൽകി. ലേബർ കോടതി അവർക്ക് അനുകൂലമായി വിധിച്ചു, സുപ്രീം കോടതി ഇത് ശരിവെക്കുകയും ചെയ്തു, മുഴുവൻ ശമ്പളത്തോടുകൂടിയ അവധി നൽകാൻ കമ്പനി നിർബന്ധിതരായി.",
+                    ta: "ஒரு நிறுவனம் ஒரு ஊழியருக்கு 26 வார ஊதியத்துடன் கூடிய மகப்பேறு விடுப்பை மறுக்க முயன்றது. அவர் புகார் அளித்தார். தொழிலாளர் நீதிமன்றம் அவருக்கு ஆதரவாக தீர்ப்பளித்தது, உச்சநீதிமன்றமும் இதை உறுதிசெய்தது, இதனால் நிறுவனம் முழு ஊதியத்துடன் கூடிய விடுப்பை வழங்க வேண்டிய கட்டாயம் ஏற்பட்டது.",
+                    kn: "ಒಂದು ಕಂಪನಿಯು ಉದ್ಯೋಗಿಗೆ ಅವಳ 26 ವಾರಗಳ ಪಾವತಿಸಿದ ಮಾತೃತ್ವ ರಜೆಯನ್ನು ನಿರಾಕರಿಸಲು ಪ್ರಯತ್ನಿಸಿತು. ಅವಳು ದೂರು ಸಲ್ಲಿಸಿದಳು. ಕಾರ್ಮಿಕ ನ್ಯಾಯಾಲಯವು ಅವಳ ಪರವಾಗಿ ತೀರ್ಪು ನೀಡಿತು, ಮತ್ತು ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಇದನ್ನು ಎತ್ತಿಹಿಡಿಯಿತು, ಕಂಪನಿಯು ಪೂರ್ಣ ಪಾವತಿಸಿದ ರಜೆಯನ್ನು ಒದಗಿಸುವಂತೆ ಒತ್ತಾಯಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Equal Pay", hi:"समान वेतन", ml:"തുല്യ വേതനം", ta:"சம ஊதியம்", kn:"ಸಮಾನ ವೇತನ"},
+                icon: ICONS.equalPay,
+                source: "Equal Remuneration Act 1976",
+                simplified: {
+                    en: "Women and men must be paid the same salary for doing the same job or work of a similar nature. Discrimination is illegal.",
+                    hi: "एक ही काम या समान प्रकृति के काम के लिए महिलाओं और पुरुषों को समान वेतन दिया जाना चाहिए। भेदभाव अवैध है।",
+                    ml: "ഒരേ ജോലിക്കോ സമാന സ്വഭാവമുള്ള ജോലിക്കോ സ്ത്രീകൾക്കും പുരുഷന്മാർക്കും ഒരേ ശമ്പളം നൽകണം. വിവേചനം നിയമവിരുദ്ധമാണ്.",
+                    ta: "ஒரே வேலை அல்லது ஒத்த தன்மை கொண்ட வேலைக்கு பெண்களுக்கும் ஆண்களுக்கும் சம சம்பளம் வழங்கப்பட வேண்டும். பாகுபாடு சட்டவிரோதமானது.",
+                    kn: "ಒಂದೇ ಕೆಲಸ ಅಥವಾ ಒಂದೇ ರೀತಿಯ ಕೆಲಸಕ್ಕಾಗಿ ಮಹಿಳೆಯರು ಮತ್ತು ಪುರುಷರಿಗೆ ಸಮಾನ ವೇತನವನ್ನು ಪಾವತಿಸಬೇಕು. ತಾರತಮ್ಯವು ಕಾನೂನುಬಾಹಿರವಾಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "Female employees at a factory were paid less than male employees for the same work. They went to court. The Supreme Court ruled this was unconstitutional and ordered the factory to pay equal wages to all.",
+                    hi: "एक कारखाने में महिला कर्मचारियों को एक ही काम के लिए पुरुष कर्मचारियों से कम भुगतान किया जाता था। वे अदालत गईं। सुप्रीम कोर्ट ने इसे असंवैधानिक करार दिया और कारखाने को सभी को समान वेतन देने का आदेश दिया।",
+                    ml: "ഒരു ഫാക്ടറിയിൽ ഒരേ ജോലിക്ക് പുരുഷ ജീവനക്കാരേക്കാൾ കുറഞ്ഞ ശമ്പളമാണ് വനിതാ ജീവനക്കാർക്ക് നൽകിയിരുന്നത്. അവർ കോടതിയെ സമീപിച്ചു. ഇത് ഭരണഘടനാ വിരുദ്ധമാണെന്ന് സുപ്രീം കോടതി വിധിക്കുകയും എല്ലാവർക്കും തുല്യ വേതനം നൽകാൻ ഫാക്ടറിയോട് ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஒரு தொழிற்சாலையில் பெண் ஊழியர்களுக்கு ஒரே வேலைக்காக ஆண் ஊழியர்களை விட குறைவாக ஊதியம் வழங்கப்பட்டது. அவர்கள் நீதிமன்றத்திற்குச் சென்றனர். உச்சநீதிமன்றம் இது அரசியலமைப்பிற்கு முரணானது என்று தீர்ப்பளித்தது மற்றும் அனைவருக்கும் சம ஊதியம் வழங்க தொழிற்சாலைக்கு உத்தரவிட்டது.",
+                    kn: "ಒಂದು ಕಾರ್ಖಾನೆಯಲ್ಲಿ ಮಹಿಳಾ ಉದ್ಯೋಗಿಗಳಿಗೆ ಒಂದೇ ಕೆಲಸಕ್ಕಾಗಿ ಪುರುಷ ಉದ್ಯೋಗಿಗಳಿಗಿಂತ ಕಡಿಮೆ ವೇತನ ನೀಡಲಾಗುತ್ತಿತ್ತು. ಅವರು ನ್ಯಾಯಾಲಯಕ್ಕೆ ಹೋದರು. ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಇದನ್ನು ಅಸಂವಿಧಾನಿಕ ಎಂದು ತೀರ್ಪು ನೀಡಿತು ಮತ್ತು ಎಲ್ಲರಿಗೂ ಸಮಾನ ವೇತನವನ್ನು ಪಾವತಿಸಲು ಕಾರ್ಖಾನೆಗೆ ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Stalking", hi:"पीछा करना", ml:"പിന്തുടരൽ", ta:"பின்தொடர்தல்", kn:"ಹಿಂಬಾಲಿಸುವುದು"},
+                icon: ICONS.stalking,
+                source: "Sec 79 BNS 2023",
+                simplified: {
+                    en: "Following, monitoring, or repeatedly contacting a woman (online or offline) against her will is a crime. Call 1091.",
+                    hi: "किसी महिला की इच्छा के विरुद्ध उसका पीछा करना, निगरानी करना या बार-बार संपर्क करना (ऑनलाइन या ऑफलाइन) एक अपराध है। 1091 पर कॉल करें।",
+                    ml: "ഒരു സ്ത്രീയുടെ ഇഷ്ടത്തിന് വിരുദ്ധമായി അവരെ പിന്തുടരുകയോ, നിരീക്ഷിക്കുകയോ, ആവർത്തിച്ച് ബന്ധപ്പെടുകയോ ചെയ്യുന്നത് (ഓൺലൈനിലോ ഓഫ്‌ലൈനിലോ) ഒരു കുറ്റകൃത്യമാണ്. 1091 എന്ന നമ്പറിൽ വിളിക്കുക.",
+                    ta: "ஒரு பெண்ணின் விருப்பத்திற்கு மாறாக அவளைப் பின்தொடர்வது, கண்காணிப்பது அல்லது மீண்டும் மீண்டும் தொடர்புகொள்வது (ஆன்லைன் அல்லது ஆஃப்லைன்) ஒரு குற்றம். 1091 ஐ அழைக்கவும்.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆಯ ಇಚ್ಛೆಗೆ ವಿರುದ್ಧವಾಗಿ ಅವಳನ್ನು ಹಿಂಬಾಲಿಸುವುದು, ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡುವುದು, ಅಥವಾ ಪದೇ ಪದೇ ಸಂಪರ್ಕಿಸುವುದು (ಆನ್‌ಲೈನ್ ಅಥವಾ ಆಫ್‌ಲೈನ್) ಒಂದು ಅಪರಾಧ. 1091 ಕ್ಕೆ ಕರೆ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A man repeatedly followed a woman home from work and sent her unwanted messages. She filed a complaint for stalking. The Delhi High Court upheld the conviction, and the man was sentenced to 3 years in jail.",
+                    hi: "एक आदमी बार-बार एक महिला का काम से घर तक पीछा करता था और उसे अवांछित संदेश भेजता था। उसने पीछा करने की शिकायत दर्ज कराई। दिल्ली उच्च न्यायालय ने सजा को बरकरार रखा, और उस आदमी को 3 साल की जेल की सजा सुनाई गई।",
+                    ml: "ഒരാൾ സ്ഥിരമായി ഒരു സ്ത്രീയെ ജോലി കഴിഞ്ഞ് വീട്ടിലേക്ക് പിന്തുടരുകയും അനാവശ്യ സന്ദേശങ്ങൾ അയക്കുകയും ചെയ്തിരുന്നു. അവർ സ്റ്റോക്കിംഗിന് പരാതി നൽകി. ഡൽഹി ഹൈക്കോടതി ശിക്ഷ ശരിവെക്കുകയും, ആയാൾക്ക് 3 വർഷം തടവ് ശിക്ഷ വിധിക്കുകയും ചെയ്തു.",
+                    ta: "ஒருவன் வேலையிலிருந்து வீடு திரும்பும் ஒரு பெண்ணை மீண்டும் மீண்டும் பின்தொடர்ந்து அவளுக்கு தேவையற்ற செய்திகளை அனுப்பினான். அவள் பின்தொடர்தல் (stalking) புகார் அளித்தாள். தில்லி உயர் நீதிமன்றம் தண்டனையை உறுதி செய்தது, மேலும் அந்த நபருக்கு 3 ஆண்டுகள் சிறைத்தண்டனை விதிக்கப்பட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಮಹಿಳೆಯೊಬ್ಬಳು ಕೆಲಸದಿಂದ ಮನೆಗೆ ಹೋಗುವಾಗ ಅವಳನ್ನು ಪದೇ ಪದೇ ಹಿಂಬಾಲಿಸುತ್ತಿದ್ದನು ಮತ್ತು ಅವಳಿಗೆ ಅನಗತ್ಯ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸುತ್ತಿದ್ದನು. ಅವಳು ಹಿಂಬಾಲಿಸಿದ್ದಕ್ಕಾಗಿ ದೂರು ದಾಖಲಿಸಿದಳು. ದೆಹಲಿ ಉಚ್ಚ ನ್ಯಾಯಾಲಯವು ಶಿಕ್ಷೆಯನ್ನು ಎತ್ತಿಹಿಡಿಯಿತು, ಮತ್ತು ಆ ವ್ಯಕ್ತಿಗೆ 3 ವರ್ಷಗಳ ಜೈಲು ಶಿಕ್ಷೆ ವಿಧಿಸಲಾಯಿತು."
+                }
+            }
+        ];
+        
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-pink-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(womenLaws, e.target.value));
+        renderLaws(womenLaws); // Initial render
+    </script>
+</body>
+</html>

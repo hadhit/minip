@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employment Rights - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Added green glow (rgb for green-500) to the existing shadow */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(52, 211, 153, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-green-500 to-green-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Employment Rights</h1>
+            <p class="text-xl mb-6">Labour Codes 2020 - 8 Key Rights</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths ---
+        const ICONS = {
+            wage: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 8c-1.11 0-2.08-.402-2.599-1M12 16v1m0-1v-8m0 0c1.657 0 3 .895 3 2s-1.343 2-3 2-3 .895-3 2 1.343 2 3 2m0 0l1.401-1.401M12 16L10.599 14.599m0 0A3.001 3.001 0 0112 12m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3 .895 3 2-1.343 2-3 2m0 0l-1.401 1.401M12 12l1.401-1.401m0 0A3.001 3.001 0 0112 12m0 0c1.657 0 3 .895 3 2s-1.343 2-3 2m0 0v1m0-1v-8m0 8L10.599 14.599M12 16l1.401-1.401m0 0A3.001 3.001 0 0112 12m0 0c-1.11 0-2.08-.402-2.599-1M12 8V7m0 1v8m0 0L10.599 14.599M12 16l1.401-1.401"></path></svg>`,
+            workday: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+            weeklyOff: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path></svg>`,
+            maternity: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M11.828 15.172a.5.5 0 01.707 0l3.5 3.5a.5.5 0 01-.707.707l-3.5-3.5a.5.5 0 010-.707zM12 3.75a8.25 8.25 0 100 16.5 8.25 8.25 0 000-16.5zM12 15a.75.75 0 000 1.5.75.75 0 000-1.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5A2.25 2.25 0 1012 12a2.25 2.25 0 000-4.5z"></path></svg>`,
+            discrimination: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52c2.621.962 4.5 3.385 4.5 6.21 0 2.825-1.879 5.248-4.5 6.21m0 0c-1.01.143-2.01.317-3 .52m-3-.52c-2.621.962-4.5 3.385-4.5 6.21 0 2.825 1.879 5.248 4.5 6.21m-3-.52c-1.01-.143-2.01-.317-3-.52m0 0c-2.621-.962-4.5-3.385-4.5-6.21 0-2.825 1.879 5.248 4.5-6.21m3 .52c1.01.143 2.01.317 3 .52m0 0c2.621-.962 4.5-3.385 4.5-6.21 0-2.825-1.879 5.248-4.5-6.21m-3 .52c-1.01-.143-2.01-.317-3-.52"></path></svg>`,
+            pf: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 3l-3-3m-3 3l-3-3m-3 3l-3-3m-3 3l-3-3"></path></svg>`,
+            gratuity: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12H.75m.386-6.364l1.591 1.591M12 6.75a.75.75 0 00-.75.75v3c0 .414.336.75.75.75h3a.75.75 0 00.75-.75v-3a.75.75 0 00-.75-.75h-3z"></path></svg>`,
+            termination: `<svg class="law-icon text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12.578 0c-.27.004-.537.01-.804.018M15 3.75a3 3 0 01-6 0m6 0h-6M15 3.75S11.25 3 9 3S3.75 3.75 3.75 3.75"></path></svg>`
+        };
+        
+        const employmentLaws = [
+            {
+                name: {en:"Minimum Wage", hi:"न्यूनतम मजदूरी", ml:"കുറഞ്ഞ വേതനം", ta:"குறைந்த ஊதியம்", kn:"ಕನಿಷ್ಠ ವೇತನ"},
+                icon: ICONS.wage,
+                source: "Sec 6, Wage Code 2019",
+                simplified: {
+                    en: "You must be paid the minimum wage set by the government for your job type. If not, you can file a complaint. Helpline 14434.",
+                    hi: "आपको अपनी नौकरी के प्रकार के लिए सरकार द्वारा निर्धारित न्यूनतम मजदूरी मिलनी चाहिए। यदि नहीं, तो आप शिकायत दर्ज कर सकते हैं। हेल्पलाइन 14434।",
+                    ml: "നിങ്ങളുടെ ജോലിയുടെ തരം അനുസരിച്ച് സർക്കാർ നിശ്ചയിച്ചിട്ടുള്ള കുറഞ്ഞ വേതനം നിങ്ങൾക്ക് ലഭിക്കണം. ഇല്ലെങ്കിൽ, നിങ്ങൾക്ക് പരാതി നൽകാം. ഹെൽപ്പ് ലൈൻ 14434.",
+                    ta: "உங்கள் வேலை வகைக்கு அரசாங்கத்தால் நிர்ணயிக்கப்பட்ட குறைந்தபட்ச ஊதியம் നിങ്ങൾക്ക് வழங்கப்பட வேண்டும். இல்லையெனில், நீங்கள் புகார் செய்யலாம். ஹெல்ப்லைன் 14434.",
+                    kn: "ನಿಮ್ಮ ಉದ್ಯೋಗದ ಪ್ರಕಾರಕ್ಕೆ ಸರ್ಕಾರವು ನಿಗದಿಪಡಿಸಿದ ಕನಿಷ್ಠ ವೇತನವನ್ನು ನೀವು ಪಡೆಯಬೇಕು. ಇಲ್ಲದಿದ್ದರೆ, ನೀವು ದೂರು ಸಲ್ಲಿಸಬಹುದು. ಸಹಾಯವಾಣಿ 14434."
+                },
+                caseStudy: {
+                    en: "A group of construction workers complained they were paid below the state's minimum wage. The Labour Dept. investigated and forced the company to pay full back wages. The Supreme Court has ruled that a fair wage is a fundamental right.",
+                    hi: "निर्माण श्रमिकों के एक समूह ने शिकायत की कि उन्हें राज्य के न्यूनतम वेतन से कम भुगतान किया गया। श्रम विभाग ने जांच की और कंपनी को पूरा बकाया वेतन देने के लिए मजबूर किया। सुप्रीम कोर्ट ने फैसला सुनाया है कि उचित वेतन एक मौलिक अधिकार है।",
+                    ml: "ഒരു കൂട്ടം നിർമ്മാണ തൊഴിലാളികൾ സംസ്ഥാനത്തെ കുറഞ്ഞ വേതനത്തേക്കാൾ കുറഞ്ഞ തുകയാണ് തങ്ങൾക്ക് ലഭിക്കുന്നതെന്ന് പരാതിപ്പെട്ടു. തൊഴിൽ വകുപ്പ് അന്വേഷിക്കുകയും കമ്പനിയെക്കൊണ്ട് മുഴുവൻ കുടിശ്ശികയും നൽകാൻ നിർബന്ധിക്കുകയും ചെയ്തു. മാന്യമായ വേതനം മൗലികാവകാശമാണെന്ന് സുപ്രീം കോടതി വിധിച്ചിട്ടുണ്ട്.",
+                    ta: "கட்டுமானத் தொழிலாளர்கள் குழு ஒன்று, மாநிலத்தின் குறைந்தபட்ச ஊதியத்தை விட குறைவாக தங்களுக்கு வழங்கப்படுவதாக புகார் அளித்தது. தொழிலாளர் துறை விசாரித்து, நிறுவனம் முழு நிலுவைத் தொகையை வழங்கும்படி கட்டாயப்படுத்தியது. நியாயமான ஊதியம் அடிப்படை உரிமை என்று உச்ச நீதிமன்றம் தீர்ப்பளித்துள்ளது.",
+                    kn: "ನಿರ್ಮಾಣ ಕಾರ್ಮಿಕರ ಗುಂಪೊಂದು ತಮಗೆ ರಾಜ್ಯದ ಕನಿಷ್ಠ ವೇತನಕ್ಕಿಂತ ಕಡಿಮೆ ವೇತನ ನೀಡಲಾಗುತ್ತಿದೆ ಎಂದು ದೂರು ನೀಡಿತು. ಕಾರ್ಮಿಕ ಇಲಾಖೆ ತನಿಖೆ ನಡೆಸಿ, ಕಂಪನಿಗೆ ಪೂರ್ಣ ಬಾಕಿ ವೇತನವನ್ನು ಪಾವತಿಸಲು ಬಲವಂತಪಡಿಸಿತು. ನ್ಯಾಯಯುತ ವೇತನವು ಮೂಲಭೂತ ಹಕ್ಕು ಎಂದು ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ತೀರ್ಪು ನೀಡಿದೆ."
+                }
+            },
+            {
+                name: {en:"8 Hour Workday", hi:"8 घंटे कार्य दिवस", ml:"8 മണിക്കൂർ വർക്ക്", ta:"8 மணி நாள்", kn:"8 ಗಂಟೆ ಕೆಲಸ"},
+                icon: ICONS.workday,
+                source: "Sec 14, Wage Code",
+                simplified: {
+                    en: "A standard workday is 8 hours. If you work more, you must be paid overtime, usually at double the normal rate.",
+                    hi: "एक मानक कार्य दिवस 8 घंटे का होता है। यदि आप अधिक काम करते हैं, तो आपको ओवरटाइम का भुगतान किया जाना चाहिए, आमतौर पर सामान्य दर से दोगुना।",
+                    ml: "ഒരു സാധാരണ പ്രവൃത്തി ദിവസം 8 മണിക്കൂറാണ്. നിങ്ങൾ കൂടുതൽ സമയം ജോലി ചെയ്യുകയാണെങ്കിൽ, നിങ്ങൾക്ക് ഓവർടൈം വേതനം ലഭിക്കണം, സാധാരണയായി സാധാരണ നിരക്കിന്റെ ഇരട്ടി.",
+                    ta: "ഒരു நிலையான வேலை நாள் 8 மணி நேரம். நீங்கள் அதிகமாக வேலை செய்தால், உங்களுக்கு கூடுதல் நேர ஊதியம் வழங்கப்பட வேண்டும், பொதுவாக சாதாரண விகிதத்தில் இருமடங்கு.",
+                    kn: "ಒಂದು ಪ್ರಮಾಣಿತ ಕೆಲಸದ ದಿನ 8 ಗಂಟೆಗಳು. ನೀವು ಹೆಚ್ಚು ಕೆಲಸ ಮಾಡಿದರೆ, ನಿಮಗೆ ಓವರ್‌ಟೈಮ್ ಪಾವತಿಸಬೇಕು, ಸಾಮಾನ್ಯವಾಗಿ ಸಾಮಾನ್ಯ ದರಕ್ಕಿಂತ ಎರಡು ಪಟ್ಟು."
+                },
+                caseStudy: {
+                    en: "A factory made employees work 10-hour shifts without extra pay. The workers' union took them to the Bombay High Court, which ruled in their favor. The factory was ordered to pay two years' worth of overtime (OT) pay to all employees.",
+                    hi: "एक फैक्ट्री ने कर्मचारियों को बिना अतिरिक्त भुगतान के 10 घंटे की शिफ्ट में काम कराया। वर्कर्स यूनियन उन्हें बॉम्बे हाईकोर्ट ले गई, जिसने उनके पक्ष में फैसला सुनाया। फैक्ट्री को सभी कर्मचारियों को दो साल का ओवरटाइम (OT) वेतन देने का आदेश दिया गया।",
+                    ml: "ഒരു ഫാക്ടറി ജീവനക്കാരെ അധിക വേതനം നൽകാതെ 10 മണിക്കൂർ ഷിഫ്റ്റിൽ ജോലി ചെയ്യിപ്പിച്ചു. വർക്കേഴ്സ് യൂണിയൻ അവരെ ബോംബെ ഹൈക്കോടതിയിൽ കൊണ്ടുപോയി, അത് അവർക്ക് അനുകൂലമായി വിധിച്ചു. എല്ലാ ജീവനക്കാർക്കും രണ്ട് വർഷത്തെ ഓവർടൈം (ഒടി) ശമ്പളം നൽകാൻ ഫാക്ടറിയോട് ഉത്തരവിട്ടു.",
+                    ta: "ஒரு தொழிற்சாலை ஊழியர்களை கூடுதல் ஊதியம் இல்லாமல் 10 மணி நேர ஷிப்டில் வேலை வாங்கியது. தொழிலாளர் சங்கம் அவர்களை பம்பாய் உயர் நீதிமன்றத்திற்கு அழைத்துச் சென்றது, அது அவர்களுக்கு ஆதரவாக தீர்ப்பளித்தது. அனைத்து ஊழியர்களுக்கும் இரண்டு வருட கூடுதல் நேர (OT) ஊதியத்தை வழங்குமாறு தொழிற்சாலைக்கு உத்தரவிடப்பட்டது.",
+                    kn: "ಒಂದು ಕಾರ್ಖಾನೆಯು ಉದ್ಯೋಗಿಗಳಿಗೆ ಹೆಚ್ಚುವರಿ ಪಾವತಿಯಿಲ್ಲದೆ 10 ಗಂಟೆಗಳ ಶಿಫ್ಟ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡಿಸಿತು. ಕಾರ್ಮಿಕರ ಸಂಘವು ಅವರನ್ನು ಬಾಂಬೆ ಹೈಕೋರ್ಟ್‌ಗೆ ಕರೆದೊಯ್ದಿತು, ಅದು ಅವರ ಪರವಾಗಿ ತೀರ್ಪು ನೀಡಿತು. ಎಲ್ಲಾ ಉದ್ಯೋಗಿಗಳಿಗೆ ಎರಡು ವರ್ಷಗಳ ಓವರ್‌ಟೈಮ್ (OT) ಪಾವತಿಸಲು ಕಾರ್ಖಾನೆಗೆ ಆದೇಶಿಸಲಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Weekly Off", hi:"साप्ताहिक अवकाश", ml:"ആഴ്ചതോറും ഓഫ്", ta:"வார இடைவெளி", kn:"ಸಾಪ್ತಾಹಿಕ ರಜೆ"},
+                icon: ICONS.weeklyOff,
+                source: "Sec 15, Wage Code",
+                simplified: {
+                    en: "You are entitled to one paid day off (a rest day) after every 6 days of continuous work. This is mandatory.",
+                    hi: "आप हर 6 दिनों की निरंतर काम के बाद एक सवेतन अवकाश (एक आराम का दिन) के हकदार हैं। यह अनिवार्य है।",
+                    ml: "ഓരോ 6 ദിവസത്തെ തുടർച്ചയായ ജോലിക്കുശേഷവും നിങ്ങൾക്ക് ശമ്പളത്തോടുകൂടിയ ഒരു ദിവസം അവധി (ഒരു വിശ്രമ ദിനം) ലഭിക്കാൻ അർഹതയുണ്ട്. ഇത് നിർബന്ധമാണ്.",
+                    ta: "ஒவ்வொரு 6 நாட்கள் தொடர்ச்சியான வேலைக்குப் பிறகும் ஒரு ஊதியத்துடன் கூடிய விடுமுறை நாள் (ஓய்வு நாள்) பெற உங்களுக்கு உரிமை உண்டு. இது கட்டாயமாகும்.",
+                    kn: "ಪ್ರತಿ 6 ದಿನಗಳ ನಿರಂತರ ಕೆಲಸದ ನಂತರ ನೀವು ಒಂದು ಪಾವತಿಸಿದ ರಜಾ ದಿನಕ್ಕೆ (ಒಂದು ವಿಶ್ರಾಂತಿ ದಿನ) ಅರ್ಹರಾಗಿದ್ದೀರಿ. ಇದು ಕಡ್ಡಾಯವಾಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "A retail company scheduled staff to work 15 days straight during a festival. An employee complained to the Labour Commissioner, who forced the company to provide compensatory days off and stop the illegal practice.",
+                    hi: "एक रिटेल कंपनी ने एक त्योहार के दौरान कर्मचारियों को 15 दिनों तक लगातार काम करने के लिए निर्धारित किया। एक कर्मचारी ने श्रम आयुक्त से शिकायत की, जिन्होंने कंपनी को मुआवजे के दिनों की छुट्टी देने और अवैध प्रथा को रोकने के लिए मजबूर किया।",
+                    ml: "ഒരു റീട്ടെയിൽ കമ്പനി ഒരു ഉത്സവ സമയത്ത് 15 ദിവസം തുടർച്ചയായി ജോലി ചെയ്യാൻ ജീവനക്കാരെ ഷെഡ്യൂൾ ചെയ്തു. ഒരു ജീവനക്കാരൻ ലേബർ കമ്മീഷണർക്ക് പരാതി നൽകി, അദ്ദേഹം കമ്പനിയെക്കൊണ്ട് നഷ്ടപരിഹാരമായി അവധി ദിവസങ്ങൾ നൽകാനും നിയമവിരുദ്ധമായ ഈ പ്രവൃത്തി നിർത്തലാക്കാനും നിർബന്ധിച്ചു.",
+                    ta: "ஒரு சில்லறைக் கடை நிறுவனம் ஒரு திருவிழாவின் போது ஊழியர்களை 15 நாட்கள் தொடர்ந்து வேலை செய்யும்படி திட்டமிட்டது. ஒரு ஊழியர் தொழிலாளர் ஆணையரிடம் புகார் அளித்தார், அவர் நிறுவனத்தை ஈடுசெய்யும் விடுமுறை நாட்களை வழங்கவும், சட்டவிரੋதப் பழக்கத்தை நிறுத்தவும் கட்டாயப்படுத்தினார்.",
+                    kn: "ಒಂದು ಚಿಲ್ಲರೆ ಕಂಪನಿಯು ಹಬ್ಬದ ಸಮಯದಲ್ಲಿ ಸಿಬ್ಬಂದಿಗೆ 15 ದಿನಗಳ ಕಾಲ ನಿರಂತರವಾಗಿ ಕೆಲಸ ಮಾಡಲು ನಿಗದಿಪಡಿಸಿತು. ಒಬ್ಬ ಉದ್ಯೋಗಿಯು ಕಾರ್ಮಿಕ ಆಯುಕ್ತರಿಗೆ ದೂರು ನೀಡಿದನು, ಅವರು ಕಂಪನಿಗೆ ಪರಿಹಾರ ದಿನಗಳನ್ನು ಒದಗಿಸಲು ಮತ್ತು ಅಕ್ರಮ ಪದ್ಧತಿಯನ್ನು ನಿಲ್ಲಿಸಲು ಬಲವಂತಪಡಿಸಿದರು."
+                }
+            },
+            {
+                name: {en:"Maternity Leave", hi:"मातृत्व अवकाश", ml:"മാതൃത്വ അവധി", ta:"தாய்மை விடுமுறை", kn:"ಮಾತೃತ್ವ ರಜೆ"},
+                icon: ICONS.maternity,
+                source: "Maternity Benefit Act",
+                simplified: {
+                    en: "Female employees are entitled to 26 weeks (about 6 months) of fully paid leave for pregnancy and childbirth.",
+                    hi: "महिला कर्मचारी गर्भावस्था और प्रसव के लिए 26 सप्ताह (लगभग 6 महीने) की पूरी तरह से सवेतन छुट्टी की हकदार हैं।",
+                    ml: "ഗർഭാവസ്ഥയ്ക്കും പ്രസവത്തിനുമായി 26 ആഴ്ച (ഏകദേശം 6 മാസം) പൂർണ്ണ ശമ്പളത്തോടുകൂടിയ അവധിക്ക് വനിതാ ജീവനക്കാർക്ക് അർഹതയുണ്ട്.",
+                    ta: "கர்ப்பம் மற்றும் பிரசவத்திற்காக பெண் ஊழியர்கள் 26 வாரங்கள் (சுமார் 6 மாதங்கள்) முழு ஊதியத்துடன் கூடிய விடுப்புக்கு தகுதியுடையவர்கள்.",
+                    kn: "ಮಹಿಳಾ ಉದ್ಯೋಗಿಗಳು ಗರ್ಭಧಾರಣೆ ಮತ್ತು ಹೆರಿಗೆಗಾಗಿ 26 ವಾರಗಳ (ಸುಮಾರು 6 ತಿಂಗಳು) ಸಂಪೂರ್ಣ ಪಾವತಿಸಿದ ರಜೆಗೆ ಅರ್ಹರಾಗಿರುತ್ತಾರೆ."
+                },
+                caseStudy: {
+                    en: "A company tried to fire an employee who requested maternity leave. She took the case to court. The Supreme Court upheld her right to 26 weeks of paid leave and ordered her reinstatement with back pay.",
+                    hi: "एक कंपनी ने मातृत्व अवकाश मांगने वाली एक कर्मचारी को निकालने की कोशिश की। वह मामले को कोर्ट ले गईं। सुप्रीम कोर्ट ने 26 सप्ताह के सवेतन अवकाश के उसके अधिकार को बरकरार रखा और उसे बकाया वेतन के साथ बहाल करने का आदेश दिया।",
+                    ml: "പ്രസവാവധി ആവശ്യപ്പെട്ട ഒരു ജീവനക്കാരിയെ ഒരു കമ്പനി പിരിച്ചുവിടാൻ ശ്രമിച്ചു. അവർ കേസ് കോടതിയിൽ എത്തിച്ചു. 26 ആഴ്ചത്തെ ശമ്പളത്തോടുകൂടിയ അവധിക്കുള്ള അവരുടെ അവകാശം സുപ്രീം കോടതി ശരിവെക്കുകയും, കുടിശ്ശികയുള്ള ശമ്പളത്തോടെ അവരെ തിരിച്ചെടുക്കാൻ ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "மகப்பேறு விடுப்பு கோரிய ஒரு ஊழியரை ஒரு நிறுவனம் பணிநீக்கம் செய்ய முயன்றது. அவர் வழக்கை நீதிமன்றத்திற்கு எடுத்துச் சென்றார். 26 வார ஊதியத்துடன் கூடிய விடுப்புக்கான அவரது உரிமையை உச்ச நீதிமன்றம் உறுதிசெய்தது மற்றும் அவரை மீண்டும் பணியில் அமர்த்தும்படி உத்தரவிட்டது.",
+                    kn: "ಮಾತೃತ್ವ ರಜೆ ಕೋರಿದ ಉದ್ಯೋಗಿಯನ್ನು ಒಂದು ಕಂಪನಿಯು ವಜಾಗೊಳಿಸಲು ಪ್ರಯತ್ನಿಸಿತು. ಅವರು ಪ್ರಕರಣವನ್ನು ನ್ಯಾಯಾಲಯಕ್ಕೆ ತೆಗೆದುಕೊಂಡು ಹೋದರು. 26 ವಾರಗಳ ಪಾವತಿಸಿದ ರಜೆಯ ಹಕ್ಕನ್ನು ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಎತ್ತಿಹಿಡಿಯಿತು ಮತ್ತು ಬಾಕಿ ವೇತನದೊಂದಿಗೆ ಮರುಸ್ಥಾಪಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"No Discrimination", hi:"भेदभाव निषेध", ml:"വിവേചനം വിലക്ക്", ta:"வேறுபாடு தடை", kn:"ಭೇದಭಾವ ನಿಷೇಧ"},
+                icon: ICONS.discrimination,
+                source: "Sec 3, Wage Code",
+                simplified: {
+                    en: "Men and women must receive equal pay for the same work. Discrimination based on gender in pay or hiring is illegal.",
+                    hi: "समान काम के लिए पुरुषों और महिलाओं को समान वेतन मिलना चाहिए। वेतन या भर्ती में लिंग के आधार पर भेदभाव अवैध है।",
+                    ml: "ഒരേ ജോലിയ്ക്ക് പുരുഷന്മാർക്കും സ്ത്രീകൾക്കും തുല്യ വേതനം ലഭിക്കണം. ശമ്പളത്തിലോ നിയമനത്തിലോ ലിംഗഭേദത്തിന്റെ അടിസ്ഥാനത്തിലുള്ള വിവേചനം നിയമവിരുദ്ധമാണ്.",
+                    ta: "ஒரே வேலைக்கு ஆண்களும் பெண்களும் சம ஊதியம் பெற வேண்டும். ஊதியம் அல்லது ஆட்சேர்ப்பில் பாலின அடிப்படையில் பாகுபாடு காட்டுவது சட்டவிரோதமானது.",
+                    kn: "ಒಂದೇ ಕೆಲಸಕ್ಕೆ ಪುರುಷರು ಮತ್ತು ಮಹಿಳೆಯರು ಸಮಾನ ವೇತನವನ್ನು ಪಡೆಯಬೇಕು. ವೇತನ ಅಥವಾ ನೇಮಕಾತಿಯಲ್ಲಿ ಲಿಂಗದ ಆಧಾರದ ಮೇಲೆ ತಾರತಮ್ಯ ಮಾಡುವುದು ಕಾನೂನುಬಾಹಿರವಾಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "In an IT firm, female managers were paid less than male managers for the same role. The Supreme Court ruled this was illegal discrimination and ordered the company to equalize pay and provide back wages.",
+                    hi: "एक आईटी फर्म में, महिला प्रबंधकों को समान भूमिका के लिए पुरुष प्रबंधकों से कम वेतन दिया जाता था। सुप्रीम कोर्ट ने इसे अवैध भेदभाव करार दिया और कंपनी को वेतन समान करने और बकाया वेतन देने का आदेश दिया।",
+                    ml: "ഒരു ഐടി സ്ഥാപനത്തിൽ, ഒരേ പദവിക്ക് പുരുഷ മാനേജർമാരേക്കാൾ കുറഞ്ഞ ശമ്പളമാണ് വനിതാ മാനേജർമാർക്ക് നൽകിയിരുന്നത്. ഇത് നിയമവിരുദ്ധമായ വിവേചനമാണെന്ന് സുപ്രീം കോടതി വിധിക്കുകയും, ശമ്പളം തുല്യമാക്കാനും കുടിശ്ശിക നൽകാനും കമ്പനിയോട് ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஒரு ஐடி நிறுவனத்தில், ஒரே பணிக்காக ஆண் மேலாளர்களை விட பெண் மேலாளர்களுக்கு குறைந்த ஊதியம் வழங்கப்பட்டது. இது சட்டவிரோதப் பாகுபாடு என்று உச்ச நீதிமன்றம் தீர்ப்பளித்தது மற்றும் ஊதியத்தை சமன் செய்யவும், நிலுவைத் தொகையை வழங்கவும் நிறுவனத்திற்கு உத்தரவிட்டது.",
+                    kn: "ಒಂದು ಐಟಿ ಸಂಸ್ಥೆಯಲ್ಲಿ, ಒಂದೇ ಪಾತ್ರಕ್ಕಾಗಿ ಮಹಿಳಾ ವ್ಯವಸ್ಥಾಪಕರಿಗೆ ಪುರುષ ವ್ಯವಸ್ಥಾಪಕರಿಗಿಂತ ಕಡಿಮೆ ವೇತನ ನೀಡಲಾಗುತ್ತಿತ್ತು. ಇದು ಕಾನೂನುಬಾಹಿರ ತಾರತಮ್ಯ ಎಂದು ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ತೀರ್ಪು ನೀಡಿತು ಮತ್ತು ಕಂಪನಿಗೆ ವೇತನವನ್ನು ಸಮಾನಗೊಳಿಸಲು ಮತ್ತು ಬಾಕಿ ವೇತನವನ್ನು ಒದಗಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"PF Deduction", hi:"PF कटौती", ml:"PF കുറവ്", ta:"PF விலக்கு", kn:"PF ಕಡಿತ"},
+                icon: ICONS.pf,
+                source: "EPF Act, 1952",
+                simplified: {
+                    en: "A portion of your salary (12%) is saved in a Provident Fund (PF) account for your retirement. Your employer must also contribute.",
+                    hi: "आपके वेतन का एक हिस्सा (12%) आपके रिटायरमेंट के लिए एक भविष्य निधि (PF) खाते में बचाया जाता है। आपके नियोक्ता को भी योगदान देना होता है।",
+                    ml: "നിങ്ങളുടെ ശമ്പളത്തിന്റെ ഒരു ഭാഗം (12%) നിങ്ങളുടെ വിരമിക്കലിനായി ഒരു പ്രൊവിഡന്റ് ഫണ്ട് (പിഎഫ്) അക്കൗണ്ടിൽ സംരക്ഷിക്കപ്പെടുന്നു. നിങ്ങളുടെ തൊഴിലുടമയും ഇതിലേക്ക് സംഭാവന നൽകണം.",
+                    ta: "உங்கள் சம்பளத்தின் ஒரு பகுதி (12%) உங்கள் ஓய்வூதியத்திற்காக ஒரு வருங்கால வைப்பு நிதி (PF) கணக்கில் சேமிக்கப்படுகிறது. உங்கள் முதலாளியும் பங்களிக்க வேண்டும்.",
+                    kn: "ನಿಮ್ಮ ಸಂಬಳದ ಒಂದು ಭಾಗವನ್ನು (12%) ನಿಮ್ಮ ನಿವೃತ್ತಿಗಾಗಿ ಭವಿಷ್ಯ ನಿಧಿ (ಪಿಎಫ್) ಖಾತೆಯಲ್ಲಿ ಉಳಿಸಲಾಗುತ್ತದೆ. ನಿಮ್ಮ ಉದ್ಯೋಗದಾತರೂ ಸಹ ಕೊಡುಗೆ ನೀಡಬೇಕು."
+                },
+                caseStudy: {
+                    en: "A company deducted PF from salaries but didn't deposit it into the employees' PF accounts. The EPFO (Provident Fund Organisation) discovered the fraud, fined the company heavily, and started legal action to recover the savings.",
+                    hi: "एक कंपनी ने वेतन से पीएफ काटा लेकिन उसे कर्मचारियों के पीएफ खातों में जमा नहीं किया। ईपीएफओ (भविष्य निधि संगठन) ने धोखाधड़ी का पता लगाया, कंपनी पर भारी जुर्माना लगाया और बचत की वसूली के लिए कानूनी कार्रवाई शुरू की।",
+                    ml: "ഒരു കമ്പനി ശമ്പളത്തിൽ നിന്ന് പിഎഫ് കുറച്ചെങ്കിലും അത് ജീവനക്കാരുടെ പിഎഫ് അക്കൗണ്ടുകളിൽ നിക്ഷേപിച്ചില്ല. ഇപിഎഫ്ഒ (പ്രൊവിഡന്റ് ഫണ്ട് ഓർഗനൈസേഷൻ) ഈ തട്ടിപ്പ് കണ്ടെത്തുകയും, കമ്പനിക്ക് കനത്ത പിഴ ചുമത്തുകയും, പണം വീണ്ടെടുക്കാൻ നിയമനടപടി ആരംഭിക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு நிறுவனம் சம்பளத்தில் இருந்து பிஎஃப் பிடித்தம் செய்தது ஆனால் அதை ஊழியர்களின் பிஎஃப் கணக்குகளில் டெபாசிட் செய்யவில்லை. இபிஎஃப்ஓ (வருங்கால வைப்பு நிதி அமைப்பு) இந்த மோசடியைக் கண்டுபிடித்து, நிறுவனத்திற்கு பெரும் அபராதம் விதித்தது மற்றும் சேமிப்பை மீட்க சட்ட நடவடிக்கை தொடங்கியது.",
+                    kn: "ಒಂದು ಕಂಪನಿಯು ಸಂಬಳದಿಂದ ಪಿಎಫ್ ಕಡಿತಗೊಳಿಸಿತು ಆದರೆ ಅದನ್ನು ಉದ್ಯೋಗಿಗಳ ಪಿಎಫ್ ಖಾತೆಗಳಿಗೆ ಜಮಾ ಮಾಡಲಿಲ್ಲ. ಇಪಿಎಫ್‌ಒ (ಭವಿಷ್ಯ ನಿಧಿ ಸಂಸ್ಥೆ) ಈ ವಂಚನೆಯನ್ನು ಪತ್ತೆಹಚ್ಚಿತು, ಕಂಪನಿಗೆ ಭಾರಿ ದಂಡ ವಿಧಿಸಿತು ಮತ್ತು ಉಳಿತಾಯವನ್ನು ವಸೂಲಿ ಮಾಡಲು ಕಾನೂನು ಕ್ರಮವನ್ನು ಪ್ರಾರಂಭಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Gratuity", hi:"ग्रेच्युटी", ml:"ഗ്രാറ്റുവിറ്റി", ta:"கிரேச்சுவிட்டி", kn:"ಗ್ರಾಟ್ಯುಯಿಟಿ"},
+                icon: ICONS.gratuity,
+                source: "Payment of Gratuity Act",
+                simplified: {
+                    en: "If you have worked for a company for 5 or more years, you are entitled to a 'gratuity' (a bonus payment) when you leave the job.",
+                    hi: "यदि आपने किसी कंपनी में 5 या अधिक वर्षों तक काम किया है, तो नौकरी छोड़ने पर आप 'ग्रेच्युटी' (एक बोनस भुगतान) के हकदार हैं।",
+                    ml: "നിങ്ങൾ ഒരു കമ്പനിയിൽ 5 വർഷമോ അതിൽ കൂടുതലോ ജോലി ചെയ്തിട്ടുണ്ടെങ്കിൽ, നിങ്ങൾ ജോലി വിടുമ്പോൾ 'ഗ്രാറ്റുവിറ്റി' (ഒരു ബോണസ് പേയ്മെന്റ്) ലഭിക്കാൻ നിങ്ങൾക്ക് അർഹതയുണ്ട്.",
+                    ta: "நீங்கள் ஒரு நிறுவனத்தில் 5 அல்லது அதற்கு மேற்பட்ட ஆண்டுகள் பணிபுரிந்திருந்தால், நீங்கள் வேலையை விட்டு வெளியேறும் போது 'கிராറ്റുவிட்டி' (ஒரு போனஸ் கட்டணம்) பெற தகுதியுடையவர்.",
+                    kn: "ನೀವು ಒಂದು ಕಂಪನಿಯಲ್ಲಿ 5 ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು ವರ್ಷಗಳ ಕಾಲ ಕೆಲಸ ಮಾಡಿದ್ದರೆ, ನೀವು ಉದ್ಯೋಗವನ್ನು ತೊರೆದಾಗ 'ಗ್ರಾಚ್ಯುಟಿ' (ಒಂದು ಬೋನಸ್ ಪಾವತಿ) ಗೆ ಅರ್ಹರಾಗಿರುತ್ತೀರಿ."
+                },
+                caseStudy: {
+                    en: "An employee who worked for 7 years was denied his gratuity payment when he resigned. He filed a complaint with the Labour Court, which ordered the company to pay the full gratuity amount with interest.",
+                    hi: "7 साल तक काम करने वाले एक कर्मचारी को इस्तीफा देने पर उसकी ग्रेच̧टी भुगतान से वंचित कर दिया गया। उन्होंने लेबर कोर्ट में शिकायत दर्ज की, जिसने कंपनी को ब्याज सहित पूरी ग्रेच्युटी राशि का भुगतान करने का आदेश दिया।",
+                    ml: "7 വർഷം ജോലി ചെയ്ത ഒരു ജീവനക്കാരന് രാജി വെച്ചപ്പോൾ ഗ്രാറ്റുവിറ്റി പേയ്‌മെന്റ് നിഷേധിക്കപ്പെട്ടു. അദ്ദേഹം ലേബർ കോടതിയിൽ പരാതി നൽകി, കോടതി കമ്പനിയോട് പലിശ സഹിതം മുഴുവൻ ഗ്രാറ്റുവിറ്റി തുകയും നൽകാൻ ഉത്തരവിട്ടു.",
+                    ta: "7 ஆண்டுகள் பணிபுரிந்த ஒரு ஊழியர் ராஜினாமா செய்தபோது அவரது கிராஜுவிட்டி தொகையை வழங்க மறுக்கப்பட்டது. அவர் தொழிலாளர் நீதிமன்றத்தில் புகார் அளித்தார், அது நிறுவனத்திற்கு முழு கிராஜுவிட்டி தொகையை வட்டியுடன் செலுத்துமாறு உத்தரவிட்டது.",
+                    kn: "7 ವರ್ಷಗಳ ಕಾಲ ಕೆಲಸ ಮಾಡಿದ ಉದ್ಯೋಗಿಗೆ ರಾಜೀನಾಮೆ ನೀಡಿದಾಗ ಅವನ ಗ್ರಾಚ್ಯುಟಿ ಪಾವತಿಯನ್ನು ನಿರಾಕರಿಸಲಾಯಿತು. ಅವನು ಕಾರ್ಮಿಕ ನ್ಯಾಯಾಲಯದಲ್ಲಿ ದೂರು ಸಲ್ಲಿಸಿದನು, ಅದು ಕಂಪನಿಗೆ ಪೂರ್ಣ ಗ್ರಾಚ್ಯuಟಿ ಮೊತ್ತವನ್ನು ಬಡ್ಡಿಯೊಂದಿಗೆ ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Termination Notice", hi:"समाप्ति सूचना", ml:"ഷർട്ട് നോട്ടീസ്", ta:"முடிவு அறிவிப்பு", kn:"ಅಂತ್ಯ ನೋಟೀಸ್"},
+                icon: ICONS.termination,
+                source: "Industrial Disputes Act",
+                simplified: {
+                    en: "An employer cannot fire a permanent employee without a valid reason and without providing a notice period (usually 30 days) or salary in lieu of notice.",
+                    hi: "एक नियोक्ता एक स्थायी कर्मचारी को वैध कारण के बिना और नोटिस अवधि (आमतौर पर 30 दिन) या नोटिस के बदले वेतन दिए बिना नहीं निकाल सकता।",
+                    ml: "ഒരു സ്ഥിരം ജീവനക്കാരനെ മതിയായ കാരണമില്ലാതെയും, നോട്ടീസ് കാലയളവ് (സാധാരണയായി 30 ദിവസം) നൽകുകയോ അല്ലെങ്കിൽ അതിനുപകരമായി ശമ്പളം നൽകുകയോ ചെയ്യാതെ പിരിച്ചുവിടാൻ തൊഴിലുടമയ്ക്ക് കഴിയില്ല.",
+                    ta: "ஒரு முதலாளி ஒரு நிரந்தர ஊழியரை சரியான காரணம் இல்லாமலும், அறிவிப்பு காலம் (வழக்கமாக 30 நாட்கள்) வழங்காமலும் அல்லது அறிவிப்புக்கு பதிலாக சம்பளம் வழங்காமலும் பணிநீக்கம் செய்ய முடியாது.",
+                    kn: "ಒಬ್ಬ ಉದ್ಯೋಗದಾತನು ಒಬ್ಬ ಖಾಯಂ ಉದ್ಯೋಗಿಯನ್ನು ಮಾನ್ಯ ಕಾರಣವಿಲ್ಲದೆ ಮತ್ತು ನೋಟಿಸ್ ಅವಧಿಯನ್ನು (ಸಾಮಾನ್ಯವಾಗಿ 30 ದಿನಗಳು) ಅಥವಾ ನೋಟಿಸ್ ಬದಲಿಗೆ ಸಂಬಳವನ್ನು ನೀಡದೆ ವಜಾಗೊಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
+                },
+                caseStudy: {
+                    en: "A manager was fired in an email and told not to come in the next day. The Delhi High Court ruled this was an illegal termination. The company was ordered to pay the employee one month's salary as compensation.",
+                    hi: "एक मैनेजर को एक ईमेल में निकाल दिया गया और अगले दिन आने से मना कर दिया गया। दिल्ली उच्च न्यायालय ने इसे अवैध समाप्ति करार दिया। कंपनी को कर्मचारी को मुआवजे के रूप में एक महीने का वेतन देने का आदेश दिया गया।",
+                    ml: "ഒരു മാനേജരെ ഒരു ഇമെയിലിൽ പിരിച്ചുവിടുകയും അടുത്ത ദിവസം വരരുതെന്ന് പറയുകയും ചെയ്തു. ഇത് നിയമവിരുദ്ധമായ പിരിച്ചുവിടലാണെന്ന് ഡൽഹി ഹൈക്കോടതി വിധിച്ചു. കമ്പനിയോട് ജീവനക്കാരന് ഒരു മാസത്തെ ശമ്പളം നഷ്ടപരിഹാരമായി നൽകാൻ ഉത്തരവിട്ടു.",
+                    ta: "ഒരു மேலாளர் ஒரு மின்னஞ்சலில் பணிநீக்கம் செய்யப்பட்டார் மற்றும் அடுத்த நாள் வர வேண்டாம் என்று கூறப்பட்டது. இது சட்டவிரோதமான பணிநீக்கம் என்று டெல்லி உயர் நீதிமன்றம் தீர்ப்பளித்தது. அந்த ஊழியருக்கு ஒரு மாத சம்பளத்தை இழப்பீடாக வழங்குமாறு நிறுவனத்திற்கு உத்தரவிடப்பட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯವಸ್ಥಾಪಕನನ್ನು ಇಮೇಲ್‌ನಲ್ಲಿ ವಜಾಗೊಳಿಸಲಾಯಿತು ಮತ್ತು ಮರುದಿನ ಬರಬೇಡ ಎಂದು ಹೇಳಲಾಯಿತು. ಇದು ಕಾನೂನುಬಾಹಿರ ವಜಾ ಎಂದು ದೆಹಲಿ ಹೈಕೋರ್ಟ್ ತೀರ್ಪು ನೀಡಿತು. ಕಂಪನಿಗೆ ಉದ್ಯೋಗಿಗೆ ಒಂದು ತಿಂಗಳ ಸಂಬಳವನ್ನು ಪರಿಹಾರವಾಗಿ ಪಾವತಿಸಲು ಆದೇಶಿಸಲಾಯಿತು."
+                }
+            }
+        ];
+
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-green-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(employmentLaws, e.target.value));
+        renderLaws(employmentLaws); // Initial render
+    </script>
+</body>
+</html>

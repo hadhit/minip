@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criminal Law - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Added RED glow (rgb for red-500) */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(239, 68, 68, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-red-600 to-red-500 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Criminal Law</h1>
+            <p class="text-xl mb-6">Bharatiya Nyaya Sanhita 2023 - 8 Key Laws</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths (Red Theme) ---
+        const ICONS = {
+            murder: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg>`,
+            theft: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path></svg>`,
+            robbery: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M17.5 11.25a.75.75 0 01-1.5 0v-2.5a.75.75 0 011.5 0v2.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14.5 11.25a.75.75 0 01-1.5 0v-2.5a.75.75 0 011.5 0v2.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M11.5 11.25a.75.75 0 01-1.5 0v-2.5a.75.75 0 011.5 0v2.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 11.25a.75.75 0 01-1.5 0v-2.5a.75.75 0 011.5 0v2.5z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M4.875 14.121a3 3 0 010-4.242L6.75 8.001a3 3 0 014.242 0l3.001 3.001a3 3 0 010 4.242l-1.878 1.878a3 3 0 01-4.242 0l-3.001-3.001z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M19.125 14.121a3 3 0 010-4.242L17.25 8.001a3 3 0 00-4.242 0l-3.001 3.001a3 3 0 000 4.242l1.878 1.878a3 3 0 004.242 0l3.001-3.001z"></path></svg>`,
+            rape: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.48 0 .947-.04.14-.117M12 21c-.48 0-.947-.04-1.4-.117M12 21c-2.21 0-4-1.79-4-4v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2"></path></svg>`,
+            assault: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 11-9 0v3.75M13.5 10.5H21A2.25 2.25 0 0123.25 12.75v7.5A2.25 2.25 0 0121 22.5H3A2.25 2.25 0 01.75 20.25v-7.5A2.25 2.25 0 013 10.5h10.5M13.5 10.5c-1.12 0-2.163.303-3.071.835a.75.75 0 01-1.04-1.04A6.002 6.002 0 0113.5 10.5z"></path></svg>`,
+            cheating: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"></path></svg>`,
+            defamation: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>`,
+            fir: `<svg class="law-icon text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>`
+        };
+
+        const criminalLaws = [
+            {
+                name: {en:"Murder", hi:"हत्या", ml:"കൊലപാതകം", ta:"கொலை", kn:"ಹತ್ಯೆ"},
+                icon: ICONS.murder,
+                source: "Sec 103, BNS 2023",
+                simplified: {
+                    en: "Intentionally killing another person. This is the most serious crime and can lead to life imprisonment or the death penalty.",
+                    hi: "जानबूझकर किसी दूसरे व्यक्ति की हत्या करना। यह सबसे गंभीर अपराध है और इसमें आजीवन कारावास या मृत्युदंड हो सकता है।",
+                    ml: "മറ്റൊരാളെ മനഃപൂർവ്വം കൊല്ലുന്നത്. ഇത് ഏറ്റവും ഗുരുതരമായ കുറ്റകൃത്യമാണ്, ജീവപര്യന്തം തടവോ വധശിക്ഷയോ ലഭിക്കാം.",
+                    ta: "வேண்டுமென்றே மற்றொருவரைக் கொல்வது. இது மிகவும் கடுமையான குற்றம் மற்றும் ஆயுள் தண்டனை அல்லது மரண தண்டனைக்கு வழிவகுக்கும்.",
+                    kn: "ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಮತ್ತೊಬ್ಬ ವ್ಯಕ್ತಿಯನ್ನು ಕೊಲ್ಲುವುದು. ಇದು ಅತ್ಯಂತ ಗಂಭೀರ ಅಪರಾಧವಾಗಿದೆ ಮತ್ತು ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ಅಥವಾ ಮರಣದಂಡನೆಗೆ ಕಾರಣವಾಗಬಹುದು."
+                },
+                caseStudy: {
+                    en: "A person planned and killed another person over a money dispute. The Supreme Court upheld the conviction based on evidence, and the attacker was sentenced to life imprisonment.",
+                    hi: "एक व्यक्ति ने पैसे के विवाद में एक अन्य व्यक्ति की योजना बनाकर हत्या कर दी। सुप्रीम कोर्ट ने सबूतों के आधार पर सजा को बरकरार रखा, और हमलावर को आजीवन कारावास की सजा सुनाई गई।",
+                    ml: "പണത്തെച്ചൊല്ലിയുള്ള തർക്കത്തെ തുടർന്ന് ഒരാൾ മറ്റൊരാളെ ആസൂത്രണം ചെയ്ത് കൊലപ്പെടുത്തി. തെളിവുകളുടെ അടിസ്ഥാനത്തിൽ സുപ്രീം കോടതി ശിക്ഷ ശരിവെച്ചു, പ്രതിക്ക് ജീവപര്യന്തം തടവ് ശിക്ഷ വിധിച്ചു.",
+                    ta: "ஒருவர் பணத் தகராறில் மற்றொருவரைக் திட்டமிட்டுக் கொன்றார். ஆதாரங்களின் அடிப்படையில் உச்ச நீதிமன்றம் தண்டனையை உறுதி செய்தது, மேலும் தாக்குதல் நடத்தியவருக்கு ஆயுள் தண்டனை விதிக்கப்பட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಹಣದ ವಿವಾದದ ಮೇಲೆ ಮತ್ತೊಬ್ಬ ವ್ಯಕ್ತಿಯನ್ನು ಯೋಜಿಸಿ ಕೊಂದನು. ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಸಾಕ್ಷ್ಯಾಧಾರಗಳ ಆಧಾರದ ಮೇಲೆ ಶಿಕ್ಷೆಯನ್ನು ಎತ್ತಿಹಿಡಿಯಿತು, ಮತ್ತು ದಾಳಿಕೋರನಿಗೆ ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ವಿಧಿಸಲಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Theft", hi:"चोरी", ml:"മോഷണം", ta:"திருட்டு", kn:"ಕಳ್ಳತನ"},
+                icon: ICONS.theft,
+                source: "Sec 303, BNS",
+                simplified: {
+                    en: "Taking someone's movable property (like a phone or wallet) without their permission. Can lead to up to 3 years in jail.",
+                    hi: "किसी की चल संपत्ति (जैसे फोन या वॉलेट) को उनकी अनुमति के बिना लेना। इसमें 3 साल तक की जेल हो सकती है।",
+                    ml: "ഒരാളുടെ ചലിക്കുന്ന സ്വത്ത് (ഫോൺ അല്ലെങ്കിൽ വാലറ്റ് പോലുള്ളവ) അവരുടെ അനുവാദമില്ലാതെ എടുക്കുന്നത്. 3 വർഷം വരെ തടവ് ലഭിക്കാം.",
+                    ta: "ஒருவரின் அசையும் சொத்தை (தொலைபேசி அல்லது பணப்பை போன்றவை) அவர்களின் அனுமதியின்றி எடுத்துச் செல்வது. 3 ஆண்டுகள் வரை சிறைத்தண்டனை கிடைக்கலாம்.",
+                    kn: "ಯಾರೊಬ್ಬರ ಚರ ಆಸ್ತಿಯನ್ನು (ಫೋನ್ ಅಥವಾ ವಾಲೆಟ್‌ನಂತಹ) ಅವರ ಅನುಮತಿಯಿಲ್ಲದೆ ತೆಗೆದುಕೊಳ್ಳುವುದು. 3 ವರ್ಷಗಳವರೆಗೆ ಜೈಲು ಶಿಕ್ಷೆಯಾಗಬಹುದು."
+                },
+                caseStudy: {
+                    en: "A person was caught on CCTV stealing a mobile phone from a shop. The court found them guilty of theft based on the footage and sentenced them to 1 year in jail.",
+                    hi: "एक व्यक्ति एक दुकान से मोबाइल फोन चुराते हुए सीसीटीवी में पकड़ा गया। अदालत ने फुटेज के आधार पर उसे चोरी का दोषी पाया और 1 साल की जेल की सजा सुनाई।",
+                    ml: "ഒരാൾ കടയിൽ നിന്ന് മൊബൈൽ ഫോൺ മോഷ്ടിക്കുന്നത് സിസിടിവിയിൽ പതിഞ്ഞു. ദൃശ്യങ്ങളുടെ അടിസ്ഥാനത്തിൽ കോടതി ഇയാളെ മോഷണക്കുറ്റം ചുമത്തി 1 വർഷം തടവിന് ശിക്ഷിച്ചു.",
+                    ta: "ஒருவர் கடையில் இருந்து மொபைல் போன் திருடும்போது சிசிடிவியில் பிடிபட்டார். காட்சிகளின் அடிப்படையில் நீதிமன்றம் அவரைக் குற்றவாளி என்று கண்டறிந்து 1 வருடம் சிறைத்தண்டனை விதித்தது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಅಂಗಡಿಯಿಂದ ಮೊಬೈಲ್ ಫೋನ್ ಕದಿಯುತ್ತಿರುವುದು ಸಿಸಿಟಿವಿಯಲ್ಲಿ ಸೆರೆಯಾಗಿದೆ. ದೃಶ್ಯಾವಳಿಗಳ ಆಧಾರದ ಮೇಲೆ ನ್ಯಾಯಾಲಯವು ಅವರನ್ನು ಕಳ್ಳತನದ ಆರೋಪಿ ಎಂದು ತೀರ್ಮಾನಿಸಿ 1 ವರ್ಷ ಜೈಲು ಶಿಕ್ಷೆ ವಿಧಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Robbery", hi:"लूट", ml:"കൊള്ള", ta:"கொள்ளை", kn:"ದರೋಡೆ"},
+                icon: ICONS.robbery,
+                source: "Sec 310, BNS",
+                simplified: {
+                    en: "Theft that involves using force or fear of violence (e.g., snatching a chain, mugging). This is more serious, with up to 10 years in jail.",
+                    hi: "चोरी जिसमें बल या हिंसा का डर (जैसे, चेन छीनना, मगिंग) शामिल हो। यह अधिक गंभीर है, जिसमें 10 साल तक की जेल हो सकती है।",
+                    ml: "ബലപ്രയോഗം അല്ലെങ്കിൽ അക്രമ ഭീഷണി (ഉദാഹരണത്തിന്, മാല പൊട്ടിക്കൽ, പിടിച്ചുപറി) ഉൾപ്പെടുന്ന മോഷണം. ഇത് കൂടുതൽ ഗൗരവതരമാണ്, 10 വർഷം വരെ തടവ് ലഭിക്കാം.",
+                    ta: "பலம் அல்லது வன்முறை பயத்தைப் (உதாரணமாக, சங்கிலி பறிப்பு, கொள்ளை) பயன்படுத்தி திருடுவது. இது மிகவும் தீவிரமானது, 10 ஆண்டுகள் வரை சிறைத்தண்டனை கிடைக்கலாம்.",
+                    kn: "ಬಲ ಅಥವಾ ಹಿಂಸೆಯ ಭಯವನ್ನು (ಉದಾಹರಣೆಗೆ, ಸರವನ್ನು ಕಸಿದುಕೊಳ್ಳುವುದು, ದರೋಡೆ) ಒಳಗೊಂಡ ಕಳ್ಳತನ. ಇದು ಹೆಚ್ಚು ಗಂಭೀರವಾಗಿದೆ, 10 ವರ್ಷಗಳವರೆಗೆ ಜೈಲು ಶಿಕ್ಷೆಯಾಗಬಹುದು."
+                },
+                caseStudy: {
+                    en: "Two men on a bike used force to snatch a woman's gold chain. They were caught by the Mumbai Police. The court convicted them of robbery, not just theft, due to the violence used.",
+                    hi: "बाइक पर सवार दो लोगों ने बल प्रयोग कर एक महिला की सोने की चेन छीन ली। उन्हें मुंबई पुलिस ने पकड़ लिया। अदालत ने उन्हें इस्तेमाल की गई हिंसा के कारण सिर्फ चोरी ही नहीं, बल्कि लूट का भी दोषी ठहराया।",
+                    ml: "ബൈക്കിലെത്തിയ രണ്ടുപേർ ബലപ്രയോഗത്തിലൂടെ ഒരു സ്ത്രീയുടെ സ്വർണ്ണമാല പിടിച്ചുപറിച്ചു. മുംബൈ പോലീസ് ഇവരെ പിടികൂടി. അക്രമം പ്രയോഗിച്ചതിനാൽ കോടതി ഇവരെ മോഷണമല്ല, കവർച്ചയാണ് നടത്തിയതെന്ന് കണ്ടെത്തി ശിക്ഷിച്ചു.",
+                    ta: "பைக்கில் வந்த இருவர் ஒரு பெண்ணின் தங்கச் சங்கிலியைப் பலவந்தமாகப் பறித்துச் சென்றனர். அவர்களை மும்பை காவல்துறை பிடித்தது. பயன்படுத்தப்பட்ட வன்முறை காரணமாக, நீதிமன்றம் அவர்களை திருடர்கள் என்று மட்டுமல்ல, கொள்ளையர்கள் என்றும் தண்டித்தது.",
+                    kn: "ಬೈಕ್‌ನಲ್ಲಿದ್ದ ಇಬ್ಬರು ವ್ಯಕ್ತಿಗಳು ಬಲಪ್ರಯೋಗದಿಂದ ಮಹಿಳೆಯೊಬ್ಬಳ ಚಿನ್ನದ ಸರವನ್ನು ಕಸಿದುಕೊಂಡಿದ್ದಾರೆ. ಅವರನ್ನು ಮುಂಬೈ ಪೊಲೀಸರು ಬಂಧಿಸಿದ್ದಾರೆ. ಬಳಸಿದ ಹಿಂಸಾಚಾರದ ಕಾರಣ, ನ್ಯಾಯಾಲಯವು ಅವರನ್ನು ಕೇವಲ ಕಳ್ಳತನವಲ್ಲ, ದರೋಡೆಯ ಆರೋಪಿ ಎಂದು ತೀರ್ಮಾನಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Rape", hi:"बलात्कार", ml:"ബലാത്സംഗം", ta:"பாலியல் வன்முறை", kn:"ಬಲಾತ್ಕಾರ"},
+                icon: ICONS.rape,
+                source: "Sec 64, BNS",
+                simplified: {
+                    en: "Forcing a woman into any sexual act without her consent. This is a severe crime punishable by life imprisonment or death.",
+                    hi: "किसी महिला को उसकी सहमति के बिना किसी भी यौन क्रिया के लिए मजबूर करना। यह एक गंभीर अपराध है जिसकी सजा आजीवन कारावास या मृत्यु है।",
+                    ml: "ഒരു സ്ത്രീയെ അവരുടെ സമ്മതമില്ലാതെ ഏതെങ്കിലും ലൈംഗിക പ്രവർത്തനത്തിന് നിർബന്ധിക്കുന്നത്. ഇത് ജീവപര്യന്തം തടവോ വധശിക്ഷയോ ലഭിക്കാവുന്ന ഗുരുതരമായ കുറ്റമാണ്.",
+                    ta: "ஒரு பெண்ணை அவளது சம்மதம் இல்லாமல் எந்தவொரு பாலியல் செயலிலும் ஈடுபடக் கட்டாயப்படுத்துவது. இது ஆயுள் தண்டனை அல்லது மரண தண்டனை விதிக்கப்படும் ஒரு கடுமையான குற்றம்.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆಯನ್ನು ಅವಳ ಒಪ್ಪಿಗೆಯಿಲ್ಲದೆ ಯಾವುದೇ ಲೈಂಗಿಕ ಕ್ರಿಯೆಗೆ ಒತ್ತಾಯಿಸುವುದು. ಇದು ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ಅಥವಾ ಮರಣದಂಡನೆಯಿಂದ ಶಿಕ್ಷಾರ್ಹವಾದ ಗಂಭೀರ ಅಪರಾಧವಾಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "Based on a victim's testimony and medical evidence, the Supreme Court upheld the conviction of a man for rape. He was sentenced to life imprisonment under the stringent criminal laws.",
+                    hi: "एक पीड़िता की गवाही और चिकित्सा सबूतों के आधार पर, सुप्रीम कोर्ट ने एक व्यक्ति को बलात्कार के लिए दोषी ठहराया। उसे कड़े आपराधिक कानूनों के तहत आजीवन कारावास की सजा सुनाई गई।",
+                    ml: "ഇരയുടെ മൊഴിയുടെയും മെഡിക്കൽ തെളിവുകളുടെയും അടിസ്ഥാനത്തിൽ, ബലാത്സംഗക്കേസിൽ ഒരാളുടെ ശിക്ഷ സുപ്രീം കോടതി ശരിവച്ചു. കർശനമായ ക്രിമിനൽ നിയമപ്രകാരം ഇയാളെ ജീവപര്യന്തം തടവിന് ശിക്ഷിച്ചു.",
+                    ta: "பாதிக்கப்பட்டவரின் சாட்சியம் மற்றும் மருத்துவ ஆதாரங்களின் அடிப்படையில், பாலியல் வன்கொடுமைக் குற்றவாளியின் தண்டனையை உச்ச நீதிமன்றம் உறுதி செய்தது. கடுமையான குற்றவியல் சட்டங்களின் கீழ் அவருக்கு ஆயுள் தண்டனை விதிக்கப்பட்டது.",
+                    kn: "ಸಂತ್ರಸ್ತೆಯ ಸಾಕ್ಷ್ಯ ಮತ್ತು ವೈದ್ಯಕೀಯ ಸಾಕ್ಷ್ಯಗಳ ಆಧಾರದ ಮೇಲೆ, ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಅತ್ಯಾಚಾರಕ್ಕಾಗಿ ವ್ಯಕ್ತಿಯೊಬ್ಬನ ಶಿಕ್ಷೆಯನ್ನು ಎತ್ತಿಹಿಡಿಯಿತು. ಕಠಿಣ ಕ್ರಿಮಿನಲ್ ಕಾನೂನುಗಳ ಅಡಿಯಲ್ಲಿ ಅವನಿಗೆ ಜೀವಾವಧಿ ಶಿಕ್ಷೆ ವಿಧಿಸಲಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Assault", hi:"मारपीट", ml:"മർദ്ദനം", ta:"தாக்குதல்", kn:"ಹಲ್ಲೆ"},
+                icon: ICONS.assault,
+                source: "Sec 115, BNS",
+                simplified: {
+                    en: "Using force to cause bodily injury or harm to another person. You have the right to file an FIR against the attacker.",
+                    hi: "किसी अन्य व्यक्ति को शारीरिक चोट या नुकसान पहुंचाने के लिए बल का प्रयोग करना। आपको हमलावर के खिलाफ FIR दर्ज करने का अधिकार है।",
+                    ml: "മറ്റൊരാൾക്ക് ശാരീരിക പരിക്കോ ദോഷമോ ഉണ്ടാക്കാൻ ബലപ്രയോഗം നടത്തുന്നത്. ആക്രമിക്കെതിരെ എഫ്‌ഐആർ ഫയൽ ചെയ്യാൻ നിങ്ങൾക്ക് അവകാശമുണ്ട്.",
+                    ta: "மற்றொருவருக்கு உடல் ரீதியான காயம் அல்லது தீங்கு விளைவிக்க சக்தியைப் பயன்படுத்துதல். தாக்குதல் நடத்தியவருக்கு எதிராக FIR பதிவு செய்ய உங்களுக்கு உரிமை உண்டு.",
+                    kn: "ಮತ್ತೊಬ್ಬ ವ್ಯಕ್ತಿಗೆ ದೈಹಿಕ ಗಾಯ ಅಥವಾ ಹಾನಿಯನ್ನುಂಟುಮಾಡಲು ಬಲವನ್ನು ಬಳಸುವುದು. ದಾಳಿಕೋರನ ವಿರುದ್ಧ ಎಫ್‌ಐಆರ್ ದಾಖಲಿಸುವ ಹಕ್ಕು ನಿಮಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "A person was beaten by their neighbor during an argument. The victim filed an FIR for assault. The Bombay High Court found the neighbor guilty and ordered them to pay a ₹10,000 fine to the victim.",
+                    hi: "एक बहस के दौरान एक व्यक्ति को उनके पड़ोसी ने पीटा। पीड़ित ने मारपीट के लिए FIR दर्ज कराई। बॉम्बे हाईकोर्ट ने पड़ोसी को दोषी पाया और उन्हें पीड़ित को ₹10,000 का जुर्माना देने का आदेश दिया।",
+                    ml: "തർക്കത്തിനിടെ ഒരാൾക്ക് അയൽവാസിയുടെ മർദനമേറ്റു. മർദനമേറ്റയാൾ എഫ്‌ഐആർ ഫയൽ ചെയ്തു. ബോംബെ ഹൈക്കോടതി അയൽവാസിയെ കുറ്റക്കാരനാണെന്ന് കണ്ടെത്തുകയും, ഇരയ്ക്ക് ₹10,000 പിഴ നൽകാൻ ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஒரு வாக்குவாதத்தின் போது ஒருவர் தனது அண்டை வீட்டாரால் தாக்கப்பட்டார். பாதிக்கப்பட்டவர் தாக்குதலுக்காக FIR பதிவு செய்தார். பம்பாய் உயர் நீதிமன்றம் அண்டை வீட்டாரைக் குற்றவாளி என்று கண்டறிந்து, பாதிக்கப்பட்டவருக்கு ₹10,000 அபராதம் செலுத்த உத்தரவிட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ವಾಗ್ವಾದದ ಸಮಯದಲ್ಲಿ ತನ್ನ ನೆರೆಯವರಿಂದ ಹಲ್ಲೆಗೊಳಗಾದನು. ಸಂತ್ರಸ್ತನು ಹಲ್ಲೆಗಾಗಿ ಎಫ್‌ಐಆರ್ ದಾಖಲಿಸಿದನು. ಬಾಂಬೆ ಹೈಕೋರ್ಟ್ ನೆರೆಯವರನ್ನು ದೋಷಿ ಎಂದು ತೀರ್ಮಾನಿಸಿ, ಸಂತ್ರಸ್ತನಿಗೆ ₹10,000 ದಂಡವನ್ನು ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Cheating", hi:"धोखाधड़ी", ml:"വഞ്ചന", ta:"ஏமாற்றுதல்", kn:"ಮೋಸ"},
+                icon: ICONS.cheating,
+                source: "Sec 316, BNS",
+                simplified: {
+                    en: "Deceiving someone to gain money or property (e.g., job scams, financial fraud). This can lead to 3 years in jail.",
+                    hi: "पैसा या संपत्ति हासिल करने के लिए किसी को धोखा देना (जैसे, नौकरी घोटाला, वित्तीय धोखाधड़ी)। इसमें 3 साल की जेल हो सकती है।",
+                    ml: "പണമോ സ്വത്തോ നേടാനായി ആരെയെങ്കിലും കബളിപ്പിക്കുന്നത് (ഉദാഹരണത്തിന്, ജോലി തട്ടിപ്പ്, സാമ്പത്തിക തട്ടിപ്പ്). ഇത് 3 വർഷം തടവ് ശിക്ഷ ലഭിക്കാം.",
+                    ta: "பணம் அல்லது சொத்துக்களைப் பெற ஒருவரை ஏமாற்றுவது (உதாரணமாக, வேலை மோசடிகள், நிதி மோசடி). இது 3 ஆண்டுகள் சிறைத்தண்டனைக்கு வழிவகுக்கும்.",
+                    kn: "ಹಣ ಅಥವಾ ಆಸ್ತಿಯನ್ನು ಪಡೆಯಲು ಯಾರಿಗಾದರೂ ಮೋಸ ಮಾಡುವುದು (ಉದಾಹರಣೆಗೆ, ಉದ್ಯೋಗ ಹಗರಣಗಳು, ಆರ್ಥಿಕ ವಂಚನೆ). ಇದು 3 ವರ್ಷಗಳ ಜೈಲು ಶಿಕ್ಷೆಗೆ ಕಾರಣವಾಗಬಹುದು."
+                },
+                caseStudy: {
+                    en: "A company took money from people, promising them jobs abroad, but then disappeared. The CBI investigated this as a major cheating scam. The owners were arrested and charged under this section.",
+                    hi: "एक कंपनी ने लोगों से विदेश में नौकरी दिलाने का वादा करके पैसे लिए, लेकिन फिर गायब हो गई। सीबीआई ने इसे एक बड़े धोखाधड़ी घोटाले के रूप में जांचा। मालिकों को गिरफ्तार किया गया और इस धारा के तहत आरोप लगाया गया।",
+                    ml: "വിദേശത്ത് ജോലി വാഗ്ദാനം ചെയ്ത് ഒരു കമ്പനി ആളുകളിൽ നിന്ന് പണം വാങ്ങി, പിന്നീട് അപ്രത്യക്ഷമായി. സിബിഐ ഇതിനെ ഒരു വലിയ വഞ്ചനാ തട്ടിപ്പായി അന്വേഷിച്ചു. ഉടമകളെ അറസ്റ്റ് ചെയ്യുകയും ഈ വകുപ്പ് പ്രകാരം കേസെടുക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு நிறுவனம் வெளிநாட்டில் வேலை வாங்கித் தருவதாகக் கூறி மக்களிடம் பணம் வாங்கியது, ஆனால் பின்னர் காணாமல் போனது. சிபிஐ இதை ஒரு பெரிய ஏமாற்று மோசடியாக விசாரித்தது. உரிமையாளர்கள் கைது செய்யப்பட்டு, இந்தப் பிரிவின் கீழ் குற்றம் சாட்டப்பட்டனர்.",
+                    kn: "ಒಂದು ಕಂಪನಿಯು ಜನರಿಗೆ ವಿದೇಶದಲ್ಲಿ ಉದ್ಯೋಗ ಕೊಡಿಸುವುದಾಗಿ ಭರವಸೆ ನೀಡಿ ಹಣವನ್ನು ತೆಗೆದುಕೊಂಡಿತು, ಆದರೆ ನಂತರ ಕಣ್ಮರೆಯಾಯಿತು. ಸಿಬಿಐ ಇದನ್ನು ಒಂದು ದೊಡ್ಡ ಮೋಸದ ಹಗರಣವೆಂದು ತನಿಖೆ ಮಾಡಿತು. ಮಾಲೀಕರನ್ನು ಬಂಧಿಸಲಾಯಿತು ಮತ್ತು ಈ ವಿಭಾಗದ ಅಡಿಯಲ್ಲಿ ಆರೋಪ ಹೊರಿಸಲಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Defamation", hi:"मानहानि", ml:"അപകീർത്തിപ്പെടുത്തൽ", ta:"அவதூறு", kn:"ಮಾನಹಾನಿ"},
+                icon: ICONS.defamation,
+                source: "Sec 356, BNS",
+                simplified: {
+                    en: "Harming someone's reputation by spreading false news or writing false statements about them (online or offline).",
+                    hi: "किसी के बारे में झूठी खबर फैलाकर या झूठे बयान लिखकर (ऑनलाइन या ऑफलाइन) उनकी प्रतिष्ठा को नुकसान पहुंचाना।",
+                    ml: "ഒരാളെക്കുറിച്ച് വ്യാജ വാർത്തകൾ പ്രചരിപ്പിക്കുകയോ തെറ്റായ പ്രസ്താവനകൾ എഴുതുകയോ (ഓൺലൈനിലോ ഓഫ്‌ലൈനിലോ) ചെയ്യുന്നതിലൂടെ അവരുടെ പ്രശസ്തിക്ക് ഹാനിയുണ്ടാക്കുന്നത്.",
+                    ta: "ஒருவரைப் பற்றி தவறான செய்திகளைப் பரப்புவதன் மூலம் அல்லது தவறான அறிக்கைகளை எழுதுவதன் மூலம் (ஆன்லைன் அல்லது ஆஃப்லைன்) அவரது நற்பெயருக்கு தீங்கு விளைவித்தல்.",
+                    kn: "ಯಾರೊಬ್ಬರ ಬಗ್ಗೆ ಸುಳ್ಳು ಸುದ್ದಿ ಹರಡುವ ಮೂಲಕ ಅಥವಾ ಸುಳ್ಳು ಹೇಳಿಕೆಗಳನ್ನು ಬರೆಯುವ ಮೂಲಕ (ಆನ್‌ಲೈನ್ ಅಥವಾ ಆಫ್‌ಲೈನ್) ಅವರ ಖ್ಯಾತಿಗೆ ಹಾನಿ ಮಾಡುವುದು."
+                },
+                caseStudy: {
+                    en: "A person posted fake and abusive comments online about a doctor, harming their reputation. The doctor filed a defamation case. The court found the person guilty and ordered them to pay a ₹10 Lakh fine.",
+                    hi: "एक व्यक्ति ने एक डॉक्टर के बारे में ऑनलाइन झूठी और अपमानजनक टिप्पणियां पोस्ट कीं, जिससे उनकी प्रतिष्ठा को नुकसान पहुंचा। डॉक्टर ने मानहानि का मुकदमा दायर किया। अदालत ने उस व्यक्ति को दोषी पाया और उसे ₹10 लाख का जुर्माना देने का आदेश दिया।",
+                    ml: "ഒരാൾ ഒരു ഡോക്ടറെക്കുറിച്ച് വ്യാജവും അധിക്ഷേപകരവുമായ അഭിപ്രായങ്ങൾ ഓൺലൈനിൽ പോസ്റ്റ് ചെയ്തു, ഇത് അവരുടെ പ്രശസ്തിക്ക് ഹാനിയുണ്ടാക്കി. ഡോക്ടർ അപകീർത്തിക്കേസ് ഫയൽ ചെയ്തു. കോടതി ആളെ കുറ്റക്കാരനാണെന്ന് കണ്ടെത്തുകയും ₹10 ലക്ഷം പിഴയടക്കാൻ ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஒருவர் ஒரு மருத்துவரைப் பற்றி ஆன்லைனில் போலியான மற்றும் தவறான கருத்துகளைப் பதிவிட்டார், இது அவரது நற்பெயருக்கு தீங்கு விளைவித்தது. மருத்துவர் அவதூறு வழக்குத் தொடர்ந்தார். நீதிமன்றம் அந்த நபரைக் குற்றவாளி என்று கண்டறிந்து, அவருக்கு ₹10 லட்சம் அபராதம் செலுத்த உத்தரவிட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಒಬ್ಬ ವೈದ್ಯರ ಬಗ್ಗೆ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಸುಳ್ಳು ಮತ್ತು ನಿಂದನೀಯ ಕಾಮೆಂಟ್‌ಗಳನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿದನು, ಇದು ಅವರ ಖ್ಯಾತಿಗೆ ಹಾನಿ ಮಾಡಿತು. ವೈದ್ಯರು ಮಾನಹಾನಿ ಮೊಕದ್ದಮೆ ಹೂಡಿದರು. ನ್ಯಾಯಾಲಯವು ಆ ವ್ಯಕ್ತಿಯನ್ನು ದೋಷಿ ಎಂದು ತೀರ್ಮಾನಿಸಿ, ಅವರಿಗೆ ₹10 ಲಕ್ಷ ದಂಡವನ್ನು ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"FIR Filing", hi:"FIR दर्ज करना", ml:"FIR രജിസ്റ്റർ", ta:"FIR பதிவு", kn:"FIR ನೋಂದಣಿ"},
+                icon: ICONS.fir,
+                source: "Sec 173, CrPC",
+                simplified: {
+                    en: "The police *must* register a First Information Report (FIR) for a serious (cognizable) crime. They cannot refuse. If they do, complain to a senior officer.",
+                    hi: "पुलिस को एक गंभीर (संज्ञेय) अपराध के लिए FIR दर्ज करनी *अनिवार्य* है। वे मना नहीं कर सकते। यदि वे ऐसा करते हैं, तो एक वरिष्ठ अधिकारी से शिकायत करें।",
+                    ml: "ഗുരുതരമായ (കോഗ്നിസബിൾ) കുറ്റകൃത്യത്തിന് പോലീസ് എഫ്‌ഐആർ രജിസ്റ്റർ *ചെയ്യണം*. അവർക്ക് അത് നിരസിക്കാൻ കഴിയില്ല. അവർ അങ്ങനെ ചെയ്യുകയാണെങ്കിൽ, ഒരു സീനിയർ ഓഫീസറോട് പരാതിപ്പെടുക.",
+                    ta: "ஒரு கடுமையான (அறியக்கூடிய) குற்றத்திற்காக காவல்துறை முதல் தகவல் அறிக்கையை (FIR) *பதிவு செய்ய வேண்டும்*. அவர்கள் மறுக்க முடியாது. அவர்கள் அப்படிச் செய்தால், ஒரு மூத்த அதிகாரியிடம் புகார் செய்யுங்கள்.",
+                    kn: "ಪೊಲೀಸರು ಗಂಭೀರ (ತಿಳಿದುಕೊಳ್ಳಬಹುದಾದ) ಅಪರಾಧಕ್ಕಾಗಿ ಪ್ರಥಮ ಮಾಹಿತಿ ವರದಿಯನ್ನು (ಎಫ್‌ಐಆರ್) *ನೋಂದಾಯಿಸಬೇಕು*. ಅವರು ನಿರಾಕರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಅವರು ಹಾಗೆ ಮಾಡಿದರೆ, ಹಿರಿಯ ಅಧಿಕಾರಿಗೆ ದೂರು ನೀಡಿ."
+                },
+                caseStudy: {
+                    en: "A woman went to file an FIR for theft, but the officer refused. She sent a written complaint to the Superintendent of Police (SP). The SP ordered the station to register the FIR immediately and started an inquiry against the officer.",
+                    hi: "एक महिला चोरी की FIR दर्ज कराने गई, लेकिन अधिकारी ने मना कर दिया। उसने पुलिस अधीक्षक (SP) को एक लिखित शिकायत भेजी। SP ने स्टेशन को तुरंत FIR दर्ज करने का आदेश दिया और अधिकारी के खिलाफ जांच शुरू की।",
+                    ml: "ഒരു സ്ത്രീ മോഷണത്തിന് എഫ്‌ഐആർ ഫയൽ ചെയ്യാൻ പോയി, എന്നാൽ ഉദ്യോഗസ്ഥൻ അത് നിരസിച്ചു. അവർ പോലീസ് സൂപ്രണ്ടിന് (എസ്പി) രേഖാമൂലം പരാതി നൽകി. ഉടൻ എഫ്‌ഐആർ രജിസ്റ്റർ ചെയ്യാൻ എസ്പി സ്റ്റേഷനോട് ഉത്തരവിടുകയും ഉദ്യോഗസ്ഥനെതിരെ അന്വേഷണം ആരംഭിക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு பெண் திருட்டுக்கு FIR பதிவு செய்யச் சென்றார், ஆனால் அதிகாரி மறுத்துவிட்டார். அவர் காவல் கண்காணிப்பாளருக்கு (SP) எழுத்துப்பூர்வமாக புகார் அனுப்பினார். எஸ்.பி., உடனடியாக FIR பதிவு செய்ய நிலையத்திற்கு உத்தரவிட்டார் மற்றும் அதிகாரிக்கு எதிராக விசாரணையைத் தொடங்கினார்.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆ ಕಳ್ಳತನಕ್ಕಾಗಿ ಎಫ್‌ಐಆರ್ ದಾಖಲಿಸಲು ಹೋದಳು, ಆದರೆ ಅಧಿಕಾರಿಯು ನಿರಾಕರಿಸಿದನು. ಅವಳು ಪೊಲೀಸ್ ವರಿಷ್ಠಾಧಿಕಾರಿಗೆ (ಎಸ್‌ಪಿ) ಲಿಖಿತ ದೂರು ಕಳುಹಿಸಿದಳು. ಎಸ್‌ಪಿಯು ತಕ್ಷಣವೇ ಎಫ್‌ಐಆರ್ ದಾಖಲಿಸಲು ಠಾಣೆಗೆ ಆದೇಶಿಸಿದರು ಮತ್ತು ಅಧಿಕಾರಿಯ ವಿರುದ್ಧ ವಿಚಾರಣೆಯನ್ನು ಪ್ರಾರಂಭಿಸಿದರು."
+                }
+            }
+        ];
+
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-red-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(criminalLaws, e.target.value));
+        renderLaws(criminalLaws); // Initial render
+    </script>
+</body>
+</html>

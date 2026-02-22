@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Law - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Corrected to ORANGE glow (rgb for orange-500) */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(249, 115, 22, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Property Law</h1>
+            <p class="text-xl mb-6">Transfer of Property Act 1882 - 8 Key Laws</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths (Orange Theme) ---
+        const ICONS = {
+            receipt: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>`,
+            notice: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M10 1.944A11.954 11.954 0 0112 1.5c.993 0 1.953.138 2.863.401M16.5 2.251A11.96 11.96 0 0118.602 3.75m1.398 1.85A11.962 11.962 0 0121.75 8.25c0 .993-.138 1.953-.401 2.863m-1.85 1.398A11.962 11.962 0 0118.602 14.25m-1.85 1.398A11.96 11.96 0 0116.5 17.749m-1.85 1.398A11.954 11.954 0 0112 21.5c-.993 0-1.953-.138-2.863-.401M7.5 21.749A11.96 11.96 0 015.398 20.25m-1.398-1.85A11.962 11.962 0 012.25 15.75c0-.993.138-1.953.401-2.863m1.85-1.398A11.962 11.962 0 015.398 9.75m1.85-1.398A11.96 11.96 0 017.5 6.251m1.85-1.398A11.954 11.954 0 0112 1.5c.993 0 1.953.138 2.863.401"></path></svg>`,
+            stamp: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>`,
+            registration: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"></path></svg>`,
+            agreement: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>`,
+            boundary: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0l-4.5 16.5"></path></svg>`,
+            rentControl: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>`,
+            will: `<svg class="law-icon text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>`
+        };
+
+        const propertyLaws = [
+            {
+                name: {en:"Rent Receipt", hi:"किराया रसीद", ml:"റെന്റ് റസീപ്റ്റ്", ta:"வாடகை ரசீது", kn:"ಬಾಡಿಗೆ ರಸೀದು"},
+                icon: ICONS.receipt,
+                source: "Sec 106, TPA 1882",
+                simplified: {
+                    en: "Always get a rent receipt from your landlord. It is your proof of payment.",
+                    hi: "हमेशा अपने मकान मालिक से किराए की रसीद लें। यह आपके भुगतान का प्रमाण है।",
+                    ml: "നിങ്ങളുടെ ഭൂവുടമയിൽ നിന്ന് എപ്പോഴും വാടക രസീത് വാങ്ങുക. അത് നിങ്ങൾ പണം നൽകിയതിന്റെ തെളിവാണ്.",
+                    ta: "உங்கள் வீட்டு உரிமையாளரிடமிருந்து எப்போதும் வாடகை ரசீதைப் பெறுங்கள். அதுவே நீங்கள் பணம் செலுத்தியதற்கான ஆதாரம்.",
+                    kn: "ಯಾವಾಗಲೂ ನಿಮ್ಮ ಜಮೀನುದಾರರಿಂದ ಬಾಡಿಗೆ ರಸೀದಿಯನ್ನು ಪಡೆಯಿರಿ. ಅದು ನಿಮ್ಮ ಪಾವತಿಯ ಪುರಾವೆಯಾಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "A landlord tried to evict a tenant claiming non-payment. The tenant showed all rent receipts in court. The Delhi High Court stopped the eviction, proving receipts are crucial evidence.",
+                    hi: "एक मकान मालिक ने भुगतान न करने का दावा करते हुए एक किरायेदार को बेदखल करने की कोशिश की। किरायेदार ने अदालत में सभी किराए की रसीदें दिखाईं। दिल्ली उच्च न्यायालय ने बेदखली को रोक दिया, यह साबित करते हुए कि रसीदें महत्वपूर्ण सबूत हैं।",
+                    ml: "പണം നൽകിയില്ലെന്ന് ആരോപിച്ച് ഒരു ഭൂവുടമ വാടകക്കാരനെ ഒഴിപ്പിക്കാൻ ശ്രമിച്ചു. വാടകക്കാരൻ എല്ലാ വാടക രസീതുകളും കോടതിയിൽ കാണിച്ചു. രസീതുകൾ നിർണ്ണായക തെളിവാണെന്ന് തെളിയിച്ചുകൊണ്ട് ഡൽഹി ഹൈക്കോടതി ഒഴിപ്പിക്കൽ നിർത്തിവച്ചു.",
+                    ta: "ஒரு வீட்டு உரிமையாளர் பணம் செலுத்தவில்லை என்று கூறி வாடகுகுடியிருப்பவரை வெளியேற்ற முயன்றார். வாடைகுடியிருப்பவர் அனைத்து வாடகை ரசீதுகளையும் நீதிமன்றத்தில் காட்டினார். டெல்லி உயர் நீதிமன்றம் வெளியேற்றத்தை நிறுத்தியது, ரசீதுகள் முக்கியமான ஆதாரம் என்பதை நிரூபித்தது.",
+                    kn: "ಒಬ್ಬ ಜಮೀನುದಾರನು ಬಾಡಿಗೆದಾರನು ಹಣ ಪಾವತಿಸಿಲ್ಲ ಎಂದು ಆರೋಪಿಸಿ ಅವನನ್ನು ಹೊರಹಾಕಲು ಪ್ರಯತ್ನಿಸಿದನು. ಬಾಡಿಗೆದಾರನು ನ್ಯಾಯಾಲಯದಲ್ಲಿ ಎಲ್ಲಾ ಬಾಡಿಗೆ ರಸೀದಿಗಳನ್ನು ತೋರಿಸಿದನು. ದೆಹಲಿ ಉಚ್ಚ ನ್ಯಾಯಾಲಯವು ಹೊರಹಾುವುದನ್ನು ನಿಲ್ಲಿಸಿತು, ರಸೀದಿಗಳು ನಿರ್ಣಾಯಕ ಸಾಕ್ಷ್ಯಗಳಾಗಿವೆ ಎಂದು ಸಾಬೀತುಪಡಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Eviction Notice Period", hi:"बेदखली नोटिस अवधि", ml:"ഒഴിപ്പിക്കൽ നോട്ടീസ് കാലയളവ്", ta:"வெளியேற்ற அறிவிப்பு காலம்", kn:"ತೆರವು ನೋಟಿಸ್ ಅವಧಿ"},
+                icon: ICONS.notice,
+                source: "Sec 106, TPA",
+                simplified: {
+                    en: "A landlord must give you a proper notice (usually 1 month) before asking you to move out. They cannot evict you overnight.",
+                    hi: "एक मकान मालिक को आपको बाहर जाने के लिए कहने से पहले एक उचित नोटिस (आमतौर पर 1 महीना) देना होगा। वे आपको रातोंरात बेदखल नहीं कर सकते।",
+                    ml: "നിങ്ങളോട് ഒഴിഞ്ഞുപോകാൻ ആവശ്യപ്പെടുന്നതിന് മുമ്പ് ഭൂവുടമ നിങ്ങൾക്ക് കൃത്യമായ നോട്ടീസ് (സാധാരണയായി 1 മാസം) നൽകണം. ഒറ്റരാത്രികൊണ്ട് നിങ്ങളെ ഒഴിപ്പിക്കാൻ അവർക്ക് കഴിയില്ല.",
+                    ta: "ஒரு வீட்டு உரிமையாளர் உங்களை வெளியேறச் சொல்வதற்கு முன் உங்களுக்கு முறையான அறிவிப்பு (வழக்கமாக 1 மாதம்) கொடுக்க வேண்டும். ஒரே இரவில் உங்களை வெளியேற்ற முடியாது.",
+                    kn: "ಒಬ್ಬ ಜಮೀನುದಾರನು ನಿಮ್ಮನ್ನು ಹೊರಗೆ ಹೋಗಲು ಹೇಳುವ ಮೊದಲು ನಿಮಗೆ ಸರಿಯಾದ ನೋಟಿಸ್ (ಸಾಮಾನ್ಯವಾಗಿ 1 ತಿಂಗಳು) ನೀಡಬೇಕು. ಅವರು ನಿಮ್ಮನ್ನು ರಾತ್ರೋರಾತ್ರಿ ಹೊರಹಾಕಲು ಸಾಧ್ಯವಿಲ್ಲ."
+                },
+                caseStudy: {
+                    en: "A landlord gave a 30-day notice to a tenant. The tenant argued it was too short. The Supreme Court upheld the notice, confirming that a 1-month notice is legally valid and binding for eviction.",
+                    hi: "एक मकान मालिक ने एक किरायेदार को 30 दिन का नोटिस दिया। किरायेदार ने तर्क दिया कि यह बहुत कम था। सुप्रीम कोर्ट ने नोटिस को बरकरार रखा, इस बात की पुष्टि करते हुए कि 1 महीने का नोटिस कानूनी रूप से वैध और बेदखली के लिए बाध्यकारी है।",
+                    ml: "ഒരു ഭൂവുടമ വാടകക്കാരന് 30 ദിവസത്തെ നോട്ടീസ് നൽകി. അത് വളരെ കുറവാണെന്ന് വാടകക്കാരൻ വാദിച്ചു. സുപ്രീം കോടതി നോട്ടീസ് ശരിവെച്ചു, 1 മാസത്തെ നോട്ടീസ് നിയമപരമായി സാധുതയുള്ളതും ഒഴിപ്പിക്കലിന് ബാധകവുമാണെന്ന് സ്ഥിരീകരിച്ചു.",
+                    ta: "ஒரு வீட்டு உரிமையாளர் வாடகைதாரருக்கு 30 நாள் அறிவிப்பு கொடுத்தார். அது மிகவும் குறுகியது என்று வாடகைதாரர் வாதிட்டார். உச்சநீதிமன்றம் அந்த அறிவிப்பை உறுதிசெய்தது, 1 மாத அறிவிப்பு சட்டப்பூர்வமாக செல்லுபடியாகும் மற்றும் வெளியேற்றத்திற்கு கட்டுப்படும் என்று உறுதிப்படுத்தியது.",
+                    kn: "ಒಬ್ಬ ಜಮೀನುದಾರನು ಬಾಡಿಗೆದಾರನಿಗೆ 30 ದಿನಗಳ ನೋಟಿಸ್ ನೀಡಿದನು. ಅದು ತುಂಬಾ ಚಿಕ್ಕದು ಎಂದು ಬಾಡಿಗೆದಾರನು ವಾದಿಸಿದನು. ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ನೋಟಿಸ್ ಅನ್ನು ಎತ್ತಿಹಿಡಿಯಿತು, 1 ತಿಂಗಳ ನೋಟಿಸ್ ಕಾನೂನುಬದ್ಧವಾಗಿ ಮಾನ್ಯವಾಗಿದೆ ಮತ್ತು ತೆರವುಗೊಳಿಸಲು ಬದ್ಧವಾಗಿದೆ ಎಂದು ದೃಢಪಡಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Stamp Duty", hi:"स्टाम्प ड्यूटी", ml:"സ്റ്റാമ്പ് ഡ്യൂട്ടി", ta:"முத்திரை வரி", kn:"ಸ್ಟಾಂಪ್ ಡ್ಯೂಟಿ"},
+                icon: ICONS.stamp,
+                source: "Indian Stamp Act 1899",
+                simplified: {
+                    en: "When you buy property, you must pay a government tax called Stamp Duty. This makes the sale legally valid.",
+                    hi: "जब आप संपत्ति खरीदते हैं, तो आपको स्टाम्प ड्यूटी नामक एक सरकारी कर का भुगतान करना होगा। यह बिक्री को कानूनी रूप से वैध बनाता है।",
+                    ml: "നിങ്ങൾ വസ്തു വാങ്ങുമ്പോൾ, സ്റ്റാമ്പ് ഡ്യൂട്ടി എന്ന സർക്കാർ നികുതി അടയ്ക്കണം. ഇത് വിൽപ്പനയെ നിയമപരമായി സാധുവാക്കുന്നു.",
+                    ta: "நீங்கள் சொத்து வாங்கும்போது, முத்திரை வரி எனப்படும் அரசாங்க வரி செலுத்த வேண்டும். இது விற்பனையை சட்டப்பூர்வமாக செல்லுபடியாக்குகிறது.",
+                    kn: "ನೀವು ಆಸ್ತಿಯನ್ನು ಖರೀದಿಸಿದಾಗ, ನೀವು ಸ್ಟಾಂಪ್ ಡ್ಯೂಟಿ ಎಂಬ ಸರ್ಕಾರಿ ತೆರಿಗೆಯನ್ನು ಪಾವತಿಸಬೇಕು. ಇದು ಮಾರಾಟವನ್ನು ಕಾನೂನುಬದ್ಧವಾಗಿ ಮಾನ್ಯಗೊಳಿಸುತ್ತದೆ."
+                },
+                caseStudy: {
+                    en: "When buying a flat worth ₹50 Lakhs in Maharashtra, the buyer had to pay an additional 6% (₹3 Lakhs) as stamp duty to the government. This fee is mandatory to legally register the property.",
+                    hi: "महाराष्ट्र में ₹50 लाख का फ्लैट खरीदते समय, खरीदार को सरकार को अतिरिक्त 6% (₹3 लाख) स्टांप ड्यूटी के रूप में भुगतान करना पड़ा। संपत्ति को कानूनी रूप से पंजीकृत करने के लिए यह शुल्क अनिवार्य है।",
+                    ml: "മഹാരാഷ്ട്രയിൽ 50 ലക്ഷം രൂപ വിലയുള്ള ഒരു ഫ്ലാറ്റ് വാങ്ങിയപ്പോൾ, വാങ്ങുന്നയാൾ സർക്കാരിലേക്ക് 6% (3 ലക്ഷം രൂപ) അധികമായി സ്റ്റാമ്പ് ഡ്യൂട്ടി അടയ്‌ക്കേണ്ടിവന്നു. പ്രോപ്പർട്ടി നിയമപരമായി രജിസ്റ്റർ ചെയ്യുന്നതിന് ഈ ഫീസ് നിർബന്ധമാണ്.",
+                    ta: "மகாராஷ்டிராவில் ₹50 லட்சம் மதிப்புள்ள ஒரு பிளாட் வாங்கும்போது, வாங்குபவர் அரசாங்கத்திற்கு கூடுதலாக 6% (₹3 லட்சம்) முத்திரை வரியாக செலுத்த வேண்டியிருந்தது. சொத்தை சட்டப்பூர்வமாக பதிவு செய்ய இந்த கட்டணம் கட்டாயமாகும்.",
+                    kn: "ಮಹಾರಾಷ್ಟ್ರದಲ್ಲಿ ₹50 ಲಕ್ಷ ಮೌಲ್ಯದ ಫ್ಲ್ಯಾಟ್ ಖರೀದಿಸುವಾಗ, ಖರೀದಿದಾರನು ಸರ್ಕಾರಕ್ಕೆ ಹೆಚ್ಚುವರಿಯಾಗಿ 6% (₹3 ಲಕ್ಷ) ಸ್ಟಾಂಪ್ ಡ್ಯೂಟಿಯಾಗಿ ಪಾವತಿಸಬೇಕಾಯಿತು. ಆಸ್ತಿಯನ್ನು ಕಾನೂನುಬದ್ಧವಾಗಿ ನೋಂದಾಯಿಸಲು ಈ ಶುಲ್ಕವು ಕಡ್ಡಾಯವಾಗಿದೆ."
+                }
+            },
+            {
+                name: {en:"Property Registration", hi:"संपत्ति पंजीकरण", ml:"സ്വത്ത് രജിസ്ട്രേഷൻ", ta:"சொத்து பதிவு", kn:"ಆಸ್ತಿ ನೋಂದಣಿ"},
+                icon: ICONS.registration,
+                source: "Registration Act 1908",
+                simplified: {
+                    en: "After buying, you must register the property in your name at the Sub-Registrar's office within 4 months.",
+                    hi: "खरीदने के बाद, आपको 4 महीने के भीतर सब-रजिस्ट्रार के कार्यालय में संपत्ति को अपने नाम पर पंजीकृत करना होगा।",
+                    ml: "വാങ്ങിയ ശേഷം, 4 മാസത്തിനുള്ളിൽ സബ്-രജിസ്ട്രാർ ഓഫീസിൽ നിങ്ങളുടെ പേരിൽ വസ്തു രജിസ്റ്റർ ചെയ്യണം.",
+                    ta: "வாங்கிய பிறகு, 4 மாதங்களுக்குள் துணைப் பதிவாளர் அலுவலகத்தில் சொத்தை உங்கள் பெயரில் பதிவு செய்ய வேண்டும்.",
+                    kn: "ಖರೀದಿಸಿದ ನಂತರ, ನೀವು 4 ತಿಂಗಳೊಳಗೆ ಉಪ-ನೋಂದಣಾಧಿಕಾರಿ ಕಚೇರಿಯಲ್ಲಿ ಆಸ್ತಿಯನ್ನು ನಿಮ್ಮ ಹೆಸರಿನಲ್ಲಿ ನೋಂದಾಯಿಸಬೇಕು."
+                },
+                caseStudy: {
+                    en: "A person bought land but didn't register the sale deed for 6 months. When they finally went to register, they had to pay a heavy late fee (penalty) as per the Registration Act, which mandates registration within 4 months.",
+                    hi: "एक व्यक्ति ने जमीन खरीदी लेकिन 6 महीने तक बिक्री विलेख पंजीकृत नहीं किया। जब वे अंततः पंजीकरण करने गए, तो उन्हें पंजीकरण अधिनियम के अनुसार भारी विलंब शुल्क (जुर्माना) देना पड़ा, जो 4 महीने के भीतर पंजीकरण अनिवार्य करता है।",
+                    ml: "ഒരാൾ ഭൂമി വാങ്ങി, എന്നാൽ 6 മാസത്തേക്ക് സെയിൽ ഡീഡ് രജിസ്റ്റർ ചെയ്തില്ല. ഒടുവിൽ രജിസ്റ്റർ ചെയ്യാൻ പോയപ്പോൾ, 4 മാസത്തിനുള്ളിൽ രജിസ്ട്രേഷൻ നിർബന്ധമാക്കുന്ന രജിസ്ട്രേഷൻ ആക്റ്റ് പ്രകാരം അവർക്ക് കനത്ത ലേറ്റ് ഫീ (പിഴ) അടയ്‌ക്കേണ്ടി വന്നു.",
+                    ta: "ஒருவர் நிலம் வாங்கினார் ஆனால் 6 மாதங்களுக்கு விற்பனைப் பத்திரத்தை பதிவு செய்யவில்லை. இறுதியாக அவர்கள் பதிவு செய்யச் சென்றபோது, 4 மாதங்களுக்குள் பதிவைக் கட்டாயப்படுத்தும் பதிவுச் சட்டத்தின்படி, அவர்கள் அதிக தாமதக் கட்டணம் (அபராதம்) செலுத்த வேண்டியிருந்தது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಜಮೀನು ಖರೀದಿಸಿದನು ಆದರೆ 6 ತಿಂಗಳವರೆಗೆ ಮಾರಾಟ ಪತ್ರವನ್ನು ನೋಂದಾಯಿಸಲಿಲ್ಲ. ಅಂತಿಮವಾಗಿ ಅವರು ನೋಂದಾಯಿಸಲು ಹೋದಾಗ, 4 ತಿಂಗಳೊಳಗೆ ನೋಂದಣಿಯನ್ನು ಕಡ್ಡಾಯಗೊಳಿಸುವ ನೋಂದಣಿ ಕಾಯ್ದೆಯ ಪ್ರಕಾರ, ಅವರು ಭಾರಿ ತಡವಾದ ಶುಲ್ಕವನ್ನು (ದಂಡ) ಪಾವತಿಸಬೇಕಾಯಿತು."
+                }
+            },
+            {
+                name: {en:"Sale Agreement", hi:"बिक्री समझौता", ml:"വിൽപ്പന കരാർ", ta:"விற்பனை ஒப்பந்தம்", kn:"ಮಾರಾಟ ಒಪ್ಪಂದ"},
+                icon: ICONS.agreement,
+                source: "Sec 54, TPA",
+                simplified: {
+                    en: "Always sign a written 'Sale Agreement' that lists the price, property details, and date. A verbal promise is not enough.",
+                    hi: "हमेशा एक लिखित 'बिक्री समझौता' पर हस्ताक्षर करें जिसमें मूल्य, संपत्ति का विवरण और तारीख सूचीबद्ध हो। मौखिक वादा पर्याप्त नहीं है।",
+                    ml: "വില, വസ്തുവിന്റെ വിശദാംശങ്ങൾ, തീയതി എന്നിവ രേഖപ്പെടുത്തിയ ഒരു 'സെയിൽ എഗ്രിമെന്റ്' എപ്പോഴും ഒപ്പിടുക. വാക്കാലുള്ള വാഗ്ദാനം മാത്രം പോരാ.",
+                    ta: "எப்போதும் விலை, சொத்து விவரங்கள் மற்றும் தேதியைப் பட்டியலிடும் 'விற்பனை ஒப்பந்தத்தில்' கையெழுத்திடுங்கள். வாய்மொழி வாக்குறுதி போதாது.",
+                    kn: "ಯಾವಾಗಲೂ ಬೆಲೆ, ಆಸ್ತಿ ವಿವರಗಳು ಮತ್ತು ದಿನಾಂಕವನ್ನು ಪಟ್ಟಿಮಾಡುವ 'ಮಾರಾಟ ಒಪ್ಪಂದ'ಕ್ಕೆ ಸಹಿ ಮಾಡಿ. ಮೌಖಿಕ ವಾಗ್ದಾನವು ಸಾಕಾಗುವುದಿಲ್ಲ."
+                },
+                caseStudy: {
+                    en: "A seller backed out of a property deal. The buyer went to the Delhi High Court. Because they had a written and signed 'Sale Agreement', the court found it to be a valid contract and forced the seller to proceed with the sale.",
+                    hi: "एक विक्रेता एक संपत्ति सौदे से पीछे हट गया। खरीदार दिल्ली उच्च न्यायालय गया। क्योंकि उनके पास एक लिखित और हस्ताक्षरित 'बिक्री समझौता' था, अदालत ने इसे एक वैध अनुबंध पाया और विक्रेता को बिक्री के साथ आगे बढ़ने के लिए मजबूर किया।",
+                    ml: "ഒരു പ്രോപ്പർട്ടി ഇടപാടിൽ നിന്ന് വിൽപ്പനക്കാരൻ പിന്മാറി. വാങ്ങിയയാൾ ഡൽഹി ഹൈക്കോടതിയെ സമീപിച്ചു. അവർക്ക് രേഖാമൂലമുള്ളതും ഒപ്പിട്ടതുമായ 'സെയിൽ എഗ്രിമെന്റ്' ഉണ്ടായിരുന്നതിനാൽ, കോടതി അതൊരു സാധുവായ കരാറായി കണ്ടെത്തുകയും വിൽപ്പനയുമായി മുന്നോട്ട് പോകാൻ വിൽപ്പനക്കാരനെ നിർബന്ധിക്കുകയും ചെയ്തു.",
+                    ta: "ഒരു சொத்து ஒப்பந்தத்திலிருந்து விற்பனையாளர் பின்வாங்கினார். வாங்குபவர் டெல்லி உயர் நீதிமன்றத்திற்குச் சென்றார். அவர்களிடம் எழுதப்பட்ட மற்றும் கையொப்பமிடப்பட்ட 'விற்பனை ஒப்பந்தம்' இருந்ததால், நீதிமன்றம் அதை செல்லுபடியாகும் ஒப்பந்தமாகக் கண்டறிந்து, விற்பனையாளரை விற்பனையைத் தொடர கட்டாயப்படுத்தியது.",
+                    kn: "ಒಬ್ಬ ಮಾರಾಟಗಾರನು ಆಸ್ತಿ ವ್ಯವಹಾರದಿಂದ ಹಿಂದೆ ಸರಿದನು. ಖರೀದಿದಾರನು ದೆಹಲಿ ಉಚ್ಚ ನ್ಯಾಯಾಲಯಕ್ಕೆ ಹೋದನು. ಏಕೆಂದರೆ ಅವರ ಬಳಿ ಲಿಖಿತ ಮತ್ತು ಸಹಿ ಮಾಡಿದ 'ಮಾರಾಟ ಒಪ್ಪಂದ' ಇತ್ತು, ನ್ಯಾಯಾಲಯವು ಅದನ್ನು ಮಾನ್ಯವಾದ ಒಪ್ಪಂದವೆಂದು ಪರಿಗಣಿಸಿತು ಮತ್ತು ಮಾರಾಟಗಾರನನ್ನು ಮಾರಾಟದೊಂದಿಗೆ ಮುಂದುವರಿಯುವಂತೆ ಒತ್ತಾಯಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Boundary Disputes", hi:"सीमा विवाद", ml:"ബൗണ്ടറി തർക്കം", ta:"எல்லை சச்சரவு", kn:"ಗಡಿ ವಿವಾದ"},
+                icon: ICONS.boundary,
+                source: "Specific Relief Act",
+                simplified: {
+                    en: "If you have a fight with a neighbor over your property line, the Tehsildar can survey the land and settle the dispute.",
+                    hi: "यदि आपकी संपत्ति की रेखा को लेकर किसी पड़ोसी से आपका झगड़ा होता है, तो तहसीलदार जमीन का सर्वेक्षण कर विवाद का निपटारा कर सकता है।",
+                    ml: "നിങ്ങളുടെ വസ്തുവിന്റെ അതിർത്തിയെച്ചൊല്ലി അയൽക്കാരനുമായി തർക്കമുണ്ടായാൽ, തഹസിൽദാർക്ക് ഭൂമി സർവേ ചെയ്ത് തർക്കം പരിഹരിക്കാൻ കഴിയും.",
+                    ta: "உங்கள் சொத்து எல்லையைப் பற்றி அண்டை வீட்டாருடன் சண்டை ஏற்பட்டால், தாசில்தார் நிலத்தை அளவீடு செய்து சச்சரவைத் தீர்க்க முடியும்.",
+                    kn: "ನಿಮ್ಮ ಆಸ್ತಿಯ ಗಡಿಯ ಬಗ್ಗೆ ನೆರೆಹೊರೆಯವರೊಂದಿಗೆ ನಿಮಗೆ ಜಗಳವಾದರೆ, ತಹಶೀಲ್ದಾರರು ಜಮೀನನ್ನು ಸಮೀಕ್ಷೆ ಮಾಡಿ ವಿವಾದವನ್ನು ಬಗೆಹರಿಸಬಹುದು."
+                },
+                caseStudy: {
+                    en: "Two neighbors were fighting over the fence line. They filed a case. The court, as per the law, appointed a Tehsildar who surveyed the land records and officially marked the correct boundary, resolving the dispute.",
+                    hi: "दो पड़ोसियों में बाड़ की रेखा को लेकर झगड़ा हो रहा था। उन्होंने मामला दर्ज कराया। अदालत ने कानून के अनुसार, एक तहसीलदार को नियुक्त किया, जिसने भूमि अभिलेखों का सर्वेक्षण किया और सही सीमा को आधिकारिक रूप से चिह्नित किया, जिससे विवाद का समाधान हो गया।",
+                    ml: "വേലിയുടെ അതിർത്തിയെച്ചൊല്ലി രണ്ട് അയൽക്കാർ തമ്മിൽ വഴക്കുണ്ടായി. അവർ കേസ് ഫയൽ ചെയ്തു. നിയമപ്രകാരം, കോടതി ഒരു തഹസിൽദാരെ നിയമിച്ചു, അദ്ദേഹം ഭൂമി രേഖകൾ സർവേ ചെയ്യുകയും ശരിയായ അതിർത്തി ഔദ്യോഗികമായി അടയാളപ്പെടുത്തുകയും തർക്കം പരിഹരിക്കുകയും ചെയ്തു.",
+                    ta: "வேலி கோடு தொடர்பாக இரண்டு அண்டை வீட்டார் சண்டையிட்டுக் கொண்டனர். அவர்கள் வழக்குத் தொடர்ந்தனர். சட்டத்தின்படி, நீதிமன்றம் ஒரு தாசில்தாரை நியமித்தது, அவர் நில ஆவணங்களை ஆய்வு செய்து சரியான எல்லையை அதிகாரப்பூர்வமாக குறித்து, சச்சரவைத் தீர்த்து வைத்தார்.",
+                    kn: "ಇಬ್ಬರು ನೆರೆಹೊರೆಯವರು ಬೇಲಿಯ ಗಡಿಯ ಬಗ್ಗೆ ಜಗಳವಾಡುತ್ತಿದ್ದರು. ಅವರು ಪ್ರಕರಣವನ್ನು ದಾಖಲಿಸಿದರು. ನ್ಯಾಯಾಲಯವು, ಕಾನೂನಿನ ಪ್ರಕಾರ, ಒಬ್ಬ ತಹಶೀಲ್ದಾರರನ್ನು ನೇಮಿಸಿತು, ಅವರು ಭೂ ದಾಖಲೆಗಳನ್ನು ಸಮೀಕ್ಷೆ ಮಾಡಿ ಸರಿಯಾದ ಗಡಿಯನ್ನು ಅಧಿಕೃತವಾಗಿ ಗುರುತಿಸಿ, ವಿವಾದವನ್ನು ಪರಿಹರಿಸಿದರು."
+                }
+            },
+            {
+                name: {en:"Rent Control", hi:"किराया नियंत्रण", ml:"റെന്റ് കൺട്രോൾ", ta:"வாடகை கட்டுப்பாடு", kn:"ಬಾಡಿಗೆ ನಿಯಂತ್ರಣ"},
+                icon: ICONS.rentControl,
+                source: "Rent Control Acts",
+                simplified: {
+                    en: "Landlords cannot increase the rent excessively. Most states limit the rent increase to a small percentage (e.g., 10%) per year.",
+                    hi: "मकान मालिक किराए में अत्यधिक वृद्धि नहीं कर सकते। अधिकांश राज्य किराए में वृद्धि को प्रति वर्ष एक छोटे प्रतिशत (जैसे, 10%) तक सीमित करते हैं।",
+                    ml: "ഭൂവുടമകൾക്ക് അമിതമായി വാടക വർദ്ധിപ്പിക്കാൻ കഴിയില്ല. മിക്ക സംസ്ഥാനങ്ങളും വാടക വർദ്ധനവ് പ്രതിവർഷം ഒരു ചെറിയ ശതമാനമായി (ഉദാഹരണത്തിന്, 10%) പരിമിതപ്പെടുത്തുന്നു.",
+                    ta: "வீட்டு உரிமையாளர்கள் வாடகையை அதிகமாக உயர்த்த முடியாது. பெரும்பாலான மாநிலங்கள் வாடகை உயர்வை ஆண்டுக்கு ஒரு சிறிய சதவீதமாக (எ.கா., 10%) கட்டுப்படுத்துகின்றன.",
+                    kn: "ಜಮೀನುದಾರರು ಬಾಡಿಗೆಯನ್ನು ಅತಿಯಾಗಿ ಹೆಚ್ಚಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಹೆಚ್ಚಿನ ರಾಜ್ಯಗಳು ಬಾಡಿಗೆ ಹೆಚ್ಚಳವನ್ನು ಪ್ರತಿ ವರ್ಷಕ್ಕೆ ಒಂದು ಸಣ್ಣ ಶೇಕಡಾವಾರು (ಉದಾಹರಣೆಗೆ, 10%) ಗೆ ಸೀಮಿತಗೊಳಿಸುತ್ತವೆ."
+                },
+                caseStudy: {
+                    en: "A landlord in Mumbai tried to increase the rent by 25% in one year. The tenant filed a case under the Rent Control Act. The court ruled the hike was illegal and capped the increase at the standard 8% for that year.",
+                    hi: "मुंबई में एक मकान मालिक ने एक साल में किराए में 25% की वृद्धि करने की कोशिश की। किरायेदार ने किराया नियंत्रण अधिनियम के तहत मामला दर्ज किया। अदालत ने इस वृद्धि को अवैध करार दिया और उस वर्ष के लिए वृद्धि को मानक 8% पर सीमित कर दिया।",
+                    ml: "മുംബൈയിലെ ഒരു ഭൂവുടമ ഒരു വർഷം കൊണ്ട് വാടക 25% വർദ്ധിപ്പിക്കാൻ ശ്രമിച്ചു. വാടകക്കാരൻ റെന്റ് കൺട്രോൾ ആക്റ്റ് പ്രകാരം കേസ് ഫയൽ ചെയ്തു. ഈ വർദ്ധനവ് നിയമവിരുദ്ധമാണെന്ന് കോടതി വിധിക്കുകയും ആ വർഷത്തെ വർദ്ധനവ് സ്റ്റാൻഡേർഡ് 8% ആയി നിജപ്പെടുത്തുകയും ചെയ്തു.",
+                    ta: "மும்பையில் ஒரு வீட்டு உரிமையாளர் ஒரே வருடத்தில் வாடகையை 25% உயர்த்த முயன்றார். வாடகைதாரர் வாடகை கட்டுப்பாட்டுச் சட்டத்தின் கீழ் வழக்குத் தொடர்ந்தார். இந்த உயர்வை சட்டவிரோதமானது என்று நீதிமன்றம் தீர்ப்பளித்தது மற்றும் அந்த ஆண்டுக்கான உயர்வை நிலையான 8% ஆக மட்டுப்படுத்தியது.",
+                    kn: "ಮುಂಬೈಯಲ್ಲಿ ಒಬ್ಬ ಜಮೀನುದಾರನು ಒಂದೇ ವರ್ಷದಲ್ಲಿ ಬಾಡಿಗೆಯನ್ನು 25% ಹೆಚ್ಚಿಸಲು ಪ್ರಯತ್ನಿಸಿದನು. ಬಾಡಿಗೆದಾರನು ಬಾಡಿಗೆ ನಿಯಂತ್ರಣ ಕಾಯ್ದೆಯಡಿಯಲ್ಲಿ ಪ್ರಕರಣವನ್ನು ದಾಖಲಿಸಿದನು. ನ್ಯಾಯಾಲಯವು ಈ ಹೆಚ್ಚಳವನ್ನು ಕಾನೂನುಬಾಹಿರ ಎಂದು ತೀರ್ಪು ನೀಡಿತು ಮತ್ತು ಆ ವರ್ಷದ ಹೆಚ್ಚಳವನ್ನು ಪ್ರಮಾಣಿತ 8% ಗೆ ಸೀಮಿತಗೊಳಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Will Registration", hi:"वसीयत पंजीकरण", ml:"വിൽ രജിസ്ട്രേഷൻ", ta:"உயில் பதிவு", kn:"ವಿಲ್ ನೋಂದಣಿ"},
+                icon: ICONS.will,
+                source: "Indian Registration Act",
+                simplified: {
+                    en: "Registering a 'Will' is not mandatory, but it is highly recommended to prevent future fights or challenges to the Will.",
+                    hi: "एक 'वसीयत' को पंजीकृत करना अनिवार्य नहीं है, लेकिन भविष्य के झगड़ों या वसीयत को चुनौती देने से रोकने के लिए इसकी अत्यधिक सिफारिश की जाती है।",
+                    ml: "ഒരു 'വിൽ' രജിസ്റ്റർ ചെയ്യുന്നത് നിർബന്ധമല്ല, എന്നാൽ ഭാവിയിലെ തർക്കങ്ങൾ ഒഴിവാക്കാൻ ഇത് വളരെ ഉചിതമാണ്.",
+                    ta: "ஒரு 'உயிலை' பதிவு செய்வது கட்டாயமில்லை, ஆனால் எதிர்கால சண்டைகள் அல்லது உயிலுக்கு சவால்களைத் தடுக்க இது மிகவும் பரிந்துரைக்கப்படுகிறது.",
+                    kn: "ಒಂದು 'ವಿಲ್' ಅನ್ನು ನೋಂದಾಯಿಸುವುದು ಕಡ್ಡಾಯವಲ್ಲ, ಆದರೆ ಭವಿಷ್ಯದ ಜಗಳಗಳನ್ನು ಅಥವಾ ವಿಲ್‌ಗೆ ಸವಾಲುಗಳನ್ನು ತಡೆಯಲು ಇದನ್ನು ಹೆಚ್ಚು ಶಿಫಾರಸು ಮಾಡಲಾಗುತ್ತದೆ."
+                },
+                caseStudy: {
+                    en: "After a person's death, their family found an unregistered 'Will'. A relative challenged it. The Supreme Court ruled that while registering a Will is not mandatory, this one was properly signed and witnessed, making it legally valid.",
+                    hi: "एक व्यक्ति की मृत्यु के बाद, उनके परिवार को एक अपंजीकृत 'वसीयत' मिली। एक रिश्तेदार ने इसे चुनौती दी। सुप्रीम कोर्ट ने फैसला सुनाया कि हालांकि वसीयत को पंजीकृत करना अनिवार्य नहीं है, लेकिन इस पर ठीक से हस्ताक्षर किए गए थे और गवाह थे, जिससे यह कानूनी रूप से वैध हो गया।",
+                    ml: "ഒരാളുടെ മരണശേഷം, അദ്ദേഹത്തിന്റെ കുടുംബം രജിസ്റ്റർ ചെയ്യാത്ത ഒരു 'വിൽ' കണ്ടെത്തി. ഒരു ബന്ധു അതിനെ ചോദ്യം ചെയ്തു. വിൽ രജിസ്റ്റർ ചെയ്യുന്നത് നിർബന്ധമല്ലെങ്കിലും, ഇത് കൃത്യമായി ഒപ്പിട്ടതും സാക്ഷ്യപ്പെടുത്തിയതുമായതിനാൽ നിയമപരമായി സാധുതയുള്ളതാണെന്ന് സുപ്രീം കോടതി വിധിച്ചു.",
+                    ta: "ஒருவர் இறந்த பிறகு, அவரது குடும்பத்தினர் பதிவு செய்யப்படாத 'உயிலை' கண்டுபிடித்தனர். ஒரு உறவினர் அதை எதிர்த்தார். உயிலை பதிவு செய்வது கட்டாயமில்லை என்றாலும், இது முறையாக கையொப்பமிடப்பட்டு சாക്ഷியளிக்கப்பட்டுள்ளதால், இது சட்டப்பூர்வமாக செல்லுபடியாகும் என்று உச்ச நீதிமன்றம் தீர்ப்பளித்தது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯ ಮರಣದ ನಂತರ, ಅವರ ಕುಟುಂಬವು ನೋಂದಾಯಿಸದ 'ವಿಲ್' ಅನ್ನು ಕಂಡುಕೊಂಡಿತು. ಒಬ್ಬ ಸಂಬಂಧಿಕರು ಅದನ್ನು ಪ್ರಶ್ನಿಸಿದರು. ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ತೀರ್ಪು ನೀಡಿತು, ವಿಲ್ ಅನ್ನು ನೋಂದಾಯಿಸುವುದು ಕಡ್ಡಾಯವಲ್ಲವಾದರೂ, ಇದನ್ನು ಸರಿಯಾಗಿ ಸಹಿ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಸಾಕ್ಷಿ ಹೇಳಲಾಗಿದೆ, ಆದ್ದರಿಂದ ಇದು ಕಾನೂನುಬದ್ಧವಾಗಿ ಮಾನ್ಯವಾಗಿದೆ."
+                }
+            }
+        ];
+
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-orange-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(propertyLaws, e.target.value));
+        renderLaws(propertyLaws); // Initial render
+    </script>
+</body>
+</html>

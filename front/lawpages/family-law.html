@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Law - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Standard Indigo Glow */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(79, 70, 229, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-pink-500 to-pink-600 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Family Law</h1>
+            <p class="text-xl mb-6">Key Acts for Family Matters</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths ---
+        const ICONS = {
+            age: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"></path></svg>`,
+            bigamy: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-4.682 2.72a.75.75 0 01-1.06 0l-1.06-1.06a.75.75 0 010-1.06l1.06-1.06a.75.75 0 011.06 0l1.06 1.06a.75.75 0 010 1.06l-1.06 1.06zM12 12.72a3 3 0 00-4.682-2.72 9.094 9.094 0 00-3.741.479m0 0v-.013c0-1.607.66-3.112 1.76-4.122 1.1-1.01 2.606-1.628 4.24-1.628s3.14.618 4.24 1.628c1.1 1.01 1.76 2.515 1.76 4.122v.013m0 0c0 1.607-.66 3.112-1.76 4.122-1.1 1.01-2.606 1.628-4.24 1.628s-3.14-.618-4.24-1.628C5.22 15.832 4.56 14.327 4.56 12.72z"></path></svg>`,
+            cruelty: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path></svg>`,
+            custody: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-4.682 2.72a.75.75 0 01-1.06 0l-1.06-1.06a.75.75 0 010-1.06l1.06-1.06a.75.75 0 011.06 0l1.06 1.06a.75.75 0 010 1.06l-1.06 1.06zM12 12.72a3 3 0 00-4.682-2.72 9.094 9.094 0 00-3.741.479M4.5 12.72v.013c0 1.607.66 3.112 1.76 4.122 1.1 1.01 2.606 1.628 4.24 1.628s3.14-.618 4.24-1.628c1.1-1.01 1.76-2.515 1.76-4.122v-.013m0 0c0-1.607-.66-3.112-1.76-4.122-1.1-1.01-2.606-1.628-4.24-1.628s-3.14.618-4.24-1.628C5.22 9.608 4.56 11.113 4.56 12.72z"></path></svg>`,
+            maintenance: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 15.536c-1.171 1.952-3.07 1.952-4.242 0-1.172-1.953-1.172-5.119 0-7.072 1.171-1.952 3.07-1.952 4.242 0 1.172 1.953 1.172 5.119 0 7.072zM12 12c-1.657 0-3-.895-3-2s1.343-2 3-2 3 .895 3 2-1.343 2-3 2z"></path></svg>`,
+            dv: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751A11.954 11.954 0 0012 2.714z"></path></svg>`,
+            inheritance: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21v-4.5m0 4.5h-2.25m2.25 0h2.25m-2.25 0V3.75m0 12.75V3.75m0 12.75L6 18.75m-2.25 2.25L6 18.75m6-15V3.75m0 12.75V3.75m0 12.75L12 18.75m-2.25 2.25L12 18.75m6-15V3.75m0 12.75V3.75m0 12.75L18 18.75m-2.25 2.25L18 18.75m4.5-15.003l-3.86 3.861m0 0l-3.86-3.861m3.86 3.861v6.203"></path></svg>`,
+            adoption: `<svg class="law-icon text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21.75c-2.43 0-4.817-.61-7.07-1.794a.75.75 0 01-.443-.695V11.23c0-.11.02-.217.059-.321 1.22-1.8 3.06-3.06 5.13-3.715a.75.75 0 01.901.127 13.44 13.44 0 003.82 0 .75.75 0 01.902-.127 8.903 8.903 0 015.13 3.715.75.75 0 01.058.321v7.954a.75.75 0 01-.443.695c-2.253 1.185-4.64 1.794-7.07 1.794z"></path></svg>`
+        };
+        
+        const familyLaws = [
+            {
+                name: {en:"Minimum Marriage Age", hi:"न्यूनतम विवाह आयु", ml:"കുറഞ്ഞ വിവാഹ പ്രായം", ta:"குறைந்த திருமண வயது", kn:"ಕನಿಷ್ಠ ವಿವಾಹ ವಯಸ್ಸು"},
+                icon: ICONS.age,
+                source: "Sec 5(iii), HMA 1955",
+                simplified: {
+                    en: "The boy must be 21 years old and the girl must be 18 years old to marry legally. Child marriage is a crime.",
+                    hi: "कानूनी रूप से शादी करने के लिए लड़के की उम्र 21 साल और लड़की की उम्र 18 साल होनी चाहिए। बाल विवाह एक अपराध है।",
+                    ml: "നിയമപരമായി വിവാഹം കഴിക്കാൻ ആൺകുട്ടിക്ക് 21 വയസ്സും പെൺകുട്ടിക്ക് 18 വയസ്സും ആയിരിക്കണം. ശൈശവ വിവാഹം ഒരു കുറ്റമാണ്.",
+                    ta: "சட்டப்பூர்வமாக திருமணம் செய்ய பையனுக்கு 21 வயது மற்றும் பெண்ணுக்கு 18 வயது இருக்க வேண்டும். குழந்தை திருமணம் ஒரு குற்றம்.",
+                    kn: "ಕಾನೂನುಬದ್ಧವಾಗಿ ಮದುವೆಯಾಗಲು ಹುಡುಗನಿಗೆ 21 ವರ್ಷ ಮತ್ತು ಹುಡುಗಿಗೆ 18 ವರ್ಷ ವಯಸ್ಸಾಗಿರಬೇಕು. ಬಾಲ್ಯ ವಿವಾಹವು ಒಂದು ಅಪರಾಧ."
+                },
+                caseStudy: {
+                    en: "A family tried to marry their 17-year-old daughter. A neighbour alerted Childline (1098). Officials intervened, stopped the wedding, and moved the girl to a welfare home until she turned 18.",
+                    hi: "एक परिवार ने अपनी 17 वर्षीय बेटी की शादी करने की कोशिश की। एक पड़ोसी ने चाइल्डलाइन (1098) को सतर्क किया। अधिकारियों ने हस्तक्षेप किया, शादी रोक दी, और लड़की को 18 साल की होने तक एक कल्याण गृह में भेज दिया।",
+                    ml: "ഒരു കുടുംബം തങ്ങളുടെ 17 വയസ്സുള്ള മകളെ വിവാഹം കഴിപ്പിക്കാൻ ശ്രമിച്ചു. ഒരു അയൽവാസി ചൈൽഡ് ലൈനിൽ (1098) വിവരമറിയിച്ചു. ഉദ്യോഗസ്ഥർ ഇടപെട്ടു, വിവാഹം നിർത്തിവച്ചു, പെൺകുട്ടിക്ക് 18 വയസ്സ് തികയുന്നതുവരെ അവളെ ഒരു ക്ഷേമ മന്ദിരത്തിലേക്ക് മാറ്റി.",
+                    ta: "ஒரு குடும்பம் தங்களது 17 வயது மகளுக்கு திருமணம் செய்து வைக்க முயன்றது. ஒரு அண்டை வீட்டார் சைல்டுலைன் (1098) க்கு தகவல் கொடுத்தார். அதிகாரிகள் தலையிட்டு, திருமணத்தை நிறுத்தினர், மேலும் அந்தப் பெண்ணுக்கு 18 வயது ஆகும் வரை ஒரு நல இல்லத்திற்கு மாற்றினர்.",
+                    kn: "ಒಂದು ಕುಟುಂಬವು ತಮ್ಮ 17 ವರ್ಷದ ಮಗಳಿಗೆ ಮದುವೆ ಮಾಡಲು ಪ್ರಯತ್ನಿಸಿತು. ಒಬ್ಬ ನೆರೆಯವರು ಚೈಲ್ಡ್‌ಲೈನ್ (1098) ಗೆ ಮಾಹಿತಿ ನೀಡಿದರು. ಅಧಿಕಾರಿಗಳು ಮಧ್ಯಪ್ರವೇಶಿಸಿ, ಮದುವೆಯನ್ನು ನಿಲ್ಲಿಸಿದರು, ಮತ್ತು ಆಕೆಗೆ 18 ವರ್ಷ ತುಂಬುವವರೆಗೆ ಕಲ್ಯಾಣ ಗೃಹಕ್ಕೆ ಸ್ಥಳಾಂತರಿಸಿದರು."
+                }
+            },
+            {
+                name: {en:"Bigamy (2nd Marriage)", hi:"द्विविवाह (दूसरी शादी)", ml:"രണ്ടാം വിവാഹം", ta:"இரண்டாவது திருமணம்", kn:"ದ್ವಿಪತ್ನಿತ್ವ (2ನೇ ಮದುವೆ)"},
+                icon: ICONS.bigamy,
+                source: "Sec 5(i), HMA 1955",
+                simplified: {
+                    en: "It is illegal to marry a second person while you are still legally married to the first person. You must get a divorce first.",
+                    hi: "जब आप पहले व्यक्ति से कानूनी रूप से विवाहित हैं, तब दूसरे व्यक्ति से शादी करना अवैध है। आपको पहले तलाक लेना होगा।",
+                    ml: "നിങ്ങൾ ആദ്യത്തെയാളുമായി നിയമപരമായി വിവാഹിതനായിരിക്കുമ്പോൾ രണ്ടാമതൊരാളെ വിവാഹം കഴിക്കുന്നത് നിയമവിരുദ്ധമാണ്. നിങ്ങൾ ആദ്യം വിവാഹമോചനം നേടണം.",
+                    ta: "நீங்கள் முதல் நபரை சட்டப்பூர்வமாக திருமணம் செய்திருக்கும் போது, இரண்டாவது நபரை திருமணம் செய்வது சட்டவிரோதமானது. நீங்கள் முதலில் விவாகரத்து பெற வேண்டும்.",
+                    kn: "ನೀವು ಮೊದಲ ವ್ಯಕ್ತಿಗೆ ಕಾನೂನುಬದ್ಧವಾಗಿ ಮದುವೆಯಾಗಿರುವಾಗ ಎರಡನೇ ವ್ಯಕ್ತಿಯನ್ನು ಮದುವೆಯಾಗುವುದು ಕಾನೂನುಬಾಹಿರ. ನೀವು ಮೊದಲು ವಿಚ್ಛೇದನ ಪಡೆಯಬೇಕು."
+                },
+                caseStudy: {
+                    en: "A man married a second time without divorcing his first wife. The first wife filed a police complaint. The man was found guilty of bigamy and was sentenced to prison by the Bombay High Court.",
+                    hi: "एक व्यक्ति ने अपनी पहली पत्नी को तलाक दिए बिना दूसरी बार शादी कर ली। पहली पत्नी ने पुलिस में शिकायत दर्ज कराई। उस व्यक्ति को द्विविवाह का दोषी पाया गया और बॉम्बे हाईकोर्ट ने उसे जेल की सजा सुनाई।",
+                    ml: "ഒരാൾ ആദ്യ ഭാര്യയെ വിവാഹമോചനം ചെയ്യാതെ രണ്ടാമതും വിവാഹം കഴിച്ചു. ആദ്യ ഭാര്യ പോലീസിൽ പരാതി നൽകി. ഇയാൾ കുറ്റക്കാരനാണെന്ന് കണ്ടെത്തിയ ബോംബെ ഹൈക്കോടതി ഇയാളെ ജയിൽ ശിക്ഷയ്ക്ക് വിധിച്ചു.",
+                    ta: "ஒரு நபர் தனது முதல் மனைவியை விவாகரத்து செய்யாமல் இரண்டாம் முறையாக திருமணம் செய்து கொண்டார். முதல் மனைவி காவல்துறை புகார் அளித்தார். அந்த நபர் இருதார மணம் செய்த குற்றவாளி என நிரூபிக்கப்பட்டு, பம்பாய் உயர் நீதிமன்றத்தால் சிறைத்தண்டனை விதிக்கப்பட்டார்.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ತನ್ನ ಮೊದಲ ಪತ್ನಿಗೆ ವಿಚ್ಛೇದನ ನೀಡದೆ ಎರಡನೇ ಬಾರಿ ಮದುವೆಯಾದನು. ಮೊದಲ ಪತ್ನಿ ಪೊಲೀಸ್ ದೂರು ದಾಖಲಿಸಿದಳು. ಆ ವ್ಯಕ್ತಿಯು ದ್ವಿಪತ್ನಿತ್ವದ ಅಪರಾಧಿ ಎಂದು ಕಂಡುಬಂದು, ಬಾಂಬೆ ಹೈಕೋರ್ಟ್‌ನಿಂದ ಜೈಲು ಶಿಕ್ಷೆಗೆ ಗುರಿಯಾದನು."
+                }
+            },
+            {
+                name: {en:"Divorce on Grounds of Cruelty", hi:"क्रूरता के आधार पर तलाक", ml:"ക്രൂരതയുടെ പേരിലുള്ള വിവാഹമോചനം", ta:"கொடுமையின் அடிப்படையில் விவாகரத்து", kn:"ಕ್ರೌರ್ಯದ ಆಧಾರದ ಮೇಲೆ ವಿಚ್ಛೇದನ"},
+                icon: ICONS.cruelty,
+                source: "Sec 13(1)(ia), HMA",
+                simplified: {
+                    en: "You can file for divorce if your spouse treats you with physical or mental cruelty (abuse, harassment, insults).",
+                    hi: "यदि आपका जीवनसाथी आपके साथ शारीरिक या मानसिक क्रूरता (गाली-गलौज, उत्पीड़न, अपमान) करता है, तो आप तलाक के लिए अर्जी दे सकते हैं।",
+                    ml: "നിങ്ങളുടെ പങ്കാളി നിങ്ങളോട് ശാരീരികമോ മാനസികമോ ആയ ക്രൂരത (അധിക്ഷേപം, പീഡനം, അപമാനം) കാണിക്കുകയാണെങ്കിൽ നിങ്ങൾക്ക് വിവാഹമോചനത്തിന് അപേക്ഷിക്കാം.",
+                    ta: "உங்கள் துணை உங்களை உடல் ரீதியாகவோ அல்லது மன ரீதியாகவோ கொடுமைப்படுத்தினால் (துஷ்பிரயோகம், துன்புறுத்தல், அவமதிப்பு) நீங்கள் விவாகரத்து கோரலாம்.",
+                    kn: "ನಿಮ್ಮ ಸಂಗಾತಿಯು ನಿಮ್ಮನ್ನು ಶಾರೀರಿಕವಾಗಿ ಅಥವಾ ಮಾನಸಿಕವಾಗಿ ಕ್ರೌರ್ಯದಿಂದ (ನಿಂದನೆ, ಕಿರುಕುಳ, ಅವಮಾನ) ನಡೆಸಿಕೊಂಡರೆ ನೀವು ವಿಚ್ಛೇದನಕ್ಕಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಬಹುದು."
+                },
+                caseStudy: {
+                    en: "A wife provided evidence that her husband constantly insulted her and restricted her from meeting family. The Supreme Court agreed this was mental cruelty and granted the divorce.",
+                    hi: "एक पत्नी ने सबूत दिया कि उसका पति लगातार उसका अपमान करता था और उसे परिवार से मिलने से रोकता था। सुप्रीम कोर्ट ने माना कि यह मानसिक क्रूरता थी और तलाक को मंजूरी दे दी।",
+                    ml: "തന്റെ ഭർത്താവ് തന്നെ നിരന്തരം അപമാനിക്കുകയും കുടുംബത്തെ കാണുന്നതിൽ നിന്ന് വിലക്കുകയും ചെയ്തു എന്നതിന് ഒരു ഭാര്യ തെളിവ് നൽകി. ഇത് മാനസിക ക്രൂരതയാണെന്ന് സുപ്രീം കോടതി അംഗീകരിക്കുകയും വിവാഹമോചനം അനുവദിക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு மனைவி தனது கணவர் தன்னை தொடர்ந்து அவமதித்ததாகவும், குடும்பத்தினரை சந்திக்க தடை விதித்ததாகவும் ஆதாரங்களை வழங்கினார். இது மனக் கொடுமை என்று உச்ச நீதிமன்றம் ஒப்புக்கொண்டு விவாகரத்து வழங்கியது.",
+                    kn: "ಒಬ್ಬ ಪತ್ನಿಯು ತನ್ನ ಪತಿಯು ನಿರಂತರವಾಗಿ ಅವಮಾನಿಸುತ್ತಿದ್ದನು ಮತ್ತು ಕುಟುಂಬವನ್ನು ಭೇಟಿಯಾಗದಂತೆ ನಿರ್ಬಂಧಿಸುತ್ತಿದ್ದನು ಎಂಬುದಕ್ಕೆ ಸಾಕ್ಷ್ಯವನ್ನು ಒದಗಿಸಿದಳು. ಇದು ಮಾನಸಿಕ ಕ್ರೌರ್ಯ ಎಂದು ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಒಪ್ಪಿಕೊಂಡಿತು ಮತ್ತು ವಿಚ್ಛೇದನವನ್ನು ಮಂಜೂರು ಮಾಡಿತು."
+                }
+            },
+            {
+                name: {en:"Child Custody", hi:"बाल अभिरक्षा", ml:"കുട്ടിയുടെ സംരക്ഷണം", ta:"குழந்தை காவல்", kn:"ಮಕ್ಕಳ ಪಾಲನೆ"},
+                icon: ICONS.custody,
+                source: "Guardians & Wards Act 1890",
+                simplified: {
+                    en: "After a divorce, the court decides who keeps the child. The main priority is always the child's welfare and best interest.",
+                    hi: "तलाक के बाद, अदालत तय करती है कि बच्चा किसके पास रहेगा। मुख्य प्राथमिकता हमेशा बच्चे का कल्याण और सर्वोत्तम हित होती है।",
+                    ml: "വിവാഹമോചനത്തിനുശേഷം, കുട്ടി ആരുടെ കൂടെ താമസിക്കണമെന്ന് കോടതി തീരുമാനിക്കുന്നു. കുട്ടിയുടെ ക്ഷേമത്തിനും ഉത്തമ താൽപ്പര്യത്തിനുമാണ് എപ്പോഴും പ്രധാന മുൻഗണന.",
+                    ta: "விவாகரத்துக்குப் பிறகு, குழந்தை யாருடன் இருக்க வேண்டும் என்பதை நீதிமன்றம் தீர்மானிக்கிறது. குழந்தையின் நலன் மற்றும் சிறந்த நலனே எப்போதும் முக்கிய முன்னுரிமை.",
+                    kn: "ವಿಚ್ಛೇದನದ ನಂತರ, ಮಗು ಯಾರ ಬಳಿ ಇರಬೇಕೆಂದು ನ್ಯಾಯಾಲಯವು ನಿರ್ಧರಿಸುತ್ತದೆ. ಮುಖ್ಯ ಆದ್ಯತೆಯು ಯಾವಾಗಲೂ ಮಗುವಿನ ಕಲ್ಯಾಣ ಮತ್ತು ಉತ್ತಮ ಹಿತಾಸಕ್ತಿಯಾಗಿರುತ್ತದೆ."
+                },
+                caseStudy: {
+                    en: "In a custody battle, the Delhi High Court granted custody of a young child to the mother, stating that a child of tender age is best looked after by the mother.",
+                    hi: "एक हिरासत की लड़ाई में, दिल्ली उच्च न्यायालय ने एक छोटे बच्चे की हिरासत मां को देते हुए कहा कि कम उम्र के बच्चे की सबसे अच्छी देखभाल मां ही कर सकती है।",
+                    ml: "ഒരു കസ്റ്റഡി കേസിൽ, ഡൽഹി ഹൈക്കോടതി ഒരു ചെറിയ കുട്ടിയുടെ സംരക്ഷണം അമ്മയ്ക്ക് നൽകി, ചെറിയ പ്രായത്തിലുള്ള കുട്ടിയെ ഏറ്റവും നന്നായി പരിപാലിക്കാൻ അമ്മയ്ക്കാണ് കഴിയുക എന്ന് പ്രസ്താവിച്ചു.",
+                    ta: "ஒரு குழந்தை காவலுக்கான போராட்டத்தில், டெல்லி உயர் நீதிமன்றம் ஒரு இளம் குழந்தையின் காவலை தாயிடம் வழங்கியது, சிறிய வயது குழந்தையை தாயால் தான் சிறப்பாக கவனித்துக் கொள்ள முடியும் என்று கூறியது.",
+                    kn: "ಒಂದು ಪಾಲನೆ ಹೋರಾಟದಲ್ಲಿ, ದೆಹಲಿ ಹೈಕೋರ್ಟ್ ಚಿಕ್ಕ ಮಗುವಿನ ಪಾಲನೆಯನ್ನು ತಾಯಿಗೆ ನೀಡಿತು, ಚಿಕ್ಕ ವಯಸ್ಸಿನ ಮಗುವನ್ನು ತಾಯಿಯು ಉತ್ತಮವಾಗಿ ನೋಡಿಕೊಳ್ಳಬಲ್ಲಳು ಎಂದು ಹೇಳಿತು."
+                }
+            },
+            {
+                name: {en:"Maintenance", hi:"भरण-पोषण", ml:"ചെലവിനു നൽകൽ", ta:"பராமரிப்பு", kn:"ಭತ್ಯೆ"},
+                icon: ICONS.maintenance,
+                source: "Sec 125, CrPC 1973",
+                simplified: {
+                    en: "A wife who cannot support herself financially after divorce is entitled to receive monthly maintenance money from her husband.",
+                    hi: "तलाक के बाद जो पत्नी आर्थिक रूप से अपना भरण-पोषण नहीं कर सकती, वह अपने पति से मासिक भरण-पोषण राशि पाने की हकदार है।",
+                    ml: "വിവാഹമോചനത്തിന് ശേഷം സാമ്പത്തികമായി സ്വയം നിലനിൽക്കാൻ കഴിയാത്ത ഭാര്യക്ക് ഭർത്താവിൽ നിന്ന് പ്രതിമാസ ചെലവിനു പണം ലഭിക്കാൻ അർഹതയുണ്ട്.",
+                    ta: "விவாகரத்துக்குப் பிறகு தன்னை நிதி ரீதியாக ஆதரிக்க முடியாத ஒரு மனைவி, தனது கணவரிடமிருந்து மாதாந்திர பராமரிப்புத் தொகையைப் பெற உரிமை உண்டு.",
+                    kn: "ವಿಚ್ಛೇದನದ ನಂತರ ಆರ್ಥಿಕವಾಗಿ ತನ್ನನ್ನು ತಾನು ಪೋಷಿಸಲು ಸಾಧ್ಯವಾಗದ ಪತ್ನಿಯು ತನ್ನ ಪತಿಯಿಂದ ಮಾಸಿಕ ಭತ್ಯೆ ಹಣವನ್ನು ಪಡೆಯಲು ಅರ್ಹಳಾಗಿರುತ್ತಾಳೆ."
+                },
+                caseStudy: {
+                    en: "A non-working wife filed for maintenance. The Supreme Court ordered the husband, who had a high-paying job, to pay ₹25,000 per month to cover her living expenses.",
+                    hi: "एक गैर-कामकाजी पत्नी ने भरण-पोषण के लिए अर्जी दी। सुप्रीम कोर्ट ने उच्च वेतन वाली नौकरी करने वाले पति को उसके रहने के खर्चों को कवर करने के लिए प्रति माह ₹25,000 का भुगतान करने का आदेश दिया।",
+                    ml: "ജോലിയില്ലാത്ത ഒരു ഭാര്യ ചെലവിനു പണം ആവശ്യപ്പെട്ട് അപേക്ഷ നൽകി. ഉയർന്ന ശമ്പളമുള്ള ജോലി ചെയ്യുന്ന ഭർത്താവിനോട്, ഭാര്യയുടെ ജീവിതച്ചെലവുകൾക്കായി പ്രതിമാസം ₹25,000 നൽകാമെന്ന് സുപ്രീം കോടതി ഉത്തരവിട്ടു.",
+                    ta: "வேலை செய்யாத ஒரு மனைவி பராமரிப்புக்காக விண்ணப்பித்தார். அதிக சம்பளம் வாங்கும் கணவர், அவரது வாழ்க்கைச் செலவுகளை ஈடுகட்ட மாதத்திற்கு ₹25,000 வழங்க வேண்டும் என்று உச்ச நீதிமன்றம் உத்தரவிட்டது.",
+                    kn: "ಕೆಲಸ ಮಾಡದ ಪತ್ನಿಯು ಭತ್ಯೆಗಾಗಿ ಅರ್ಜಿ ಸಲ್ಲಿಸಿದಳು. ಹೆಚ್ಚು ಸಂಬಳದ ಉದ್ಯೋಗದಲ್ಲಿದ್ದ ಪತಿಗೆ, ಆಕೆಯ ಜೀವನ ವೆಚ್ಚವನ್ನು ಭರಿಸಲು ತಿಂಗಳಿಗೆ ₹25,000 ಪಾವತಿಸುವಂತೆ ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Domestic Violence", hi:"घरेलू हिंसा", ml:"ഗാർഹിക പീഡനം", ta:"குடும்ப வன்முறை", kn:"ಕೌಟುಂಬಿಕ ಹಿಂಸೆ"},
+                icon: ICONS.dv,
+                source: "Domestic Violence Act 2005",
+                simplified: {
+                    en: "Beating, insults, or any form of harassment by a husband or his relatives is a crime. You can get a protection order. Call 1091.",
+                    hi: "पति या उसके रिश्तेदारों द्वारा मार-पीट, अपमान, या किसी भी प्रकार का उत्पीड़न एक अपराध है। आप सुरक्षा आदेश प्राप्त कर सकते हैं। 1091 पर कॉल करें।",
+                    ml: "ഭർത്താവോ അവന്റെ ബന്ധുക്കളോ മർദ്ദിക്കുക, അപമാനിക്കുക, അല്ലെങ്കിൽ ഏതെങ്കിലും തരത്തിലുള്ള പീഡനം നടത്തുന്നത് കുറ്റകരമാണ്. നിങ്ങൾക്ക് സംരക്ഷണ ഉത്തരവ് ലഭിക്കും. 1091-ൽ വിളിക്കുക.",
+                    ta: "கணவர் அல்லது அவரது உறவினர்களால் அடிதடி, அவமதிப்பு, அல்லது எந்த விதமான துன்புறுத்தலும் ஒரு குற்றமாகும். நீங்கள் பாதுகாப்பு ஆணை பெறலாம். 1091 ஐ அழைக்கவும்.",
+                    kn: "ಪತಿ ಅಥವಾ ಅವನ ಸಂಬಂಧಿಕರಿಂದ ಹೊಡೆಯುವುದು, ಅವಮಾನಿಸುವುದು, ಅಥವಾ ಯಾವುದೇ ರೀತಿಯ ಕಿರುಕುಳ ನೀಡುವುದು ಅಪರಾಧ. ನೀವು ರಕ್ಷಣಾ ಆದೇಶವನ್ನು ಪಡೆಯಬಹುದು. 1091 ಕ್ಕೆ ಕರೆ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A woman faced constant harassment from her in-laws. She complained under the DV Act. The court passed a protection order, stopping the in-laws from contacting her and allowing her to live peacefully in the house.",
+                    hi: "एक महिला को अपने ससुराल वालों से लगातार उत्पीड़न का सामना करना पड़ा। उसने DV अधिनियम के तहत शिकायत की। अदालत ने एक सुरक्षा आदेश पारित किया, जिससे ससुराल वालों को उससे संपर्क करने से रोक दिया गया और उसे घर में शांति से रहने की अनुमति दी गई।",
+                    ml: "ഒരു സ്ത്രീക്ക് ഭർതൃവീട്ടിൽ നിന്ന് നിരന്തരമായ പീഡനം നേരിടേണ്ടി വന്നു. അവർ DV നിയമപ്രകാരം പരാതി നൽകി. കോടതി ഒരു സംരക്ഷണ ഉത്തരവ് പാസാക്കി, ഭർതൃവീട്ടുകാരെ അവളുമായി ബന്ധപ്പെടുന്നതിൽ നിന്ന് തടയുകയും അവളെ വീട്ടിൽ സമാധാനത്തോടെ ജീവിക്കാൻ അനുവദിക്കുകയും ചെയ്തു.",
+                    ta: "ஒரு பெண் தனது புகுந்த வீட்டாரிடமிருந்து தொடர்ச்சியான துன்புறுத்தலை எதிர்கொண்டார். அவர் DV சட்டத்தின் கீழ் புகார் அளித்தார். நீதிமன்றம் ஒரு பாதுகாப்பு ஆணை பிறப்பித்தது, புகுந்த வீட்டார் அவளைத் தொடர்பு கொள்வதைத் தடுத்தது மற்றும் அவளை வீட்டில் அமைதியாக வாழ அனுமதித்தது.",
+                    kn: "ಒಬ್ಬ ಮಹಿಳೆಯು ತನ್ನ ಅತ್ತೆ-ಮಾವಂದಿರಿಂದ ನಿರಂತರ ಕಿರುಕುಳವನ್ನು ಎದುರಿಸುತ್ತಿದ್ದಳು. ಆಕೆ DV ಕಾಯ್ದೆಯಡಿಯಲ್ಲಿ ದೂರು ನೀಡಿದಳು. ನ್ಯಾಯಾಲಯವು ರಕ್ಷಣಾ ಆದೇಶವನ್ನು ಜಾರಿಗೊಳಿಸಿತು, ಅತ್ತೆ-ಮಾವಂದಿರು ಆಕೆಯನ್ನು ಸಂಪರ್ಕಿಸುವುದನ್ನು ತಡೆಯಿತು ಮತ್ತು ಆಕೆಗೆ ಮನೆಯಲ್ಲಿ ಶಾಂತಿಯುತವಾಗಿ ವಾಸಿಸಲು ಅವಕಾಶ ಮಾಡಿಕೊಟ್ಟಿತು."
+                }
+            },
+            {
+                name: {en:"Inheritance Rights", hi:"विरासत का अधिकार", ml:"പാരമ്പര്യ സ്വത്തവകാശം", ta:"பரம்பரை உரிமை", kn:"ಉತ್ತರಾಧಿಕಾರ ಹಕ್ಕು"},
+                icon: ICONS.inheritance,
+                source: "Hindu Succession Act 1956",
+                simplified: {
+                    en: "Daughters have the same right to their father's property as sons. They are equal co-owners.",
+                    hi: "बेटियों का अपने पिता की संपत्ति पर बेटों के समान ही अधिकार है। वे बराबर की सह-मालिक हैं।",
+                    ml: "അച്ഛന്റെ സ്വത്തിൽ ആൺമക്കൾക്ക് ഉള്ള അതേ അവകാശം പെൺമക്കൾക്കുമുണ്ട്. അവർ തുല്യ സഹ-ഉടമകളാണ്.",
+                    ta: "மகன்களுக்கு தங்கள் தந்தையின் சொத்தில் உள்ள அதே உரிமை மகள்களுக்கும் உண்டு. அவர்கள் சமமான இணை உரிமையாளர்கள்.",
+                    kn: "ತಂದೆಯ ಆಸ್ತಿಯಲ್ಲಿ ಗಂಡು ಮಕ್ಕಳಿಗೆ ಇರುವಷ್ಟೇ ಹಕ್ಕು ಹೆಣ್ಣು ಮಕ್ಕಳಿಗೂ ಇದೆ. ಅವರು ಸಮಾನ ಸಹ-ಮಾಲೀಕರು."
+                },
+                caseStudy: {
+                    en: "After a man's death, his sons tried to take all the property. The daughter went to court. In 2020, the Supreme Court confirmed that she has an equal right to the ancestral property, just like her brothers.",
+                    hi: "एक व्यक्ति की मृत्यु के बाद, उसके बेटों ने सारी संपत्ति लेने की कोशिश की। बेटी अदालत गई। 2020 में, सुप्रीम कोर्ट ने पुष्टि की कि उसे भी अपने भाइयों की तरह पैतृक संपत्ति पर बराबर का अधिकार है।",
+                    ml: "ഒരാളുടെ മരണശേഷം, അയാളുടെ ആൺമക്കൾ എല്ലാ സ്വത്തുക്കളും കൈവശപ്പെടുത്താൻ ശ്രമിച്ചു. മകൾ കോടതിയെ സമീപിച്ചു. 2020-ൽ, സഹോദരങ്ങളെപ്പോലെ തന്നെ തനിക്കും പൂർവ്വിക സ്വത്തിൽ തുല്യ അവകാശമുണ്ടെന്ന് സുപ്രീം കോടതി സ്ഥിരീകരിച്ചു.",
+                    ta: "ஒருவர் இறந்த பிறகு, அவரது மகன்கள் சொத்துக்கள் அனைத்தையும் அபகரிக்க முயன்றனர். மகள் நீதிமன்றம் சென்றார். 2020 ஆம் ஆண்டில், உச்ச நீதிமன்றம் தனது சகோதரர்களைப் போலவே மூதாதையர் சொத்தில் தனக்கும் சம உரிமை உண்டு என்பதை உறுதிப்படுத்தியது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯ ಮರಣದ ನಂತರ, ಅವನ ಗಂಡು ಮಕ್ಕಳು ಎಲ್ಲಾ ಆಸ್ತಿಯನ್ನು ತೆಗೆದುಕೊಳ್ಳಲು ಪ್ರಯತ್ನಿಸಿದರು. ಮಗಳು ನ್ಯಾಯಾಲಯಕ್ಕೆ ಹೋದಳು. 2020 ರಲ್ಲಿ, ಸುಪ್ರೀಂ ಕೋರ್ಟ್ ತನ್ನ ಸಹೋದರರಂತೆಯೇ ತನಗೂ ಪೂರ್ವಜರ ಆಸ್ತಿಯಲ್ಲಿ ಸಮಾನ ಹಕ್ಕಿದೆ ಎಂದು ದೃಢಪಡಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Adoption", hi:"गोद लेना", ml:"ദത്തെടുക്കൽ", ta:"தத்தெடுத்தல்", kn:"ದತ್ತು"},
+                icon: ICONS.adoption,
+                source: "Juvenile Justice Act 2015",
+                simplified: {
+                    en: "Any mentally sound adult, including single parents (male or female), can legally adopt a child.",
+                    hi: "कोई भी मानसिक रूप से स्वस्थ वयस्क, जिसमें एकल माता-पिता (पुरुष या महिला) शामिल हैं, कानूनी रूप से एक बच्चे को गोद ले सकता है।",
+                    ml: "മാനസികമായി ആരോഗ്യവാനായ ഏതൊരു മുതിർന്നയാൾക്കും, അവിവാഹിതരായ മാതാപിതാക്കൾക്കും (പുരുഷനോ സ്ത്രീയോ) നിയമപരമായി ഒരു കുട്ടിയെ ദത്തെടുക്കാം.",
+                    ta: "ஒற்றை பெற்றோர்கள் (ஆண் அல்லது பெண்) உட்பட மனநலம் வாய்ந்த எந்தவொரு பெரியவரும் சட்டப்பூர்வமாக ஒரு குழந்தையை தத்தெடுக்கலாம்.",
+                    kn: "ಮಾನಸಿಕವಾಗಿ ಸದೃಢರಾಗಿರುವ ಯಾವುದೇ ವಯಸ್ಕರು, ಒಂಟಿ ಪೋಷಕರು (ಪುರುಷ ಅಥವಾ ಮಹಿಳೆ) ಸೇರಿದಂತೆ, ಕಾನೂನುಬದ್ಧವಾಗಿ ಮಗುವನ್ನು ದತ್ತು ತೆಗೆದುಕೊಳ್ಳಬಹುದು."
+                },
+                caseStudy: {
+                    en: "A single woman in her 40s applied to adopt a child through the CARA portal. After home verification and legal proceedings, she was able to legally adopt a 3-year-old girl.",
+                    hi: "40 के दशक में एक अकेली महिला ने CARA पोर्टल के माध्यम से एक बच्चे को गोद लेने के लिए आवेदन किया। घर के सत्यापन और कानूनी कार्यवाही के बाद, वह 3 साल की एक बच्ची को कानूनी रूप से गोद लेने में सक्षम हुई।",
+                    ml: "40 വയസ്സുള്ള ഒരു അവിവാഹിതയായ സ്ത്രീ CARA പോർട്ടൽ വഴി ഒരു കുട്ടിയെ ദത്തെടുക്കാൻ അപേക്ഷിച്ചു. വീട് പരിശോധനയ്ക്കും നിയമപരമായ നടപടിക്രമങ്ങൾക്കും ശേഷം, അവർക്ക് 3 വയസ്സുള്ള ഒരു പെൺകുട്ടിയെ നിയമപരമായി ദത്തെടുക്കാൻ കഴിഞ്ഞു.",
+                    ta: "40 வயதான ஒரு ஒற்றைப் பெண் CARA போர்டல் மூலம் ஒரு குழந்தையை தத்தெடுக்க விண்ணப்பித்தார். வீட்டுச் சரிபார்ப்பு மற்றும் சட்ட நடவடிக்கைகளுக்குப் பிறகு, அவர் 3 வயது பெண் குழந்தையை சட்டப்பூர்வமாக தத்தெடுக்க முடிந்தது.",
+                    kn: "40 ರ ಹರೆಯದ ಒಬ್ಬ ಒಂಟಿ ಮಹಿಳೆಯು CARA ಪೋರ್ಟಲ್ ಮೂಲಕ ಮಗುವನ್ನು ದತ್ತು ತೆಗೆದುಕೊಳ್ಳಲು ಅರ್ಜಿ ಸಲ್ಲಿಸಿದಳು. ಮನೆ ಪರಿಶೀಲನೆ ಮತ್ತು ಕಾನೂನು ಪ್ರಕ್ರಿಯೆಗಳ ನಂತರ, ಆಕೆ 3 ವರ್ಷದ ಹೆಣ್ಣು ಮಗುವನ್ನು ಕಾನೂನುಬದ್ಧವಾಗಿ ದತ್ತು ತೆಗೆದುಕೊಳ್ಳಲು ಸಾಧ್ಯವಾಯಿತು."
+                }
+            }
+        ];
+        
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-pink-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(familyLaws, e.target.value));
+        renderLaws(familyLaws); // Initial render
+    </script>
+</body>
+</html>

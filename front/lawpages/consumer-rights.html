@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Rights - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .law-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        .law-card:hover { 
+            transform: translateY(-5px); 
+            /* Added blue glow (rgb for blue-500) */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                        0 4px 6px -2px rgba(0, 0, 0, 0.05),
+                        0 0 25px 0px rgba(59, 130, 246, 0.6); 
+        }
+
+        /* Stagger the animation for each card */
+        .law-card:nth-child(2) { animation-delay: 0.1s; }
+        .law-card:nth-child(3) { animation-delay: 0.2s; }
+        .law-card:nth-child(4) { animation-delay: 0.3s; }
+        .law-card:nth-child(5) { animation-delay: 0.4s; }
+        .law-card:nth-child(6) { animation-delay: 0.5s; }
+        .law-card:nth-child(7) { animation-delay: 0.6s; }
+        .law-card:nth-child(8) { animation-delay: 0.7s; }
+
+        /* Keyframes for the animation */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .law-icon {
+            width: 3.5rem; /* 56px */
+            height: 3.5rem; /* 56px */
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-lg">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="text-lg font-bold text-indigo-600 hover:text-indigo-800 transition-colors">← Back to Portal</a>
+            <a href="../login.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-indigo-700 transition-colors">Ask AI</a>
+        </nav>
+    </header>
+    
+    <section class="bg-gradient-to-r from-blue-600 to-blue-500 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-black mb-4">Consumer Rights</h1>
+            <p class="text-xl mb-6">Consumer Protection Act 2019 - 8 Key Rights</p>
+            <select id="langSelect" class="p-2 rounded bg-white text-gray-800 shadow">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ml">മലയാളം</option>
+                <option value="ta">தமிழ்</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+        </div>
+    </section>
+    
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div id="lawsContainer" class="grid md:grid-cols-2 gap-8">
+                </div>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-8 text-center">
+        © 2025 Legal Awareness Portal
+    </footer>
+
+    <script>
+        // --- Icon SVG Paths ---
+        const ICONS = {
+            safety: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`,
+            info: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>`,
+            choice: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"></path></svg>`,
+            heard: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"></path></svg>`,
+            redressal: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path></svg>`,
+            education: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25"></path></svg>`,
+            environment: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path></svg>`,
+            legalAid: `<svg class="law-icon text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c.48 0 .947-.04.14-.117M12 21c-.48 0-.947-.04-1.4-.117M12 21c-2.21 0-4-1.79-4-4v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2v-4.586a1 1 0 01.293-.707l3.414-3.414a1 1 0 01.707-.293h.28a2 2 0 012 2v4.586a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293h-.28a2 2 0 01-2-2"></path></svg>`
+        };
+        
+        const consumerLaws = [
+            {
+                name: {en:"Right to Safety", hi:"सुरक्षा का अधिकार", ml:"സുരക്ഷിതത്വം", ta:"பாதுகாப்பு", kn:"ಸುರಕ್ಷತೆ"},
+                icon: ICONS.safety,
+                source: "Sec 2(9)(i), CPA 2019",
+                simplified: {
+                    en: "You have the right to be protected from products that are dangerous to life or property. Always check for quality marks like ISI or FSSAI.",
+                    hi: "आपको जीवन या संपत्ति के लिए खतरनाक उत्पादों से संरक्षित होने का अधिकार है। हमेशा ISI या FSSAI जैसे गुणवत्ता चिह्नों की जांच करें।",
+                    ml: "ജീവനോ സ്വത്തിനോ അപകടകരമായ ഉൽപ്പന്നങ്ങളിൽ നിന്ന് സംരക്ഷിക്കപ്പെടാൻ നിങ്ങൾക്ക് അവകാശമുണ്ട്. ISI അല്ലെങ്കിൽ FSSAI പോലുള്ള ഗുണനിലവാര അടയാളങ്ങൾ എപ്പോഴും പരിശോധിക്കുക.",
+                    ta: "உயிர் அல்லது சொத்துக்களுக்கு ஆபத்தான பொருட்களிலிருந்து பாதுகாக்க உங்களுக்கு உரிமை உண்டு. ISI அல்லது FSSAI போன்ற தரக் குறியீடுகளை எப்போதும் சரிபார்க்கவும்.",
+                    kn: "ಜೀವ ಅಥವಾ ಆಸ್ತಿಗೆ ಅಪಾಯಕಾರಿಯಾದ ಉತ್ಪನ್ನಗಳಿಂದ ರಕ್ಷಣೆ ಪಡೆಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ. ಯಾವಾಗಲೂ ISI ಅಥವಾ FSSAI ನಂತಹ ಗುಣಮಟ್ಟದ ಗುರುತುಗಳನ್ನು ಪರಿಶೀಲಿಸಿ."
+                },
+                caseStudy: {
+                    en: "A family bought a new pressure cooker that exploded during its first use, causing injuries. They filed a case in the consumer court. The court found the product was defective and unsafe, and ordered the company to pay a ₹10 Lakh fine and cover medical bills.",
+                    hi: "एक परिवार ने एक नया प्रेशर कुकर खरीदा जो पहले ही इस्तेमाल के दौरान फट गया, जिससे चोटें आईं। उन्होंने उपभोक्ता अदालत में मामला दायर किया। अदालत ने पाया कि उत्पाद खराब और असुरक्षित था, और कंपनी को ₹10 लाख का जुर्माना और मेडिकल बिलों को कवर करने का आदेश दिया।",
+                    ml: "ഒരു കുടുംബം വാങ്ങിയ പുതിയ പ്രഷർ കുക്കർ ആദ്യ ഉപയോഗത്തിൽ തന്നെ പൊട്ടിത്തെറിച്ച് പരിക്കേറ്റു. അവർ ഉപഭോക്തൃ കോടതിയിൽ കേസ് ഫയൽ ചെയ്തു. ഉൽപ്പന്നം കേടായതും സുരക്ഷിതമല്ലാത്തതുമാണെന്ന് കോടതി കണ്ടെത്തുകയും, കമ്പനിയോട് ₹10 ലക്ഷം പിഴയും മെഡിക്കൽ ബില്ലുകളും നൽകാൻ ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "ஒரு குடும்பம் வாங்கிய புதிய பிரஷர் குக்கர் முதல் பயன்பாட்டிலேயே வெடித்து, காயங்களை ஏற்படுத்தியது. அவர்கள் நுகர்வோர் நீதிமன்றத்தில் வழக்குத் தொடர்ந்தனர். தயாரிப்பு குறைபாடுடையது மற்றும் பாதுகாப்பற்றது என்று நீதிமன்றம் கண்டறிந்து, நிறுவனம் ₹10 லட்சம் அபராதம் மற்றும் மருத்துவ பில்களை செலுத்த உத்தரவிட்டது.",
+                    kn: "ಒಂದು ಕುಟುಂಬವು ಹೊಸ ಪ್ರೆಶರ್ ಕುಕ್ಕರ್ ಅನ್ನು ಖರೀದಿಸಿತು, ಅದು ಮೊದಲ ಬಳಕೆಯಲ್ಲೇ ಸ್ಫೋಟಗೊಂಡು, ಗಾಯಗಳನ್ನು ಉಂಟುಮಾಡಿತು. ಅವರು ಗ್ರಾಹಕ ನ್ಯಾಯಾಲಯದಲ್ಲಿ ಪ್ರಕರಣವನ್ನು ದಾಖಲಿಸಿದರು. ಉತ್ಪನ್ನವು ದೋಷಪೂರಿತವಾಗಿದೆ ಮತ್ತು ಅಸುರಕ್ಷಿತವಾಗಿದೆ ಎಂದು ನ್ಯಾಯಾಲಯವು ಕಂಡುಕೊಂಡಿತು, ಮತ್ತು ಕಂಪನಿಗೆ ₹10 ಲಕ್ಷ ದಂಡ ಮತ್ತು ವೈದ್ಯಕೀಯ ಬಿಲ್‌ಗಳನ್ನು ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Right to Information", hi:"जानकारी का अधिकार", ml:"താക്കീത് അവകാശം", ta:"தகவல் உரிமை", kn:"ಮಾಹಿತಿ ಹಕ್ಕು"},
+                icon: ICONS.info,
+                source: "Sec 2(9)(ii), CPA 2019",
+                simplified: {
+                    en: "You have the right to know the quality, quantity, price, and expiry date of a product. Always read the label before buying.",
+                    hi: "आपको उत्पाद की गुणवत्ता, मात्रा, मूल्य और समाप्ति तिथि जानने का अधिकार है। खरीदने से पहले हमेशा लेबल पढ़ें।",
+                    ml: "ഒരു ഉൽപ്പന്നത്തിന്റെ ഗുണനിലവാരം, അളവ്, വില, കാലഹരണ തീയതി എന്നിവ അറിയാൻ നിങ്ങൾക്ക് അവകാശമുണ്ട്. വാങ്ങുന്നതിന് മുമ്പ് എപ്പോഴും ലേബൽ വായിക്കുക.",
+                    ta: "ஒரு பொருளின் தரம், அளவு, விலை மற்றும் காலாவதி தேதியை அறிய உங்களுக்கு உரிமை உண்டு. வாங்குவதற்கு முன் எப்போதும் லேபிளைப் படியுங்கள்.",
+                    kn: "ಒಂದು ಉತ್ಪನ್ನದ ಗುಣಮಟ್ಟ, ಪ್ರಮಾಣ, ಬೆಲೆ ಮತ್ತು ಮುಕ್ತಾಯ ದಿನಾಂಕವನ್ನು ತಿಳಿಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ. ಖರೀದಿಸುವ ಮೊದಲು ಯಾವಾಗಲೂ ಲೇಬಲ್ ಓದಿ."
+                },
+                caseStudy: {
+                    en: "A consumer bought a packaged food item. The label listed 'vegetable oil' but it actually contained palm oil, to which they were allergic. The National Consumer Disputes Redressal Commission (NCDRC) held the company liable for hiding information and fined them for misleading labeling.",
+                    hi: "एक उपभोक्ता ने एक पैकेटबंद खाद्य पदार्थ खरीदा। लेबल पर 'वनस्पति तेल' लिखा था, लेकिन उसमें वास्तव में पाम ऑयल था, जिससे उन्हें एलर्जी थी। राष्ट्रीय उपभोक्ता विवाद निवारण आयोग (NCDRC) ने जानकारी छिपाने के लिए कंपनी को उत्तरदायी ठहराया और भ्रामक लेबलिंग के लिए उन पर जुर्माना लगाया।",
+                    ml: "ഒരു ഉപഭോക്താവ് പാക്കേജുചെയ്ത ഭക്ഷ്യവസ്തു വാങ്ങി. ലേബലിൽ 'വെജിറ്റബിൾ ഓയിൽ' എന്ന് രേഖപ്പെടുത്തിയിരുന്നു, എന്നാൽ അതിൽ യഥാർത്ഥത്തിൽ പാം ഓയിൽ അടങ്ങിയിരുന്നു, അത് അവർക്ക് അലർജിയായിരുന്നു. വിവരം മറച്ചുവെച്ചതിന് കമ്പനി ഉത്തരവാദിയാണെന്ന് ദേശീയ ഉപഭോക്തൃ തർക്ക പരിഹാര കമ്മീഷൻ (NCDRC) കണ്ടെത്തുകയും, തെറ്റിദ്ധരിപ്പിക്കുന്ന ലേബലിംഗിന് പിഴ ചുമത്തുകയും ചെയ്തു.",
+                    ta: "ஒரு நுகர்வோர் ஒரு பொட்டலமிடப்பட்ட உணவுப் பொருளை வாங்கினார். லேபிளில் 'தாவர எண்ணெய்' என்று பட்டியலிடப்பட்டிருந்தது, ஆனால் அதில் உண்மையில் பாமாயில் இருந்தது, அது அவருக்கு ஒவ்வாமை ஏற்படுத்தியது. தகவலை மறைத்ததற்காக நிறுவனம் பொறுப்பேற்க வேண்டும் என்று தேசிய நுகர்வோர் குறைதீர் ஆணையம் (NCDRC) தீர்ப்பளித்தது மற்றும் தவறான லேபிளிங்கிற்காக அபராதம் விதித்தது.",
+                    kn: "ಒಬ್ಬ ಗ್ರಾಹಕನು ಪ್ಯಾಕೇಜ್ ಮಾಡಿದ ಆಹಾರ ಪದಾರ್ಥವನ್ನು ಖರೀದಿಸಿದನು. ಲೇಬಲ್‌ನಲ್ಲಿ 'ಸಸ್ಯಜನ್ಯ ಎಣ್ಣೆ' ಎಂದು ಪಟ್ಟಿಮಾಡಲಾಗಿತ್ತು, ಆದರೆ ಅದರಲ್ಲಿ ನಿಜವಾಗಿ ಪಾಮ್ ಆಯಿಲ್ ಇತ್ತು, ಅದಕ್ಕೆ ಅವರಿಗೆ ಅಲರ್ಜಿ ಇತ್ತು. ಮಾಹಿತಿಯನ್ನು ಮರೆಮಾಚಿದ್ದಕ್ಕಾಗಿ ಕಂಪನಿಯನ್ನು ಜವಾಬ್ದಾರರನ್ನಾಗಿ ರಾಷ್ಟ್ರೀಯ ಗ್ರಾಹಕ ವಿವಾದಗಳ ಪರಿಹಾರ ಆಯೋಗ (NCDRC) ತೀರ್ಪು ನೀಡಿತು ಮತ್ತು ತಪ್ಪು ಲೇಬಲಿಂಗ್‌ಗಾಗಿ ಅವರಿಗೆ ದಂಡ ವಿಧಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Right to Choose", hi:"चुनने का अधिकार", ml:"തിരഞ്ഞെടുക്കൽ അവകാശം", ta:"தேர்வு உரிமை", kn:"ತೀರ್ಮಾನಿಸುವ ಹಕ್ಕು"},
+                icon: ICONS.choice,
+                source: "Sec 2(9)(iii), CPA 2019",
+                simplified: {
+                    en: "No seller can force you to buy a specific product or service. You must have a variety of options to choose from at a fair price.",
+                    hi: "कोई भी विक्रेता आपको कोई विशिष्ट उत्पाद या सेवा खरीदने के लिए मजबूर नहीं कर सकता। आपके पास उचित मूल्य पर चुनने के लिए कई विकल्प होने चाहिए।",
+                    ml: "ഒരു പ്രത്യേക ഉൽപ്പന്നമോ സേവനമോ വാങ്ങാൻ ഒരു വിൽപ്പനക്കാരനും നിങ്ങളെ നിർബന്ധിക്കാൻ കഴിയില്ല. ന്യായമായ വിലയിൽ നിന്ന് തിരഞ്ഞെടുക്കാൻ നിങ്ങൾക്ക് പലതരം ഓപ്ഷനുകൾ ഉണ്ടായിരിക്കണം.",
+                    ta: "எந்தவொரு விற்பனையாளரும் ஒரு குறிப்பிட்ட தயாரிப்பு அல்லது சேவையை வாங்கும்படி உங்களை கட்டாயப்படுத்த முடியாது. நியாயமான விலையில் தேர்வு செய்ய உங்களுக்கு பல்வேறு விருப்பங்கள் இருக்க வேண்டும்.",
+                    kn: "ಯಾವುದೇ ಮಾರಾಟಗಾರನು ನಿಮ್ಮನ್ನು ನಿರ್ದಿಷ್ಟ ಉತ್ಪನ್ನ ಅಥವಾ ಸೇವೆಯನ್ನು ಖರೀದಿಸಲು ಒತ್ತಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ನ್ಯಾಯಯುತ ಬೆಲೆಯಲ್ಲಿ ಆಯ್ಕೆ ಮಾಡಲು ನಿಮ್ಮ ಬಳಿ ವಿವಿಧ ಆಯ್ಕೆಗಳು ಇರಬೇಕು."
+                },
+                caseStudy: {
+                    en: "A gas distributor forced customers to buy a gas stove from them in order to get a new gas connection. The Bombay High Court ruled this was an unfair trade practice. Consumers have the right to choose where they buy the stove from.",
+                    hi: "एक गैस वितरक ने ग्राहकों को नया गैस कनेक्शन लेने के लिए उनसे गैस स्टोव खरीदने के लिए मजबूर किया। बॉम्बे हाईकोर्ट ने इसे अनुचित व्यापार प्रथा करार दिया। उपभोक्ताओं को यह चुनने का अधिकार है कि वे स्टोव कहाँ से खरीदते हैं।",
+                    ml: "ഒരു ഗ്യാസ് വിതരണക്കാരൻ പുതിയ ഗ്യാസ് കണക്ഷൻ ലഭിക്കുന്നതിന് തങ്ങളിൽ നിന്ന് ഗ്യാസ് സ്റ്റൗ വാങ്ങാൻ ഉപഭോക്താക്കളെ നിർബന്ധിച്ചു. ഇത് അന്യായമായ വ്യാപാര രീതിയാണെന്ന് ബോംബെ ഹൈക്കോടതി വിധിച്ചു. സ്റ്റൗ എവിടെ നിന്ന് വാങ്ങണമെന്ന് തിരഞ്ഞെടുക്കാനുള്ള അവകാശം ഉപഭോക്താക്കൾക്കുണ്ട്.",
+                    ta: "ஒரு எரிவாயு விநியோகஸ்தர் புதிய எரிவாயு இணைப்பைப் பெறுவதற்காக வாடிக்கையாளர்களை தங்களால் எரிவாயு அடுப்பை வாங்கும்படி கட்டாயப்படுத்தினார். இது ஒரு நியாயமற்ற வர்த்தக நடைமுறை என்று பம்பாய் உயர் நீதிமன்றம் தீர்ப்பளித்தது. அடுப்பை எங்கிருந்து வாங்க வேண்டும் என்பதை தேர்வு செய்யும் உரிமை நுகர்வோருக்கு உள்ளது.",
+                    kn: "ಒಬ್ಬ ಗ್ಯಾಸ್ ವಿತರಕನು ಹೊಸ ಗ್ಯಾಸ್ ಸಂಪರ್ಕವನ್ನು ಪಡೆಯಲು ಗ್ರಾಹಕರನ್ನು ತಮ್ಮಿಂದ ಗ್ಯಾಸ್ ಸ್ಟವ್ ಖರೀದಿಸಲು ಒತ್ತಾಯಿಸಿದನು. ಇದನ್ನು ಬಾಂಬೆ ಹೈಕೋರ್ಟ್ ಅನ್ಯಾಯದ ವ್ಯಾಪಾರ ಪದ್ಧತಿ ಎಂದು ತೀರ್ಪು ನೀಡಿತು. ಸ್ಟವ್ ಅನ್ನು ಎಲ್ಲಿಂದ ಖರೀದಿಸಬೇಕು ಎಂಬುದನ್ನು ಆಯ್ಕೆ ಮಾಡುವ ಹಕ್ಕು ಗ್ರಾಹಕರಿಗೆ ಇದೆ."
+                }
+            },
+            {
+                name: {en:"Right to be Heard", hi:"सुनने का अधिकार", ml:"കേൾക്കപ്പെടാനുള്ള അവകാശം", ta:"கேட்கப்பட உரிமை", kn:"ಕೇಳಲ್ಪಡುವ ಹಕ್ಕು"},
+                icon: ICONS.heard,
+                source: "Sec 2(9)(iv), CPA 2019",
+                simplified: {
+                    en: "Your complaint must be heard. You have the right to file a complaint and be represented in consumer courts if you are cheated.",
+                    hi: "आपकी शिकायत सुनी जानी चाहिए। यदि आप ठगे जाते हैं, तो आपको उपभोक्ता अदालतों में शिकायत दर्ज करने और प्रतिनिधित्व करने का अधिकार है।",
+                    ml: "നിങ്ങളുടെ പരാതി കേൾക്കണം. നിങ്ങൾ വഞ്ചിക്കപ്പെട്ടാൽ, ഉപഭോക്തൃ കോടതികളിൽ പരാതി നൽകാനും പ്രതിനിധീകരിക്കാനും നിങ്ങൾക്ക് അവകാശമുണ്ട്.",
+                    ta: "உங்கள் புகார் கேட்கப்பட வேண்டும். நீங்கள் ஏமாற்றப்பட்டால், நுகர்வோர் நீதிமன்றங்களில் புகார் அளிக்கவும், பிரதிநிதித்துவப்படுத்தவும் உங்களுக்கு உரிமை உண்டு.",
+                    kn: "ನಿಮ್ಮ ದೂರನ್ನು ಕೇಳಬೇಕು. ನೀವು ಮೋಸ ಹೋದರೆ, ಗ್ರಾಹಕ ನ್ಯಾಯಾಲಯಗಳಲ್ಲಿ ದೂರು ಸಲ್ಲಿಸುವ ಮತ್ತು ಪ್ರತಿನಿಧಿಸುವ ಹಕ್ಕು ನಿಮಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "A consumer's complaint about a faulty mobile phone was ignored by the company. He filed a case in the District Consumer Forum. The forum heard his case and ordered the company to not only replace the phone but also pay compensation for the mental harassment.",
+                    hi: "एक उपभोक्ता की खराब मोबाइल फोन के बारे में शिकायत को कंपनी ने नजरअंदाज कर दिया। उन्होंने जिला उपभोक्ता फोरम में मामला दायर किया। फोरम ने उनकी बात सुनी और कंपनी को न केवल फोन बदलने का आदेश दिया, बल्कि मानसिक उत्पीड़न के लिए मुआवजा देने का भी आदेश दिया।",
+                    ml: "കേടായ ഒരു മൊബൈൽ ഫോണിനെക്കുറിച്ചുള്ള ഒരു ഉപഭോക്താവിന്റെ പരാതി കമ്പനി അവഗണിച്ചു. അദ്ദേഹം ജില്ലാ ഉപഭോക്തൃ ഫോറത്തിൽ കേസ് ഫയൽ ചെയ്തു. ഫോറം അദ്ദേഹത്തിന്റെ കേസ് കേൾക്കുകയും, ഫോൺ മാറ്റിനൽകാൻ മാത്രമല്ല, മാനസിക പീഡനത്തിന് നഷ്ടപരിഹാരം നൽകാനും കമ്പനിയോട് ഉത്തരവിടുകയും ചെയ്തു.",
+                    ta: "குறைபாடுள்ள மொபைல் போன் பற்றிய ஒரு நுகர்வோரின் புகாரை நிறுவனம் புறக்கணித்தது. அவர் மாவட்ட நுகர்வோர் மன்றத்தில் வழக்குத் தொடர்ந்தார். மன்றம் அவரது வழக்கைக் கேட்டறிந்து, நிறுவனத்திற்கு போனை மாற்றுவதோடு மட்டுமல்லாமல், மன உளைச்சலுக்காக நஷ்டஈடு வழங்கவும் உத்தரவிட்டது.",
+                    kn: "ದೋಷಪೂರಿತ ಮೊಬೈಲ್ ಫೋನ್ ಬಗ್ಗೆ ಗ್ರಾಹಕರ ದೂರನ್ನು ಕಂಪನಿಯು ನಿರ್ಲಕ್ಷಿಸಿತು. ಅವರು ಜಿಲ್ಲಾ ಗ್ರಾಹಕ ವೇದಿಕೆಯಲ್ಲಿ ಪ್ರಕರಣವನ್ನು ದಾಖಲಿಸಿದರು. ವೇದಿಕೆಯು ಅವರ ಪ್ರಕರಣವನ್ನು ಆಲಿಸಿತು ಮತ್ತು ಕಂಪನಿಗೆ ಫೋನ್ ಅನ್ನು ಬದಲಾಯಿಸಲು ಮಾತ್ರವಲ್ಲ, ಮಾನಸಿಕ ಕಿರುಕುಳಕ್ಕಾಗಿ ಪರಿಹಾರವನ್ನು ಪಾವತಿಸಲು ಸಹ ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Right to Redressal", hi:"निवारण का अधिकार", ml:"പരിഹാര അവകാശം", ta:"தீர்வு உரிமை", kn:"ಪರಿಹಾರ ಹಕ್ಕು"},
+                icon: ICONS.redressal,
+                source: "Sec 2(9)(v), CPA 2019",
+                simplified: {
+                    en: "You have the right to get a refund, replacement, or compensation for a defective product or poor service.",
+                    hi: "आपको खराब उत्पाद या खराब सेवा के लिए रिफंड, प्रतिस्थापन, या मुआवजा पाने का अधिकार है।",
+                    ml: "കേടായ ഉൽപ്പന്നത്തിനോ മോശം സേവനത്തിനോ റീഫണ്ട്, മാറ്റിസ്ഥാപിക്കൽ, അല്ലെങ്കിൽ നഷ്ടപരിഹാരം എന്നിവ ലഭിക്കാൻ നിങ്ങൾക്ക് അവകാശമുണ്ട്.",
+                    ta: "குறைபாடுள்ள தயாரிப்பு அல்லது மோசமான சேவைக்கு திரும்பப் பெறுதல், மாற்றுதல் அல்லது இழப்பீடு பெற உங்களுக்கு உரிமை உண்டு.",
+                    kn: "ದೋಷಪೂರಿತ ಉತ್ಪನ್ನ ಅಥವಾ ಕಳಪೆ ಸೇವೆಗಾಗಿ ಮರುಪಾವತಿ, ಬದಲಿ, ಅಥವಾ ಪರಿಹಾರವನ್ನು ಪಡೆಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ."
+                },
+                caseStudy: {
+                    en: "A person booked a holiday package, but the travel agent failed to provide the promised hotel and flight. The consumer court ordered the agent to refund the entire package cost and pay an additional ₹50,000 as compensation.",
+                    hi: "एक व्यक्ति ने एक हॉलिडे पैकेज बुक किया, लेकिन ट्रैवल एजेंट ने वादे के मुताबिक होटल और फ्लाइट प्रदान नहीं की। उपभोक्ता अदालत ने एजेंट को पूरे पैकेज की लागत वापस करने और मुआवजे के रूप में अतिरिक्त ₹50,000 का भुगतान करने का आदेश दिया।",
+                    ml: "ഒരാൾ ഒരു ഹോളിഡേ പാക്കേജ് ബുക്ക് ചെയ്തു, എന്നാൽ ട്രാവൽ ഏജന്റ് വാഗ്ദാനം ചെയ്ത ഹോട്ടലും ഫ്ലൈറ്റും നൽകുന്നതിൽ പരാജയപ്പെട്ടു. പാക്കേജിന്റെ മുഴുവൻ തുകയും തിരികെ നൽകാനും നഷ്ടപരിഹാരമായി ₹50,000 അധികമായി നൽകാനും ഉപഭോക്തൃ കോടതി ഏജന്റിനോട് ഉത്തരവിട്ടു.",
+                    ta: "ஒருவர் விடுமுறைத் தொகுப்பை முன்பதிவு செய்தார், ஆனால் பயண முகவர் வாக்குறுதியளித்த ஹோட்டல் மற்றும் விமானத்தை வழங்கத் தவறினார். நுகர்வோர் நீதிமன்றம் முகவருக்கு முழுத் தொகுப்புச் செலவையும் திருப்பித் தரவும், இழப்பீடாக கூடுதலாக ₹50,000 செலுத்தவும் உத்தரவிட்டது.",
+                    kn: "ಒಬ್ಬ ವ್ಯಕ್ತಿಯು ಹಾಲಿಡೇ ಪ್ಯಾಕೇಜ್ ಅನ್ನು ಬುಕ್ ಮಾಡಿದನು, ಆದರೆ ಟ್ರಾವೆಲ್ ಏಜೆಂಟ್ ವಾಗ್ದಾನ ಮಾಡಿದ ಹೋಟೆಲ್ ಮತ್ತು ವಿಮಾನವನ್ನು ಒದಗಿಸಲು ವಿಫಲನಾದನು. ಗ್ರಾಹಕ ನ್ಯಾಯಾಲಯವು ಏಜೆಂಟ್‌ಗೆ ಸಂಪೂರ್ಣ ಪ್ಯಾಕೇಜ್ ವೆಚ್ಚವನ್ನು ಮರುಪಾವತಿಸಲು ಮತ್ತು ಪರಿಹಾರವಾಗಿ ಹೆಚ್ಚುವರಿ ₹50,000 ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Right to Consumer Education", hi:"उपभोक्ता शिक्षा का अधिकार", ml:"ഉപഭോക്തൃ വിദ്യാഭ്യാസ അവകാശം", ta:"நுகர்வோர் கல்வி உரிமை", kn:"ಗ್ರಾಹಕ ಶಿಕ್ಷಣ ಹಕ್ಕು"},
+                icon: ICONS.education,
+                source: "Sec 2(9)(vi), CPA 2019",
+                simplified: {
+                    en: "You have the right to learn about your rights and responsibilities as a consumer. Look for awareness programs by the government.",
+                    hi: "आपको एक उपभोक्ता के रूप में अपने अधिकारों और जिम्मेदारियों के बारे में जानने का अधिकार है। सरकार द्वारा जागरूकता कार्यक्रमों की तलाश करें।",
+                    ml: "ഒരു ഉപഭോക്താവെന്ന നിലയിൽ നിങ്ങളുടെ അവകാശങ്ങളെയും ഉത്തരവാദിത്തങ്ങളെയും കുറിച്ച് അറിയാൻ നിങ്ങൾക്ക് അവകാശമുണ്ട്. സർക്കാർ നടത്തുന്ന ബോധവൽക്കരണ പരിപാടികൾക്കായി നോക്കുക.",
+                    ta: "ஒரு நுகர்வோராக உங்கள் உரிமைகள் மற்றும் பொறுப்புகளைப் பற்றி அறிய உங்களுக்கு உரிமை உண்டு. அரசாங்கத்தின் விழிப்புணர்வுத் திட்டங்களைத் தேடுங்கள்.",
+                    kn: "ಒಬ್ಬ ಗ್ರಾಹಕನಾಗಿ ನಿಮ್ಮ ಹಕ್ಕುಗಳು ಮತ್ತು ಜವಾಬ್ದಾರಿಗಳ ಬಗ್ಗೆ ತಿಳಿದುಕೊಳ್ಳುವ ಹಕ್ಕು ನಿಮಗಿದೆ. ಸರ್ಕಾರದಿಂದ ಜಾಗೃತಿ ಕಾರ್ಯಕ್ರಮಗಳಿಗಾಗಿ ನೋಡಿ."
+                },
+                caseStudy: {
+                    en: "The Ministry of Consumer Affairs runs the 'Jago Grahak Jago' campaign. This includes TV ads, workshops, and print media to educate consumers on how to check MRP, expiry dates, and how to file a complaint online.",
+                    hi: "उपभोक्ता मामलों का मंत्रालय 'जागो ग्राहक जागो' अभियान चलाता है। इसमें टीवी विज्ञापन, कार्यशालाएं, और प्रिंट मीडिया शामिल हैं ताकि उपभोक्ताओं को एमआरपी, समाप्ति तिथियों की जांच कैसे करें, और ऑनलाइन शिकायत कैसे दर्ज करें, इस पर शिक्षित किया जा सके।",
+                    ml: "ഉപഭോക്തൃ കാര്യ മന്ത്രാലയം 'ജാഗോ ഗ്രാഹക് ജാഗോ' എന്ന കാമ്പയിൻ നടത്തുന്നു. എംആർപി, കാലഹരണ തീയതി എന്നിവ എങ്ങനെ പരിശോധിക്കാം, ഓൺലൈനിൽ എങ്ങനെ പരാതി നൽകാം എന്നിവയെക്കുറിച്ച് ഉപഭോക്താക്കളെ ബോധവൽക്കരിക്കുന്നതിനായി ടിവി പരസ്യങ്ങൾ, ശിൽപശാലകൾ, അച്ചടി മാധ്യമങ്ങൾ എന്നിവ ഇതിൽ ഉൾപ്പെടുന്നു.",
+                    ta: "நுகர்வோர் விவகார அமைச்சகம் 'ஜாகோ கிரஹக் ஜாகோ' பிரச்சாரத்தை நடத்துகிறது. எம்ஆர்பி, காலாவதி தேதிகளை எவ்வாறு சரிபார்ப்பது, ஆன்லைனில் புகார் செய்வது எப்படி என்பது குறித்து நுகர்வோருக்குக் கற்பிக்க டிவி விளம்பரங்கள், பட்டறைகள் மற்றும் அச்சு ஊடகங்கள் இதில் அடங்கும்.",
+                    kn: "ಗ್ರಾಹಕ ವ್ಯವಹಾರಗಳ ಸಚಿವಾಲಯವು 'ಜಾಗೋ ಗ್ರಾಹಕ್ ಜಾಗೋ' ಅಭಿಯಾನವನ್ನು ನಡೆಸುತ್ತದೆ. ಎಂಆರ್‌ಪಿ, ಮುಕ್ತಾಯ ದಿನಾಂಕಗಳನ್ನು ಹೇಗೆ ಪರಿಶೀಲಿಸುವುದು, ಮತ್ತು ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ದೂರು ಸಲ್ಲಿಸುವುದು ಹೇಗೆ ಎಂಬುದರ ಕುರಿತು ಗ್ರಾಹಕರಿಗೆ ಶಿಕ್ಷಣ ನೀಡಲು ಇದು ಟಿವಿ ಜಾಹೀರಾತುಗಳು, ಕಾರ್ಯಾಗಾರಗಳು, ಮತ್ತು ಮುದ್ರಣ ಮಾಧ್ಯಮವನ್ನು ಒಳಗೊಂಡಿದೆ."
+                }
+            },
+            {
+                name: {en:"Right to Healthy Environment", hi:"स्वस्थ वातावरण का अधिकार", ml:"ആരോഗ്യകരമായ പരിസ്ഥിതി", ta:"ஆரோக்கியமான சூழல்", kn:"ಆರೋಗ್ಯಕರ ವಾತಾವರಣ"},
+                icon: ICONS.environment,
+                source: "Sec 2(9)(vii), CPA 2019",
+                simplified: {
+                    en: "You have the right to an environment that is not harmful or polluted. You can file complaints against businesses that cause pollution.",
+                    hi: "आपको ऐसे वातावरण का अधिकार है जो हानिकारक या प्रदूषित न हो। आप प्रदूषण फैलाने वाले व्यवसायों के खिलाफ शिकायत दर्ज कर सकते हैं।",
+                    ml: "ഹാനികരമോ മലിനമോ അല്ലാത്ത ഒരു പരിസ്ഥിതിക്ക് നിങ്ങൾക്ക് അവകാശമുണ്ട്. മലിനീകരണത്തിന് കാരണമാകുന്ന ബിസിനസ്സുകൾക്കെതിരെ നിങ്ങൾക്ക് പരാതി നൽകാം.",
+                    ta: " தீங்கு விளைவிக்காத அல்லது மாசுபடாத ஒரு சூழலுக்கு உங்களுக்கு உரிமை உண்டு. மாசுபாட்டை ஏற்படுத்தும் வணிகங்களுக்கு எதிராக நீங்கள் புகார் அளிக்கலாம்.",
+                    kn: "ಹಾನಿಕಾರಕವಲ್ಲದ ಅಥವಾ ಕಲುಷಿತವಲ್ಲದ ಪರಿಸರಕ್ಕೆ ನಿಮಗೆ ಹಕ್ಕಿದೆ. ಮಾಲಿನ್ಯವನ್ನು ಉಂಟುಮಾಡುವ ವ್ಯವಹಾರಗಳ ವಿರುದ್ಧ ನೀವು ದೂರು ಸಲ್ಲಿಸಬಹುದು."
+                },
+                caseStudy: {
+                    en: "Residents of a colony filed a consumer case against a factory that was dumping chemical waste nearby, polluting their water. The National Green Tribunal (NGT) ordered the factory to shut down and pay a ₹2 Crore fine.",
+                    hi: "एक कॉलोनी के निवासियों ने एक फैक्ट्री के खिलाफ उपभोक्ता मामला दायर किया, जो पास में रासायनिक कचरा डंप कर रही थी, जिससे उनका पानी प्रदूषित हो रहा था। राष्ट्रीय हरित अधिकरण (NGT) ने फैक्ट्री को बंद करने और ₹2 करोड़ का जुर्माना देने का आदेश दिया।",
+                    ml: "തങ്ങളുടെ വെള്ളം മലിനമാക്കിക്കൊണ്ട് സമീപത്ത് രാസമാലിന്യം തള്ളുന്ന ഒരു ഫാക്ടറിക്കെതിരെ ഒരു കോളനിയിലെ താമസക്കാർ ഉപഭോക്തൃ കേസ് ഫയൽ ചെയ്തു. ദേശീയ ഹരിത ട്രൈബ്യൂണൽ (NGT) ഫാക്ടറി അടച്ചുപൂട്ടാനും ₹2 കോടി പിഴ നൽകാനും ഉത്തരവിട്ടു.",
+                    ta: "ஒரு காலனியின் குடியிருப்பாளர்கள், அருகில் இரசாயனக் கழிவுகளைக் கொட்டி, தங்கள் தண்ணீரை மாசுபடுத்தும் ஒரு தொழிற்சாலைக்கு எதிராக நுகர்வோர் வழக்கைத் தாக்கல் செய்தனர். தேசிய பசுமைத் தீர்ப்பாயம் (NGT) தொழிற்சாலையை மூடவும், ₹2 கோடிகள் அபராதம் செலுத்தவும் உத்தரவிட்டது.",
+                    kn: "ಒಂದು ಕಾಲೋನಿಯ ನಿವಾಸಿಗಳು ಹತ್ತಿರದಲ್ಲಿ ರಾಸಾಯನಿಕ ತ್ಯಾಜ್ಯವನ್ನು ಸುರಿದು, ತಮ್ಮ ನೀರನ್ನು ಕಲುಷಿತಗೊಳಿಸುತ್ತಿದ್ದ ಕಾರ್ಖಾನೆಯ ವಿರುದ್ಧ ಗ್ರಾಹಕ ಪ್ರಕರಣವನ್ನು ದಾಖಲಿಸಿದರು. ರಾಷ್ಟ್ರೀಯ ಹಸಿರು ನ್ಯಾಯಮಂಡಳಿ (NGT) ಕಾರ್ಖಾನೆಯನ್ನು ಮುಚ್ಚಲು ಮತ್ತು ₹2 ಕೋಟಿ ದಂಡವನ್ನು ಪಾವತಿಸಲು ಆದೇಶಿಸಿತು."
+                }
+            },
+            {
+                name: {en:"Consumer Helpline", hi:"उपभोक्ता हेल्पलाइन", ml:"കൺസ്യൂമർ ഹെൽപ്പ് ലൈൻ", ta:"நுகர்வோர் உதவி எண்", kn:"ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿ"},
+                icon: ICONS.legalAid,
+                source: "Dept. of Consumer Affairs",
+                simplified: {
+                    en: "For any consumer grievance or question, you can call the National Consumer Helpline for free advice. Just dial 1915.",
+                    hi: "किसी भी उपभोक्ता शिकायत या प्रश्न के लिए, आप मुफ्त सलाह के लिए राष्ट्रीय उपभोक्ता हेल्पलाइन पर कॉल कर सकते हैं। बस 1915 डायल करें।",
+                    ml: "ഏത് ഉപഭോക്തൃ പരാതിക്കോ ചോദ്യത്തിനോ, നിങ്ങൾക്ക് സൗജന്യ ഉപദേശത്തിനായി ദേശീയ ഉപഭോക്തൃ ഹെൽപ്പ് ലൈനിൽ വിളിക്കാം. 1915 ഡയൽ ചെയ്താൽ മതി.",
+                    ta: "எந்தவொரு நுகர்வோர் குறைபாடு அல்லது கேள்விக்கும், நீங்கள் இலவச ஆலோசனைக்கு தேசிய நுகர்வோர் உதவி எண்ணை அழைக்கலாம். 1915 ஐ டயல் செய்தால் போதும்.",
+                    kn: "ಯಾವುದೇ ಗ್ರಾಹಕರ ದೂರು ಅಥವಾ ಪ್ರಶ್ನೆಗೆ, ನೀವು ಉಚಿತ ಸಲಹೆಗಾಗಿ ರಾಷ್ಟ್ರೀಯ ಗ್ರಾಹಕ ಸಹಾಯವಾಣಿಗೆ ಕರೆ ಮಾಡಬಹುದು. ಕೇವಲ 1915 ಡಯಲ್ ಮಾಡಿ."
+                },
+                caseStudy: {
+                    en: "A student was charged more than the MRP for a soft drink. He called 1915. The helpline executive guided him on how to file an e-complaint on the NCH portal, which resulted in a refund from the seller.",
+                    hi: "एक छात्र से एक शीतल पेय के लिए एमआरपी से अधिक शुल्क लिया गया। उसने 1915 पर कॉल किया। हेल्पलाइन कार्यकारी ने उसे एनसीएच पोर्टल पर ई-शिकायत दर्ज करने के तरीके के बारे में मार्गदर्शन किया, जिसके परिणामस्वरूप विक्रेता से रिफंड मिला।",
+                    ml: "ഒരു വിദ്യാർത്ഥിയിൽ നിന്ന് ഒരു ശീതളപാനീയത്തിന് എംആർപിയേക്കാൾ കൂടുതൽ പണം ഈടാക്കി. അദ്ദേഹം 1915-ൽ വിളിച്ചു. എൻസിഎച്ച് പോർട്ടലിൽ എങ്ങനെ ഇ-പരാതി നൽകാമെന്ന് ഹെൽപ്പ് ലൈൻ എക്സിക്യൂട്ടീവ് അദ്ദേഹത്തെ നയിച്ചു, ഇത് വിൽപ്പനക്കാരനിൽ നിന്ന് റീഫണ്ട് ലഭിക്കാൻ കാരണമായി.",
+                    ta: "ஒரு மாணவரிடம் ஒரு குளிர்பானத்திற்கு எம்ஆர்பியை விட அதிகமாக கட்டணம் வசூலிக்கப்பட்டது. அவர் 1915 ஐ அழைத்தார். ஹெல்ப்லைன் நிர்வாகி என்சிஎச் போர்ட்டலில் இ-புகார் செய்வது எப்படி என்று அவருக்கு வழிகாட்டினார், இதன் விளைவாக விற்பனையாளரிடமிருந்து திரும்பப் பெறப்பட்டது.",
+                    kn: "ಒಬ್ಬ ವಿದ್ಯಾರ್ಥಿಯಿಂದ ತಂಪು ಪಾನೀಯಕ್ಕಾಗಿ ಎಂಆರ್‌ಪಿಗಿಂತ ಹೆಚ್ಚು ಶುಲ್ಕ ವಿಧಿಸಲಾಯಿತು. ಅವನು 1915 ಕ್ಕೆ ಕರೆ ಮಾಡಿದನು. ಎನ್‌ಸಿಎಚ್ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಇ-ದೂರು ಸಲ್ಲಿಸುವುದು ಹೇಗೆ ಎಂದು ಸಹಾಯವಾಣಿ ಕಾರ್ಯನಿರ್ವಾಹಕ ಅವನಿಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡಿದರು, ಇದರ ಪರಿಣಾಮವಾಗಿ ಮಾರಾಟಗಾರನಿಂದ ಮರುಪಾವತಿ ದೊರೆಯಿತು."
+                }
+            }
+        ];
+
+        function renderLaws(laws, lang = 'en') {
+            document.getElementById('lawsContainer').innerHTML = laws.map((l, i) =>
+                // Added a CSS class for animation staggering
+                `<div class="law-card bg-white rounded-xl p-6 text-center" style="animation-delay: ${i * 0.05}s">
+                    
+                    <div class="flex justify-center mb-4">
+                        ${l.icon}
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold text-blue-700">${l.name[lang]}</h2>
+                    <p class="text-xs text-gray-400 mb-4 font-medium uppercase tracking-wider">Source: ${l.source}</p>
+                    
+                    <div class="mt-4 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">What it Means (Simplified)</h3>
+                        <p class="text-gray-700 mt-2 px-2 text-center">${l.simplified[lang]}</p>
+                    </div>
+                    
+                    <div class="mt-5 pt-5 border-t border-gray-100 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 text-center">Example Case Study</h3>
+                        <p class="text-gray-600 mt-2 px-2 italic text-center">${l.caseStudy[lang]}</p>
+                    </div>
+                </div>`
+            ).join('');
+        }
+
+        document.getElementById('langSelect').addEventListener('change', e => renderLaws(consumerLaws, e.target.value));
+        renderLaws(consumerLaws); // Initial render
+    </script>
+</body>
+</html>
