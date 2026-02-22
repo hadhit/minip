@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Awareness Portal - Know Your Rights</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                </svg>
+                <span class="text-2xl font-black text-gray-800">Know Your Rights</span>
+            </div>
+            <div>
+                <a href="login.html" class="flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    <span>Ask Legal AI</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-6xl font-black leading-tight mb-4 animate-fade-in">
+                Legal Awareness Portal
+            </h1>
+            <p class="text-xl md:text-2xl text-indigo-100 mb-8 max-w-3xl mx-auto">
+                Empowering you with the knowledge of Indian law. Explore categories below or ask our AI assistant.
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="max-w-2xl mx-auto mt-8">
+                <div class="relative">
+                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search legal topics, rights, or laws..."
+                        class="w-full pl-14 pr-4 py-4 rounded-full text-gray-800 text-lg shadow-2xl focus:outline-none focus:ring-4 focus:ring-purple-300"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-black text-center text-gray-800 mb-4 flex items-center justify-center">
+                <svg class="w-10 h-10 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                Explore Legal Topics
+            </h2>
+            <p id="searchResults" class="text-center text-gray-600 mb-8 hidden"></p>
+
+            <div id="categoriesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Categories will be inserted here by JavaScript -->
+            </div>
+
+            <div id="noResults" class="text-center py-12 hidden">
+                <p class="text-gray-500 text-lg mb-4">Try searching for different terms or</p>
+                <button onclick="clearSearch()" class="bg-indigo-600 text-white px-6 py-3 rounded-full font-bold hover:bg-indigo-700 transition">
+                    View All Categories
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gradient-to-r from-indigo-600 to-purple-600 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-black text-white mb-4">
+                Need Personalized Legal Guidance?
+            </h2>
+            <p class="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
+                Our AI-powered legal assistant is available 24/7 to answer your specific questions about Indian law.
+            </p>
+            <a href="login.html" class="inline-flex items-center space-x-2 bg-white text-indigo-600 font-bold py-4 px-8 rounded-full shadow-2xl hover:shadow-3xl transform hover:scale-110 transition duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+                <span>Start Chatting with Legal AI</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex items-center justify-center space-x-2 mb-4">
+                <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                </svg>
+                <span class="text-xl font-bold">Know Your Rights</span>
+            </div>
+            <p class="text-sm">© 2025 Legal Awareness Portal. For informational purposes only.</p>
+            <p class="text-xs text-gray-500 mt-2">This is not legal advice. Consult a qualified lawyer for specific legal matters.</p>
+        </div>
+    </footer>
+
+    <!-- MODAL POPUP -->
+    <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div id="modalContent">
+                <!-- Content loads here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // **8 CATEGORIES WITH FULL LAWS LINKS**
+        const categories = [
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`,
+                title: "Consumer Rights",
+                description: "Understand your rights as a consumer, from faulty products to unfair trade practices.",
+                color: "from-blue-500 to-blue-600",
+                topics: ["Product Defects", "Refunds", "Warranties", "False Advertising"],
+                content: "Under **Consumer Protection Act 2019**, you have rights to: <br><br>✅ **File complaint** within 2 years <br>✅ **Get refund** for defective products <br>✅ **Free legal aid** in consumer court <br><br>**Helpline:** 1915",
+                lawsPage: "consumer-rights.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`,
+                title: "Family Law",
+                description: "Information on marriage, divorce, child custody, adoption, and inheritance rights.",
+                color: "from-pink-500 to-pink-600",
+                topics: ["Marriage", "Divorce", "Child Custody", "Inheritance"],
+                content: "**Hindu Marriage Act 1955** & **Special Marriage Act 1954** <br><br>✅ **Minimum age:** 21(M)/18(F) <br>✅ **Divorce grounds:** Cruelty, desertion <br>✅ **Child custody:** Best interest of child <br><br>**Helpline:** 1098 (Childline)",
+                lawsPage: "family-law.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+                title: "Cyber Law",
+                description: "Learn about online harassment, data privacy, and your digital rights in India.",
+                color: "from-purple-500 to-purple-600",
+                topics: ["Data Privacy", "Online Fraud", "Cyberbullying", "Digital Rights"],
+                content: "**IT Act 2000** <br><br>✅ **File FIR** for cybercrime <br>✅ **Data privacy rights** under DPDP Act 2023 <br>✅ **Report** to cybercrime.gov.in <br><br>**Helpline:** 1930 (Cyber Crime)",
+                lawsPage: "cyber-law.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+                title: "Employment Rights",
+                description: "Know your workplace rights, minimum wage laws, and protection against discrimination.",
+                color: "from-green-500 to-green-600",
+                topics: ["Minimum Wage", "Working Hours", "Discrimination", "Termination"],
+                content: "**Labour Codes 2020** <br><br>✅ **8 hours/day**, 48 hours/week <br>✅ **Minimum wage:** ₹178/day (unskilled) <br>✅ **No discrimination** based on gender/caste <br><br>**Helpline:** 14434 (Labour)",
+                lawsPage: "employment-rights.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`,
+                title: "Property Law",
+                description: "Understanding property ownership, rental agreements, and tenant rights.",
+                color: "from-orange-500 to-orange-600",
+                topics: ["Ownership", "Rental Rights", "Property Disputes", "Registration"],
+                content: "**Transfer of Property Act 1882** <br><br>✅ **Rent receipt** mandatory <br>✅ **1 month notice** for eviction <br>✅ **Stamp duty:** 5-7% of property value <br><br>**Helpline:** Local Tehsildar",
+                lawsPage: "property-law.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>`,
+                title: "Criminal Law",
+                description: "Basic knowledge about criminal procedures, your rights during arrest, and bail.",
+                color: "from-red-500 to-red-600",
+                topics: ["Arrest Rights", "Bail", "FIR", "Court Procedures"],
+                content: "**CrPC 1973** <br><br>✅ **Right to lawyer** during arrest <br>✅ **FIR mandatory** for cognizable offence <br>✅ **Bail within 24 hours** <br><br>**Helpline:** 100 (Police)",
+                lawsPage: "criminal-law.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-4a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/></svg>`,
+                title: "Women's Rights",
+                description: "Protection against domestic violence, dowry, sexual harassment, and gender equality laws.",
+                color: "from-rose-500 to-rose-600",
+                topics: ["Dowry Prohibition", "Domestic Violence", "Sexual Harassment", "Maternity Benefits"],
+                content: "**Dowry Prohibition Act 1961** <br><br>✅ **File FIR** within 24 hours <br>✅ **Protection order** from Magistrate <br>✅ **Free legal aid** <br><br>**Helpline:** 1091",
+                lawsPage: "womens-rights.html"
+            },
+            {
+                icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>`,
+                title: "RTI & Governance",
+                description: "Right to Information Act, government transparency, and citizen rights.",
+                color: "from-yellow-500 to-yellow-600",
+                topics: ["RTI Application", "Government Schemes", "Public Records", "Citizen Charter"],
+                content: "**RTI Act 2005** <br><br>✅ **File RTI** for ₹10 <br>✅ **Response within 30 days** <br>✅ **Appeal to CIC** if denied <br><br>**Helpline:** 1963 (RTI)",
+                lawsPage: "rti-governance.html"
+            }
+        ];
+
+        // **FIXED MODAL WITH 2 BUTTONS**
+        function showModal(category) {
+            document.getElementById('modalContent').innerHTML = `
+                <div class="text-left">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">${category.title}</h2>
+                    <div class="prose prose-lg max-w-none mb-6">
+                        ${category.content}
+                    </div>
+                    
+                    <!-- **2 BUTTONS - THIS WAS MISSING!** -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                        <a href="login.html" class="bg-indigo-600 text-white px-6 py-3 rounded-full font-bold hover:bg-indigo-700 flex-1 text-center">
+                            🤖 Ask AI About This
+                        </a>
+                        <a href="laws-pages/${category.lawsPage}" class="bg-purple-600 text-white px-6 py-3 rounded-full font-bold hover:bg-purple-700 flex-1 text-center">
+                            📚 View Full Laws (8 Laws)
+                        </a>
+                    </div>
+                    
+                    <button onclick="closeModal()" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold hover:bg-gray-50 w-full">
+                        ❌ Close
+                    </button>
+                </div>
+            `;
+            document.getElementById('categoryModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('categoryModal').classList.add('hidden');
+        }
+
+        // RENDER WITH CLICK EVENT
+        function renderCategories(categoriesToRender) {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+
+            categoriesToRender.forEach((category, index) => {
+                const card = `
+                    <div class="card bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer animate-fade-in" 
+                         style="animation-delay: ${index * 0.1}s" 
+                         onclick="showModal(${JSON.stringify(category).replace(/"/g, '&quot;')})">
+                        <div class="bg-gradient-to-r ${category.color} p-6 text-white">
+                            <div class="flex items-center justify-center mb-4">${category.icon}</div>
+                            <h3 class="text-2xl font-bold text-center">${category.title}</h3>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-600 mb-4 text-center">${category.description}</p>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                ${category.topics.map(topic => `<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">${topic}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // SEARCH FUNCTION (KEEP SAME)
+        function handleSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+            const noResults = document.getElementById('noResults');
+            
+            if (query.trim() === '') {
+                renderCategories(categories);
+                searchResults.classList.add('hidden');
+                noResults.classList.add('hidden');
+                return;
+            }
+
+            const filtered = categories.filter(cat => 
+                cat.title.toLowerCase().includes(query.toLowerCase()) ||
+                cat.description.toLowerCase().includes(query.toLowerCase()) ||
+                cat.topics.some(topic => topic.toLowerCase().includes(query.toLowerCase()))
+            );
+
+            searchResults.textContent = `Showing ${filtered.length} results for "${query}"`;
+            searchResults.classList.remove('hidden');
+
+            if (filtered.length > 0) {
+                renderCategories(filtered);
+                noResults.classList.add('hidden');
+            } else {
+                renderCategories([]);
+                noResults.classList.remove('hidden');
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderCategories(categories);
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('noResults').classList.add('hidden');
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategories(categories);
+            
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function(e) {
+                handleSearch(e.target.value);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Legal Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --sidebar-bg: #e3f0fa;
+  --sidebar-fg: #2691b1;
+  --sidebar-avatar: #b2e4ff;
+  --sidebar-avatar-fg: #1976a7;
+  --main-bg: #f7fafc;
+  --header-bg: #fff;
+  --header-fg: #2393c1;
+  --bubble-me: #e0f5ff;
+  --bubble-bot: #f3fafd;
+  --bubble-me-fg: #156f9c;
+  --bubble-bot-fg: #32445b;
+}
+body {
+  background: var(--main-bg);
+  font-family: 'Inter',sans-serif;
+  min-height: 100vh; margin:0;
+  transition: background .3s;
+}
+body.darkmode {
+  --sidebar-bg: #172032;
+  --sidebar-fg: #b8e3ff;
+  --sidebar-avatar: #34496a;
+  --sidebar-avatar-fg: #a3cbe6;
+  --main-bg: #141d2c;
+  --header-bg: #1a2634;
+  --header-fg: #a3cbe6;
+  --bubble-me: #243f58;
+  --bubble-bot: #192333;
+  --bubble-me-fg: #b2e4ff;
+  --bubble-bot-fg: #e3f0fa;
+}
+
+/* Sidebar visible in dark mode */
+body.darkmode .sidebar-title,
+body.darkmode .sidebar-item {
+  color: #b8e3ff !important;
+}
+body.darkmode .sidebar-item.active, 
+body.darkmode .sidebar-item:hover {
+  color: #fff !important;
+}
+
+/* Match chat card text color to screenshot (very light blue, bold) */
+body.darkmode .sidebar-card {
+  color: #e3e7ff !important;
+  font-weight: bold;
+}
+body .sidebar-card {
+  color: #2691b1 !important;
+  font-weight: bold;
+}
+
+body.darkmode #user-input {
+  background: #243f58 !important;
+  color: #e3f0fa !important;
+  border-color: #b2e4ff !important;
+}
+.sidebar {
+  background: var(--sidebar-bg);
+  min-width: 245px; max-width: 295px;
+  border-right:none; box-shadow:4px 0 30px #2d7ae028;
+  display:flex;flex-direction:column;align-items:center;
+  padding:2.2rem 0 1.3rem 0; min-height:100vh;
+}
+.sidebar-title {
+  color: var(--sidebar-fg);
+  font-size:1.13rem; font-weight:800;
+  letter-spacing:.04em;margin-bottom:18px;opacity:.79;
+}
+.sidebar-list {width:96%;flex:1;overflow-y:auto;margin-top:1.3rem;}
+.sidebar-item {
+  display:flex;align-items:center;gap:12px;
+  border-radius:1.5rem;background:transparent;
+  margin-bottom:1.18rem;font-weight:700;font-size:.97rem;
+  padding:.69rem 1.03rem;color:var(--sidebar-fg);
+  border:none;box-shadow:none;cursor:pointer;
+  transition:background .10s,color .16s,transform .09s;
+}
+.sidebar-item.active, .sidebar-item:hover {
+  background:rgba(38,145,177,0.07);
+  color:#1976a7; font-weight:900; transform:scale(1.045);
+}
+.sidebar-avatar {
+  width:24px;height:24px;border-radius:50%;background:var(--sidebar-avatar);
+  display:flex;align-items:center;justify-content:center;font-size:.97rem;
+  font-weight:800;color:var(--sidebar-avatar-fg);border:1.2px solid #e3f0fa;user-select:none;
+}
+#new-chat-btn {
+  background:linear-gradient(90deg,#40b4e8 10%,#42d6e9 92%);
+  color:#fff;font-weight:bold;font-size:.97rem;border-radius:1.5rem;padding:.65rem 0;margin-bottom:2.2rem;width:83%;
+  border:none;outline:none;box-shadow:0 2px 12px #89ccee22;letter-spacing:.07em;
+  display:block;
+  transition:background .13s, transform .08s;
+}
+#new-chat-btn:hover { background:linear-gradient(90deg,#161d29 30%,#4acee7 80%); transform:scale(1.04);}
+.theme-toggle-btn {
+  position:fixed;top:16px;left:16px;z-index:999;background:#b2e4ff;color:#2691b1;
+  border:none;outline:none;border-radius:50%;width:42px;height:42px;box-shadow:0 2px 9px #abe2f236;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;
+  font-size:1.32rem;
+}
+.theme-toggle-btn:hover {background:#2691b1;color:#b2e4ff;}
+.logout-btn {
+  background:linear-gradient(90deg,#1976a7 50%, #40b4e8 100%);
+  color:#fff;font-size:1rem;font-weight:bold;border:none;border-radius:1.5rem;
+  padding:8px 32px;position:fixed;top:15px;right:28px;z-index:99;box-shadow:0 2px 15px #6cb7fd14;outline:none;
+}
+.logout-btn:hover {background:linear-gradient(90deg,#40b4e8 55%,#1976a7 45%);}
+.chat-header {
+  background: var(--header-bg);
+  color: var(--header-fg);
+  font-size:1.47rem; font-weight:900; text-align:left; margin-bottom:1.9rem;
+  padding:1.13rem 2.08rem 1.13rem 2.1rem; letter-spacing:.07em;box-shadow:0 6px 20px #89ccee16;
+  border-radius:0 0 23px 23px;
+  /* Added flex and items-center for new content */
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chat-header .language-selector {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--bubble-bot-fg);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+body.darkmode .chat-header .language-selector {
+  color: var(--header-fg);
+}
+.chat-header select {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--sidebar-fg);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-fg);
+}
+body.darkmode .chat-header select {
+  border-color: var(--sidebar-avatar);
+  background: var(--sidebar-avatar);
+  color: var(--sidebar-avatar-fg);
+}
+.glass-main {
+  background: var(--header-bg); border-radius:16px; box-shadow:0 5px 18px #2299c422;
+  padding:2.2rem 2.35rem 1.2rem 2.1rem;margin:0 auto;margin-bottom:50px;
+}
+.chat-bubble {max-width:80%;padding:.96em 1.15em;border-radius:1.35em;box-shadow:0 2px 9px #b3deef13;font-size:1.07rem;margin-bottom:1.1em;word-break:break-word;animation:floatBubbleIn .30s;}
+@keyframes floatBubbleIn {from{opacity:0;transform:translateY(11px);}to{opacity:1;transform:none;}}
+.bubble-me {margin-left:auto;margin-right:.19em;background:var(--bubble-me);color:var(--bubble-me-fg);}
+.bubble-bot {margin-right:auto;margin-left:.19em;background:var(--bubble-bot);color:var(--bubble-bot-fg);}
+.bubble-avatar {width:24px;height:24px;border-radius:50%;margin:0 .39em 0 0;display:inline-flex;align-items:center;justify-content:center;background:var(--sidebar-avatar);color:var(--sidebar-avatar-fg);font-weight:800;font-size:.95rem;border:1px solid #e3f0fa;user-select:none;}
+.chat-bubble-row {display:flex;align-items:flex-end;margin-bottom:.2em;}
+@media(max-width:900px){.glass-main{padding:1rem .08rem 1em .08rem;}}
+@media(max-width:600px){.chat-header{flex-direction:column;align-items:flex-start;gap:8px;padding:1.13rem 1.08rem;}}
+::-webkit-scrollbar-thumb{background:#e3f0fa; border-radius:10px }
+::-webkit-scrollbar-track{ background: #f3fafd;}
+  </style>
+</head>
+<body>
+<button class="theme-toggle-btn" id="themeToggle" title="Toggle theme">🌙</button>
+<button class="logout-btn" onclick="logout()">Logout</button>
+<div class="flex min-h-screen">
+  <aside id="sidebar" class="sidebar w-72 px-2 pb-6">
+    <div class="sidebar-title">Chat History</div>
+    <button id="new-chat-btn">+ New Chat</button>
+    <div class="sidebar-list" id="chat-list">
+      <!-- Chat history items will be injected here -->
+    </div>
+  </aside>
+  <main class="flex-1 min-h-screen">
+    <div class="chat-header">
+      Legal Rights Chat
+      <!-- START: Language Selector for Translation -->
+      <div class="language-selector">
+        <label for="language-select">Translate to:</label>
+        <select id="language-select">
+          <option value="English">None (English)</option>
+          <option value="Hindi">Hindi (हिंदी)</option>
+          <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+          <option value="Malayalam">Malayalam (മലയാളം)</option>
+          <option value="Tamil">Tamil (தமிழ்)</option>
+        </select>
+      </div>
+      <!-- END: Language Selector for Translation -->
+    </div>
+    <div class="glass-main shadow-2xl">
+      <div id="chat-window" class="overflow-y-auto min-h-[340px] max-h-[520px] mb-8 rounded-2xl"></div>
+      <div class="flex gap-2">
+        <input id="user-input" type="text" placeholder="Ask your legal rights..." class="flex-1 p-4 rounded-xl border border-[#b3e4fa] text-lg focus:border-[#2691b1] focus:ring-[#2691b1] focus:outline-none shadow-sm bg-[#e5f4fc]" />
+        <button id="send-button" class="px-7 py-3 text-white font-bold rounded-xl shadow-lg text-lg flex items-center justify-center"
+                style="background: linear-gradient(90deg,#1976a7 40%,#40b4e8 100%);">
+          Send 📨
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+const themeBtn = document.getElementById("themeToggle");
+function setMode(m) {
+  if(m==="dark"){document.body.classList.add("darkmode");themeBtn.innerHTML="☀️";}
+  else{document.body.classList.remove("darkmode");themeBtn.innerHTML="🌙";}
+  localStorage.setItem("themeMode", m);
+}
+if(localStorage.getItem("themeMode")==="dark"){setMode("dark");}
+themeBtn.onclick = ()=>{ setMode(document.body.classList.contains("darkmode")?"light":"dark"); };
+if (!localStorage.getItem('token')) window.location.href = "login.html";
+function logout() {
+  localStorage.clear();
+  document.body.style.transition = "opacity .6s";
+  document.body.style.opacity = 0;
+  setTimeout(()=>{window.location.href = 'login.html';}, 480);
+}
+</script>
+<script src="script.js"></script>
+</body>
+</html>

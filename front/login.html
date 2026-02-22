@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login / Sign Up • Legal Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --main-bg: linear-gradient(135deg, #635de1 0, #63e7f0 40%, #ffb199 100%);
+  --card-bg: rgba(255,255,255,0.88);
+  --border: #b4bafe;
+  --input-bg: #f4f9ff;
+  --input-focus: #63e7f0;
+  --input-shadow: #63e7f06a;
+  --h-color: #635de1;
+  --h-alt: #ffb199;
+  --btn-bg: linear-gradient(90deg,#63e7f0 18%, #ffb199 90%);
+  --btn-bg-hover: linear-gradient(90deg,#ffb199 18%, #635de1 95%);
+  --error: #ff773a;
+  --success: #24ad89;
+}
+body {
+  min-height: 100vh;
+  background: var(--main-bg);
+  font-family: 'Inter', sans-serif;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; transition: background .38s;
+}
+body.darkmode {
+  --main-bg: linear-gradient(135deg,#232852 0,#1f364c 45%,#581e33 100%);
+  --card-bg: rgba(27,36,68,0.98);
+  --border: #363958;
+  --input-bg: #1a2640;
+  --input-focus: #ffb199;
+  --input-shadow: #fca4bf72;
+  --h-color: #ffb199;
+  --h-alt: #63e7f0;
+  --btn-bg: linear-gradient(90deg,#63e7f0 5%,#581e33 90%);
+  --btn-bg-hover: linear-gradient(90deg,#581e33 30%,#63e7f0 95%);
+  --error: #ffb199;
+  --success: #24ad89;
+}
+.flip-container {
+  width: 380px; max-width:98vw; perspective:1500px;
+}
+.flipper { position:relative; width:100%; min-height:450px; transition:transform .7s cubic-bezier(0.9,1.8,0.6,0.99); transform-style:preserve-3d; }
+.flip .flipper { transform: rotateY(180deg);}
+.form-card {
+  position:absolute; width:100%; border-radius:27px;
+  background:var(--card-bg); box-shadow:0 15px 52px #635de15e, 0 2px 8px #63e7f054;
+  padding:42px 34px 30px 34px; left:0;top:0;
+  backface-visibility:hidden; min-height:365px; display:flex;
+  flex-direction:column; align-items:center; animation: floatIn 1.2s;
+}
+.form-card input {
+  width:100%;padding:.88rem 1rem;border-radius:.9rem;
+  border:1.7px solid var(--border); background:var(--input-bg);
+  font-size:1.07rem; margin-bottom:14px; margin-top:1px;
+  transition:box-shadow .14s, border .19s;
+  color: #232852;
+}
+body.darkmode .form-card input {
+  color: #f0f4fc !important;
+}
+.form-card input:focus {
+  border-color:var(--input-focus);
+  box-shadow:0 0 0 2px var(--input-shadow);
+}
+.form-card h2 {
+  font-size:2rem; font-weight:700; letter-spacing:0.7px;
+  color:var(--h-color); margin-bottom:1.3rem; font-family:'Inter',sans-serif; transition: color .4s;
+}
+.form-card .alt { color:var(--h-alt); transition:color .4s;}
+.submit-btn {
+  border:none; border-radius:12px; font-size:1.11rem; font-weight:600;
+  background:var(--btn-bg); color:#fff; box-shadow:0 10px 26px #635de13a;
+  min-width:110px; padding:13px 0; margin-top:10px;margin-bottom:5px;
+  cursor:pointer; transition:background .23s, box-shadow .21s, transform .15s;
+}
+.submit-btn:hover { background:var(--btn-bg-hover); box-shadow:0 16px 32px #635de178; transform: scale(1.05);}
+.toggle {
+  background:none; color:var(--h-color); cursor:pointer;
+  font-family:inherit; font-size:1rem; font-weight:600; border:none; margin-top:12px; transition:color .21s;
+}
+.toggle:hover { color:var(--h-alt);}
+.error { color:var(--error);margin-top:7px;}
+.success { color:var(--success); margin-top:7px;}
+.form-back { transform: rotateY(180deg); background:var(--card-bg);}
+.theme-toggle-btn {
+  position:fixed;top:15px;left:23px;z-index:150;background:#ffb199;
+  color:#5a4bc1; border:none;outline:none;border-radius:50%;
+  width:43px;height:43px;box-shadow:0 2px 10px #635de130;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .17s;color .15s; font-size:1.37rem;
+}
+body.darkmode .theme-toggle-btn { background: #305e87;color: #ffb199;}
+.theme-toggle-btn:hover {background:#635de1;color:#fff;}
+@keyframes floatIn {0%{transform:translateY(90px) scale(0.98);opacity:0;}100%{transform:none;opacity:1;}}
+@media(max-width:540px){.form-card{padding:1.7rem .6rem;}}
+  </style>
+</head>
+<body>
+<button class="theme-toggle-btn" id="themeToggle" title="Toggle theme">🌙</button>
+<div class="flip-container" id="flipContainer">
+  <div class="flipper">
+    <!-- LOGIN SIDE -->
+    <div class="form-card">
+      <h2 class="">Login</h2>
+      <form id="loginForm">
+        <input type="text" id="login-username" placeholder="Username" autocomplete="off" required />
+        <input type="password" id="login-password" placeholder="Password" required />
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+      <button class="toggle" id="toSignup">Create an account</button>
+      <div class="text-center min-h-[21px]">
+        <span id="loginError" class="error"></span>
+        <span id="loginSuccess" class="success"></span>
+      </div>
+    </div>
+    <!-- SIGNUP SIDE -->
+    <div class="form-card form-back">
+      <h2 class="alt">Create Account</h2>
+      <form id="signupForm">
+        <input type="text" id="signup-username" placeholder="Username" autocomplete="off" required />
+        <input type="password" id="signup-password" placeholder="Password" required />
+        <button type="submit" class="submit-btn">Sign up</button>
+      </form>
+      <button class="toggle" id="toLogin">Already have an account?</button>
+      <div class="text-center min-h-[21px]">
+        <span id="signupError" class="error"></span>
+        <span id="signupSuccess" class="success"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const flip = document.getElementById('flipContainer');
+const toSignup = document.getElementById('toSignup');
+const toLogin = document.getElementById('toLogin');
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+const loginError = document.getElementById('loginError');
+const loginSuccess = document.getElementById('loginSuccess');
+const signupError = document.getElementById('signupError');
+const signupSuccess = document.getElementById('signupSuccess');
+
+toSignup.onclick = () => {
+  flip.classList.add('flip');
+  loginError.textContent = loginSuccess.textContent = '';
+  setTimeout(()=>{signupSuccess.textContent = signupError.textContent = '';},380);
+};
+toLogin.onclick = () => {
+  flip.classList.remove('flip');
+  signupError.textContent = signupSuccess.textContent = '';
+  setTimeout(()=>{loginSuccess.textContent = loginError.textContent = '';},380);
+};
+
+loginForm.onsubmit = async (e) => {
+  e.preventDefault();
+  loginError.textContent = '';
+  loginSuccess.textContent = '';
+  const username = loginForm['login-username'].value.trim();
+  const password = loginForm['login-password'].value;
+  if (!username || !password) return;
+  try {
+    const res = await fetch(`http://localhost:3000/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      loginError.textContent = data.error || "Something went wrong.";
+    } else {
+      loginSuccess.textContent = "Login successful! Redirecting...";
+      document.querySelector(".flip-container").style.transition = "opacity .7s";
+      document.querySelector(".flip-container").style.opacity = 0;
+      setTimeout(() => {
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", data.token);
+        window.location.href = "chat.html";  <!-- ✅ Changed from index.html -->
+      }, 650);
+    }
+  } catch {
+    loginError.textContent = "Network/server error!";
+  }
+};
+
+signupForm.onsubmit = async (e) => {
+  e.preventDefault();
+  signupError.textContent = '';
+  signupSuccess.textContent = '';
+  const username = signupForm['signup-username'].value.trim();
+  const password = signupForm['signup-password'].value;
+  if (!username || !password) return;
+  try {
+    const res = await fetch(`http://localhost:3000/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      signupError.textContent = data.error || "Something went wrong.";
+    } else {
+      signupSuccess.textContent = "Account created! Switch to login.";
+    }
+  } catch {
+    signupError.textContent = "Network/server error!";
+  }
+};
+
+// Theme switching
+const themeBtn = document.getElementById("themeToggle");
+function setMode(m) {
+  if(m==="dark"){document.body.classList.add("darkmode");themeBtn.innerHTML="☀️";}
+  else{document.body.classList.remove("darkmode");themeBtn.innerHTML="🌙";}
+  localStorage.setItem("themeMode", m);
+}
+if(localStorage.getItem("themeMode")==="dark"){ setMode("dark"); }
+themeBtn.onclick = ()=>{ setMode(document.body.classList.contains("darkmode") ? "light" : "dark"); };
+</script>
+</body>
+</html>
